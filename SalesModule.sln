@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesModule", "SalesModule\SalesModule.csproj", "{878BED54-9BDF-4777-9679-32B4A904728E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesTester", "SalesTester\SalesTester.csproj", "{6F4ADAA3-671C-4E84-B2F0-7FCC86220C98}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{878BED54-9BDF-4777-9679-32B4A904728E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{878BED54-9BDF-4777-9679-32B4A904728E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{878BED54-9BDF-4777-9679-32B4A904728E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{878BED54-9BDF-4777-9679-32B4A904728E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4ADAA3-671C-4E84-B2F0-7FCC86220C98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4ADAA3-671C-4E84-B2F0-7FCC86220C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4ADAA3-671C-4E84-B2F0-7FCC86220C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4ADAA3-671C-4E84-B2F0-7FCC86220C98}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
