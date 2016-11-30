@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace SalesModule.GUI.CreateForms
 {
-    public partial class BundleForm : Form
+    internal partial class BundleForm : Form
     {
         public BundleForm()
         {

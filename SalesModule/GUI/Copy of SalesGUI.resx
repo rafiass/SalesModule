@@ -270,34 +270,34 @@
   <data name="&gt;&gt;btn_test.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="btn_bundle.Font" type="System.Drawing.Font, System.Drawing">
+  <data name="btn_advancedBundle.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 13pt</value>
   </data>
-  <data name="btn_bundle.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="btn_advancedBundle.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="btn_bundle.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="btn_advancedBundle.Location" type="System.Drawing.Point, System.Drawing">
     <value>128, 91</value>
   </data>
-  <data name="btn_bundle.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="btn_advancedBundle.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 82</value>
   </data>
-  <data name="btn_bundle.TabIndex" type="System.Int32, mscorlib">
+  <data name="btn_advancedBundle.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
-  <data name="btn_bundle.Text" xml:space="preserve">
+  <data name="btn_advancedBundle.Text" xml:space="preserve">
     <value>חבילה</value>
   </data>
-  <data name="&gt;&gt;btn_bundle.Name" xml:space="preserve">
-    <value>btn_bundle</value>
+  <data name="&gt;&gt;btn_advancedBundle.Name" xml:space="preserve">
+    <value>btn_advancedBundle</value>
   </data>
-  <data name="&gt;&gt;btn_bundle.Type" xml:space="preserve">
+  <data name="&gt;&gt;btn_advancedBundle.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;btn_bundle.Parent" xml:space="preserve">
+  <data name="&gt;&gt;btn_advancedBundle.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;btn_bundle.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;btn_advancedBundle.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="btn_advBuyAndGet.Font" type="System.Drawing.Font, System.Drawing">
@@ -316,7 +316,7 @@
     <value>7</value>
   </data>
   <data name="btn_advBuyAndGet.Text" xml:space="preserve">
-    <value>קנה וקבל (מתקדם)</value>
+    <value>קנה וקבל (מתקדם - בקרוב)</value>
   </data>
   <data name="&gt;&gt;btn_advBuyAndGet.Name" xml:space="preserve">
     <value>btn_advBuyAndGet</value>

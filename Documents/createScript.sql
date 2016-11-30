@@ -1,8 +1,6 @@
-use [Demo]
-go
-
 
 Drop table PluReqSale;
+
 -- require product for a specific sale
 CREATE TABLE [dbo].[PluReqSale](
 	[SaleID] [int] NOT NULL,
@@ -20,6 +18,7 @@ GO
 
 
 Drop table PluOutSale;
+
 -- products on which the sale is effective, with new price or discount
 CREATE TABLE [dbo].[PluOutSale](
 	[OutID] [int] NOT NULL,
@@ -39,7 +38,9 @@ CREATE TABLE [dbo].[PluOutSale](
 ) ON [PRIMARY]
 GO
 
+
 Drop table PluGiftedSale;
+
 -- products which is gifted (or discounted) when a particular discounted product is effective
 CREATE TABLE [dbo].[PluGiftedSale](
 	[OutID] [int] NOT NULL,
@@ -59,6 +60,7 @@ GO
 
 
 Drop table Sales;
+
 -- Sale object
 CREATE TABLE [dbo].[Sales](
 	[SaleID] [int] IDENTITY(1,1) NOT NULL,
@@ -82,6 +84,7 @@ GO
 
 
 Drop table SalesGroup;
+
 -- Gather series of sales to a united group
 CREATE TABLE [dbo].[SalesGroup](
 	[GroupID] [int] IDENTITY(1,1) NOT NULL,
@@ -97,6 +100,7 @@ GO
 
 
 Drop table SalesPcid;
+
 -- mix and match of sales and branches, including border dates and effective hours for each particular branch
 CREATE TABLE [dbo].[SalesPcid](
 	[SaleGroupID] [int] NOT NULL,
@@ -116,6 +120,7 @@ GO
 
 
 Drop table SalesUser;
+
 -- restricting each sale to a particular customer or club
 CREATE TABLE [dbo].[SalesUser](
 	[SaleGroupID] [int] NOT NULL,
@@ -132,6 +137,7 @@ GO
 
 
 Drop table SalesOffType;
+
 -- off types
 CREATE TABLE [dbo].[SalesOffType](
 	[TypeID] [int] IDENTITY(1,1) NOT NULL,
@@ -147,7 +153,6 @@ insert into SalesOffType (TypeName) values ('Nothing') -- 1
 insert into SalesOffType (TypeName) values ('Percentage') -- 2
 insert into SalesOffType (TypeName) values ('Fix Price') -- 3
 insert into SalesOffType (TypeName) values ('Fix Discount') -- 4
-
 
 
 Drop table SaleTypes;

@@ -5,6 +5,8 @@ namespace SalesModule
 {
     internal static class Common
     {
+        public static string CurrentDirectory { get { return Environment.CurrentDirectory; } }
+
         public static void InsertItemToCart(List<ShoppingItem> cart, ShoppingItem newItem)
         {
             for (int i = 0; i < cart.Count; i++)

@@ -19,7 +19,10 @@ namespace SalesModule.GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            label1.Text = _engine.AddItem("10124", 1, 39);
+            _engine.AddItem("1003", 1, 10, 1);
+            _engine.AddItem("1001", 1, 10, 1);
+            _engine.AddItem("1004", 1, 9, 1);
+            _engine.AddItem("1002", 1, 10, 1);
         }
     }
 }

@@ -1,6 +1,6 @@
 namespace SalesModule
 {
-    partial class SalesGUI
+    partial class SalesGUI1
     {
         /// <summary> 
         /// Required designer variable.
@@ -34,7 +34,7 @@ namespace SalesModule
             this.btn_discountedProduct = new System.Windows.Forms.Button();
             this.btn_simpleBuyAndGet = new System.Windows.Forms.Button();
             this.btn_test = new System.Windows.Forms.Button();
-            this.btn_bundle = new System.Windows.Forms.Button();
+            this.btn_advancedBundle = new System.Windows.Forms.Button();
             this.btn_advBuyAndGet = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -73,12 +73,12 @@ namespace SalesModule
             this.btn_test.UseVisualStyleBackColor = true;
             this.btn_test.Click += new System.EventHandler(this.btn_test_Click);
             // 
-            // btn_bundle
+            // btn_advancedBundle
             // 
-            resources.ApplyResources(this.btn_bundle, "btn_bundle");
-            this.btn_bundle.Name = "btn_bundle";
-            this.btn_bundle.UseVisualStyleBackColor = true;
-            this.btn_bundle.Click += new System.EventHandler(this.btn_bundle_Click);
+            resources.ApplyResources(this.btn_advancedBundle, "btn_advancedBundle");
+            this.btn_advancedBundle.Name = "btn_advancedBundle";
+            this.btn_advancedBundle.UseVisualStyleBackColor = true;
+            this.btn_advancedBundle.Click += new System.EventHandler(this.btn_advancedBundle_Click);
             // 
             // btn_advBuyAndGet
             // 
@@ -92,7 +92,7 @@ namespace SalesModule
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btn_advBuyAndGet);
-            this.Controls.Add(this.btn_bundle);
+            this.Controls.Add(this.btn_advancedBundle);
             this.Controls.Add(this.btn_test);
             this.Controls.Add(this.btn_simpleBuyAndGet);
             this.Controls.Add(this.btn_discountedProduct);
@@ -111,7 +111,7 @@ namespace SalesModule
         private System.Windows.Forms.Button btn_discountedProduct;
         private System.Windows.Forms.Button btn_simpleBuyAndGet;
         private System.Windows.Forms.Button btn_test;
-        private System.Windows.Forms.Button btn_bundle;
+        private System.Windows.Forms.Button btn_advancedBundle;
         private System.Windows.Forms.Button btn_advBuyAndGet;
 
 

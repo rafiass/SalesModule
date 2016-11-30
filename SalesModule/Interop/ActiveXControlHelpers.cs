@@ -1,15 +1,138 @@
+using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using Microsoft.Win32;
+
 namespace SalesModule
 {
-    using System;
-    using System.Diagnostics;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Windows.Forms;
-
-//    using Microsoft.CSharp.Devices;
-    using Microsoft.Win32;
 
 #if COM_INTEROP_ENABLED
+
+    // Helper functions to convert common COM types to their .NET equivalents
+    [ComVisible(false)]
+    internal class ActiveXControlHelpers : AxHost
+    {
+        internal ActiveXControlHelpers()
+            : base(null)
+        {
+        }
+
+        internal static System.Drawing.Color GetColorFromOleColor(int oleColor)
+        {
+            return GetColorFromOleColor(CIntToUInt(oleColor));
+        }
+
+        internal static new int GetOleColorFromColor(System.Drawing.Color color)
+        {
+            return CUIntToInt(AxHost.GetOleColorFromColor(color));
+        }
+
+        internal static int CUIntToInt(uint uiArg)
+        {
+            if (uiArg <= int.MaxValue)
+            {
+                return (int)uiArg;
+            }
+
+            return (int)(uiArg - unchecked(2 * ((uint)(int.MaxValue) + 1)));
+        }
+
+        internal static uint CIntToUInt(int iArg)
+        {
+            if (iArg < 0)
+            {
+                return (uint)(uint.MaxValue + iArg + 1);
+            }
+            return (uint)iArg;
+        }
+
+        private const int KEY_PRESSED = 0x1000;
+
+        [DllImport("user32.dll")]
+        static extern short GetKeyState(int nVirtKey);
+
+        private static bool KeyConflict(char key, UserControl u)
+        {
+            bool flag = false;
+            foreach (Control ctl in u.Controls)
+            {
+                if (Control.IsMnemonic(key, ctl.Text))
+                {
+                    if (flag)
+                    {
+                        return true;
+                    }
+                    flag = true;
+                }
+            }
+            return false;
+        }
+
+        // Handles <Tab> and <Shift>+<Tab>
+        internal static void TabHandler(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Tab)
+            {
+                Control ctl = sender as Control;
+                UserControl userCtl = GetParentUserControl(ctl);
+                Control firstCtl = userCtl.GetNextControl(null, true);
+                do
+                {
+                    firstCtl = userCtl.GetNextControl(firstCtl, true);
+                } while (firstCtl != null && !firstCtl.CanSelect);
+
+                Control lastCtl = userCtl.GetNextControl(null, false);
+                do
+                {
+                    lastCtl = userCtl.GetNextControl(lastCtl, false);
+                } while (lastCtl != null && lastCtl.CanSelect);
+
+                if (ctl.Equals(lastCtl) || ctl.Equals(firstCtl) || lastCtl.Contains(ctl) || firstCtl.Contains(ctl))
+                {
+                    userCtl.SelectNextControl((Control)sender, lastCtl.Equals(userCtl.ActiveControl), true, true, true);
+                }
+            }
+        }
+
+        private static UserControl GetParentUserControl(Control ctl)
+        {
+            if (ctl == null)
+            {
+                return null;
+            }
+
+            do
+            {
+                ctl = ctl.Parent;
+            } while (ctl.Parent != null);
+
+            if (ctl != null)
+            {
+                return (UserControl)ctl;
+            }
+
+            return null;
+        }
+
+        internal static void WireUpHandlers(Control ctl, EventHandler validationHandler)
+        {
+            if (ctl != null)
+            {
+                ctl.KeyDown += TabHandler;
+                ctl.LostFocus += validationHandler;
+
+                if (ctl.HasChildren)
+                {
+                    foreach (Control child in ctl.Controls)
+                    {
+                        WireUpHandlers(child, validationHandler);
+                    }
+                }
+            }
+        }
+    }
 
     internal static class ComRegistration
     {
@@ -166,130 +289,5 @@ namespace SalesModule
         }
     }
 
-
-
-    // Helper functions to convert common COM types to their .NET equivalents
-    [ComVisible(false)]
-    internal class ActiveXControlHelpers : AxHost
-    {
-        internal ActiveXControlHelpers()
-            : base(null)
-        {
-        }
-
-        internal static System.Drawing.Color GetColorFromOleColor(int oleColor)
-        {
-            return GetColorFromOleColor(CIntToUInt(oleColor));
-        }
-
-        internal static new int GetOleColorFromColor(System.Drawing.Color color)
-        {
-            return CUIntToInt(AxHost.GetOleColorFromColor(color));
-        }
-
-        internal static int CUIntToInt(uint uiArg)
-        {
-            if (uiArg <= int.MaxValue)
-            {
-                return (int)uiArg;
-            }
-
-            return (int)(uiArg - unchecked(2 * ((uint)(int.MaxValue) + 1)));
-        }
-
-        internal static uint CIntToUInt(int iArg)
-        {
-            if (iArg < 0)
-            {
-                return (uint)(uint.MaxValue + iArg + 1);
-            }
-            return (uint)iArg;
-        }
-
-        private const int KEY_PRESSED = 0x1000;
-
-        [DllImport("user32.dll")]
-        static extern short GetKeyState(int nVirtKey);
-
-        private static bool KeyConflict(char key, UserControl u)
-        {
-            bool flag = false;
-            foreach (Control ctl in u.Controls)
-            {
-                if (Control.IsMnemonic(key, ctl.Text))
-                {
-                    if (flag)
-                    {
-                        return true;
-                    }
-                    flag = true;
-                }
-            }
-            return false;
-        }
-
-        // Handles <Tab> and <Shift>+<Tab>
-        internal static void TabHandler(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Tab)
-            {
-                Control ctl = sender as Control;
-                UserControl userCtl = GetParentUserControl(ctl);
-                Control firstCtl = userCtl.GetNextControl(null, true);
-                do
-                {
-                    firstCtl = userCtl.GetNextControl(firstCtl, true);
-                } while (firstCtl != null && !firstCtl.CanSelect);
-
-                Control lastCtl = userCtl.GetNextControl(null, false);
-                do
-                {
-                    lastCtl = userCtl.GetNextControl(lastCtl, false);
-                } while (lastCtl != null && lastCtl.CanSelect);
-
-                if (ctl.Equals(lastCtl) || ctl.Equals(firstCtl) || lastCtl.Contains(ctl) || firstCtl.Contains(ctl))
-                {
-                    userCtl.SelectNextControl((Control)sender, lastCtl.Equals(userCtl.ActiveControl), true, true, true);
-                }
-            }
-        }
-
-        private static UserControl GetParentUserControl(Control ctl)
-        {
-            if (ctl == null)
-            {
-                return null;
-            }
-
-            do
-            {
-                ctl = ctl.Parent;
-            } while (ctl.Parent != null);
-
-            if (ctl != null)
-            {
-                return (UserControl)ctl;
-            }
-
-            return null;
-        }
-
-        internal static void WireUpHandlers(Control ctl, EventHandler validationHandler)
-        {
-            if (ctl != null)
-            {
-                ctl.KeyDown += TabHandler;
-                ctl.LostFocus += validationHandler;
-
-                if (ctl.HasChildren)
-                {
-                    foreach (Control child in ctl.Controls)
-                    {
-                        WireUpHandlers(child, validationHandler);
-                    }
-                }
-            }
-        }
-    }
 #endif
 }

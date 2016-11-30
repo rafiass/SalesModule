@@ -1,5 +1,6 @@
 
 Drop table PluOutSale;
+
 -- products on which the sale is effective, with new price or discount
 CREATE TABLE [dbo].[PluOutSale](
 	[OutID] [int] NOT NULL,

@@ -15,8 +15,8 @@ namespace SalesModule
     /// This is the default interface implemented by the user control, and should
     /// contain all the methods and properties that will be exposed to COM.
     /// </summary>
-    [Guid(SalesGUI.InterfaceId)]
-    public interface ISalesGUI
+    [Guid(SalesGUI1.InterfaceId)]
+    public interface ISalesGUI1
     {
         /// <summary>
         /// Gets or sets a value indicating whether the user control is visible.
@@ -64,7 +64,7 @@ namespace SalesModule
     /// Can be initialized only after Wrapper.Init is called.
     /// </summary>
     [Guid(ClassId), ClassInterface(ClassInterfaceType.None)]
-    public partial class SalesGUI : UserControl, ISalesGUI
+    public partial class SalesGUI1 : UserControl, ISalesGUI1
     {
         #region VB6 Interop Code
 
@@ -76,8 +76,8 @@ namespace SalesModule
         // and its COM interfaces. If you change them, existing 
         // clients will no longer be able to access the class.
 
-        public const string ClassId = "3f415adf-bdff-49c1-8d79-5bf20859f34f";
-        public const string InterfaceId = "367e9586-a89e-469e-9867-049bf12d1385";
+        public const string ClassId = "4f415adf-bdff-49c1-8d79-5bf20859f34f";
+        public const string InterfaceId = "467e9586-a89e-469e-9867-049bf12d1385";
 
         // These routines perform the additional COM registration needed by ActiveX controls
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -269,7 +269,7 @@ namespace SalesModule
          * 4. New Price - select product, set discount
         */
 
-        public SalesGUI()
+        public SalesGUI1()
         {
             // This call is required by the Windows Form Designer.
             InitializeComponent();
@@ -322,7 +322,7 @@ namespace SalesModule
         }
         private void btn_discountedProduct_Click(object sender, EventArgs e)
         {
-
+            //### btn_discountedProduct_Click do nothing...
         }
         private void btn_simpleBuyAndGet_Click(object sender, EventArgs e)
         {
@@ -330,11 +330,9 @@ namespace SalesModule
         }
         private void btn_advBuyAndGet_Click(object sender, EventArgs e)
         {
-            //###
-            //var f = new BuyAndGetAdvancedForm();
-            //f.ShowDialog();
+            //### btn_advBuyAndGet_Click do nothing
         }
-        private void btn_bundle_Click(object sender, EventArgs e)
+        private void btn_advancedBundle_Click(object sender, EventArgs e)
         {
             createNewSale(SaleTypes.AdvancedBundle);
         }

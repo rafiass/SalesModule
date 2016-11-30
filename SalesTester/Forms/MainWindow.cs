@@ -15,10 +15,8 @@ namespace SalesTester
         {
             if (!isInit)
             {
-                Wrapper w;
-                //isInit = (new Wrapper()).Init("Demo", "אדמין", "1234", 1);//demo password: bR0h3niu123demo
-                //isInit = (new Wrapper()).Init("server.neworder.co.il", "Demo", "demo", "bR0h3niu123demo", 1, "אדמין", "1234");
-                InitResults res = (w = new Wrapper()).Init("server.neworder.co.il", "Demo", "neworder", "R0h3niu123", 1, "admin", "1234");
+                var w = new Wrapper();
+                InitResults res = w.Init("40.113.20.172,44455", "Sales", "Sales", "R0h3niu123", 1, "admin", "1234");
                 isInit = w.IsInited();
                 if (isInit && res == InitResults.Success)//isInit = w.IsInited())
                     Text = "Testing version: " + w.Version;
@@ -42,7 +40,10 @@ namespace SalesTester
         }
         private void btn_auto_Click(object sender, EventArgs e)
         {
-            (new CashierAutomaticTester()).ShowDialog();
+            if (init())
+                (new CashierAutomaticTester()).ShowDialog();
+            else
+                MessageBox.Show("אין אפשרות להציג את המודל.");
         }
     }
 }

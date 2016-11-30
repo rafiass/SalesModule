@@ -40,6 +40,7 @@ namespace SalesModule
         }
         public static DBService GetLocalService()
         {
+            ActivityLog.Logger.LogCall();
             try
             {
                 DBService temp = new DBService(Connection.GetLocalConnectionString());
@@ -48,14 +49,16 @@ namespace SalesModule
                 temp._location = DBLocation.LocalServer;
                 return temp;
             }
-            catch
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("Local service: connection could not established.");
+                ActivityLog.Logger.LogError(ex);
+                throw;
             }
         }
         public bool SetStoresConnString(string store)
         {
             if (_location != DBLocation.LocalServer) return false;
+            ActivityLog.Logger.LogCall(store);
             string sql, connstr;
             SqlDataReader dr;
             try
@@ -73,8 +76,9 @@ namespace SalesModule
                 Connection.StoresConn = connstr;
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return false;
             }
             finally
@@ -84,6 +88,7 @@ namespace SalesModule
         }
         public UserData GetUserData(string empName, string empPass)
         {
+            ActivityLog.Logger.LogCall(empName, empPass);
             if (_location != DBLocation.RemoteServer) return null;
             try
             {
@@ -98,8 +103,9 @@ namespace SalesModule
 
                 return new UserData(int.Parse(empno.ToString()), empName, empPass);
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -112,13 +118,14 @@ namespace SalesModule
 
         public List<IProduct> GetProducts()
         {
-            CheckIsRemote();
+            ActivityLog.Logger.LogCall();
             string sql;
             SqlDataAdapter da;
             DataTable dt = new DataTable();
             var list = new List<IProduct>();
             try
             {
+                CheckIsRemote();
                 sql = "select pname,pluno,barcode,kind3 from plu";
                 _cmd = new SqlCommand(sql, _conn);
 
@@ -130,8 +137,9 @@ namespace SalesModule
                         R["barcode"].ToString(), R["kind3"] as int?));
                 return list;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -142,6 +150,7 @@ namespace SalesModule
 
         private DataTable SearchProducts(string term, string colName, bool isLikable = true)
         {
+            ActivityLog.Logger.LogCall(term);
             CheckIsRemote();
             string sql;
             SqlDataAdapter da;
@@ -160,8 +169,9 @@ namespace SalesModule
                 da.Fill(dt);
                 return dt;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -178,13 +188,14 @@ namespace SalesModule
         #region Sales
         public int InsertGroup(SalesGroup g)
         {
+            ActivityLog.Logger.LogCall();
             if (g == null || g.Sales.Count == 0)
                 return -1;
-            CheckIsRemote();
             string sql;
             int GroupID;
             try
             {
+                CheckIsRemote();
                 OpenConnection();
                 _trans = _conn.BeginTransaction();
 
@@ -210,8 +221,9 @@ namespace SalesModule
                 _trans.Commit();
                 return GroupID;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 if (_trans != null) _trans.Rollback();
                 return -1;
             }
@@ -386,12 +398,13 @@ namespace SalesModule
 
         public bool EditSale(Sale sale)
         {
-            CheckIsRemote();
+            ActivityLog.Logger.LogCall();
             _trans = null;
 
             string sql;
             try
             {
+                CheckIsRemote();
                 OpenConnection();
                 _trans = _conn.BeginTransaction();
 
@@ -440,8 +453,9 @@ namespace SalesModule
                 _trans.Commit();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 _trans.Rollback();
                 return false;
             }
@@ -449,7 +463,7 @@ namespace SalesModule
 
         public SalesGroup LoadGroup(int groupID)
         {
-            CheckIsRemote();
+            ActivityLog.Logger.LogCall(groupID);
             List<ProdAmount> Reqs;
             List<DiscountedProduct> Outs;
             List<GiftedProduct> Gifted;
@@ -459,6 +473,7 @@ namespace SalesModule
             var Sales = new List<Sale>();
             try
             {
+                CheckIsRemote();
                 OpenConnection();
 
                 string sql = "select * from Sales where SaleGroupID = @GroupID order by GroupIndex";
@@ -547,8 +562,9 @@ namespace SalesModule
                     DateTime.Parse(Att["DateCreated"].ToString()),
                     bool.Parse(Att["isEnabled"].ToString()), Sales);
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -559,12 +575,13 @@ namespace SalesModule
 
         public List<SalesGroup> GetAvailableSales(string vipid = null)
         {
-            CheckIsRemote();
+            ActivityLog.Logger.LogCall(vipid);
             DataTable dt;
             SqlDataAdapter da;
             var Sales = new List<SalesGroup>();
             try
             {
+                CheckIsRemote();
                 OpenConnection();
                 //get all GroupID from SalesPcid that does NOT exist in SalesUser where -
                 //  pcid, DateFrom < Date, DateTo != null && Date < DateTo,
@@ -579,9 +596,8 @@ namespace SalesModule
                 string vipOwness = "";
                 if (vipid != null)
                 {
-                    //### vip group column name
                     //this sql is a where clause to get all the vip table restrictions that the user does NOT meet
-                    string getVipGroup = "select VipClub from vip where vipno = @vip";
+                    string getVipGroup = "select VipType from vip where vipno = @vip";
                     vipOwness = "where (u.isVipno = 1 and u.VipID <> @vip) or (u.isVipno = 0 and u.VipID <> (" + getVipGroup + "))";
                     _cmd.Parameters.Add(new SqlParameter("@vip", SqlDbType.VarChar)).Value = vipid;
                 }
@@ -589,7 +605,7 @@ namespace SalesModule
                     "where p.PCID = @pcid and p.isEnabled = 1 and g.isEnabled = 1 and " +
                     "p.DateFrom <= @nowDate and (p.DateTo is NULL or @nowDate < p.DateTo) and " +
                     "(@nowTime between p.HourFrom and p.HourTo) and " +
-                    "p.SaleGroupID not in (select u.SaleGroupID from SalesUser as u " + vipOwness + ")";//###
+                    "p.SaleGroupID not in (select u.SaleGroupID from SalesUser as u " + vipOwness + ")";
                 _cmd.CommandText = sql;
 
                 dt = new DataTable();
@@ -599,20 +615,22 @@ namespace SalesModule
                     Sales.Add(LoadGroup(int.Parse(R[0].ToString())));
                 return Sales;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return null;
             }
         }
         public DataTable GetAllSalesTitles()
         {
+            ActivityLog.Logger.LogCall();
             //GroupID, Title, ename, isEnabled, DateCreated
-            CheckIsRemote();
             string sql;
             SqlDataAdapter da;
             DataTable dt = new DataTable();
             try
             {
+                CheckIsRemote();
                 //string sqlTitle = "case when (Max(GroupIndex) from Sales == 1) then " +
                 //    "(select the first sale's Title) else ('Sale #' + CONVERT(varchar(10), g.GroupID)) end";
                 sql = "select g.GroupID, ('Sale #' + CONVERT(varchar(10), g.GroupID)) as Title, e.ename, g.isEnabled, g.DateCreated " +
@@ -624,8 +642,9 @@ namespace SalesModule
                 da.Fill(dt);
                 return dt;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -636,10 +655,11 @@ namespace SalesModule
 
         public bool DisableSale(int groupID, bool isEnabled)
         {
-            CheckIsRemote();
+            ActivityLog.Logger.LogCall(groupID, isEnabled);
             string sql;
             try
             {
+                CheckIsRemote();
                 sql = "update SalesGroup set isEnabled = @status where GroupID = @GroupID";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
@@ -649,8 +669,9 @@ namespace SalesModule
                 _cmd.ExecuteNonQuery();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return false;
             }
             finally
@@ -833,10 +854,11 @@ namespace SalesModule
         public bool AssociatePcid2Sale(int groupID, int pcid,
             DateTime from, DateTime? to, TimeSpan start, TimeSpan end)
         {
-            CheckIsRemote();
+            ActivityLog.Logger.LogCall(groupID, pcid);
             string sql;
             try
             {
+                CheckIsRemote();
                 sql = "insert into SalesPCID(SaleGroupID, pcid, isEnabled, DateFrom, DateTo, HourFrom, HourTo) " +
                     "values (@GroupID, @pcid, 1, @dateFrom, @dateTo, @hourFrom, @hourTo)";
                 _cmd = new SqlCommand(sql, _conn);
@@ -851,8 +873,9 @@ namespace SalesModule
                 _cmd.ExecuteNonQuery();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return false;
             }
             finally
@@ -862,10 +885,11 @@ namespace SalesModule
         }
         public bool DisassociatePcidfromSale(int groupID, int pcid)
         {
-            CheckIsRemote();
+            ActivityLog.Logger.LogCall(groupID, pcid);
             string sql;
             try
             {
+                CheckIsRemote();
                 sql = "delete from SalesPcid where SaleGroupID = @GroupID and pcid = @pcid";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
@@ -875,8 +899,9 @@ namespace SalesModule
                 _cmd.ExecuteNonQuery();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return false;
             }
             finally
@@ -1028,24 +1053,5 @@ namespace SalesModule
         }
 
         #endregion
-
-
-        public void ChangeDBDebug()
-        {
-            return;
-            string script = File.ReadAllText(@"C:\Users\Yonatan\Dropbox\Projects\New Order\SalesModule\Documents\DebugScript.sql");
-
-            string[] batches = script.Split(new[] { "GO" }, StringSplitOptions.RemoveEmptyEntries);
-            OpenConnection();
-            using (SqlCommand cmd = _conn.CreateCommand())
-            {
-                foreach (string batch in batches)
-                {
-                    cmd.CommandText = batch;
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            CloseConnection();
-        }
     }
 }

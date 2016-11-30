@@ -1,9 +1,5 @@
-
-use [DEMO]
-go
-
 --
---	Sales insertion:
+--	Insert sales for tests:
 --
 
 

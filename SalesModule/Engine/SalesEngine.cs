@@ -9,114 +9,6 @@ namespace SalesModule
     public delegate void AppliedHandler(SaleDiscount sd);
     public delegate void CancelHandler(int id);
 
-    [Guid(SaleDiscount.InterfaceId)]
-    public interface ISaleDiscount
-    {
-        int SaleID { get; }
-        int ID { get; }
-        string Title { get; }
-        double Quantity { get; }
-        double Discount { get; }
-
-        bool IsContainProduct(string pluno);
-    }
-
-    [Guid(ClassId), ClassInterface(ClassInterfaceType.None)]
-    public class SaleDiscount : ISaleDiscount
-    {
-        #region COM
-#if COM_INTEROP_ENABLED
-        public const string ClassId = "6cd60528-bc08-4c6a-9a6a-7eadecf912c2";
-        public const string InterfaceId = "488d5b5f-049a-4cb7-be1c-dfef6435b317";
-
-        // These routines perform the additional COM registration needed by ActiveX controls
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [ComRegisterFunction]
-        private static void Register(System.Type t)
-        {
-            ComRegistration.RegisterControl(t);
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [ComUnregisterFunction]
-        private static void Unregister(System.Type t)
-        {
-            ComRegistration.UnregisterControl(t);
-        }
-
-#endif
-        #endregion
-
-        internal static int _salesID;
-
-        public int SaleID { get; private set; }
-        public int ID { get; private set; }
-        public string Title { get; private set; }
-        public double Quantity { get; private set; }
-        public double Discount { get; private set; }
-        public List<string> Plunos { get; private set; }
-
-        public SaleDiscount() : this(-1, "", 0, 0, new List<string>()) { }
-        internal SaleDiscount(int saleID, string title, double QTY, double dis, List<string> plunos)
-        {
-            SaleID = saleID;
-            ID = -1;
-            Title = title;
-            Quantity = QTY;
-            Discount = dis;
-            Plunos = plunos;
-        }
-        static SaleDiscount()
-        {
-            ResetCounter();
-        }
-        internal static void ResetCounter()
-        {
-            _salesID = 0;
-        }
-        internal void SetID()
-        {
-            ID = ++_salesID;
-        }
-        internal void SetID(int id)
-        {
-            ID = id;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is SaleDiscount && (SaleDiscount)obj == this;
-        }
-        public static bool operator ==(SaleDiscount sd1, SaleDiscount sd2)
-        {
-            return sd1.Title == sd2.Title &&
-                sd1.Discount == sd2.Discount &&
-                sd1.Quantity == sd2.Quantity;
-        }
-        public static bool operator !=(SaleDiscount sd1, SaleDiscount sd2)
-        {
-            return !(sd1 == sd2);
-        }
-        public override int GetHashCode()
-        {
-            return ID;
-        }
-
-        internal bool Add(SaleDiscount sd)
-        {
-            if (Title == sd.Title && Discount == sd.Discount)
-            {
-                Quantity += sd.Quantity;
-                return true;
-            }
-            return false;
-        }
-        public bool IsContainProduct(string pluno)
-        {
-            return Plunos.Exists(p => p == pluno);
-        }
-    }
-
     [Guid(SalesEngine.EventsId), InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface ISalesEngineEvents
     {
@@ -180,14 +72,20 @@ namespace SalesModule
 
         public SalesEngine()
         {
+            ActivityLog.Logger.LogCall();
+            EngineRestarted += () => ActivityLog.Logger.LogMessage("Engine restarted!");
+            SaleApplied += sd => ActivityLog.Logger.LogMessage("Sale applied: " + sd.Title);
+            SaleCancelled += id => ActivityLog.Logger.LogMessage("Sale canceled: " + id);
             _init = false;
         }
+
         public bool Initialize(string vipno = null)
         {
+            if (Wrapper.User == null)
+                return _init = false;
+            ActivityLog.Logger.LogCall(vipno);
             try
             {
-                if (Wrapper.User == null)
-                    return _init = false;
                 _previousSales = new List<SaleDiscount>();
                 _availableSales = DBService.GetService().GetAvailableSales(vipno);
                 _shoppingBag = new List<ShoppingItem>();
@@ -196,8 +94,9 @@ namespace SalesModule
                     EngineRestarted();
                 return _init = true;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return _init = false;
             }
         }
@@ -212,52 +111,69 @@ namespace SalesModule
         }
         internal string AddItem(string pluno, double qty, double price, int? kind)
         {
-            if (!_init) return null;
+            ActivityLog.Logger.LogCall(pluno, qty, price, kind);
+            try
+            {
+                if (!_init) return null;
 
-            ShoppingItem newItem = new ShoppingItem(pluno, qty, price, kind);
-            bool added = false;
-            foreach (ShoppingItem si in _shoppingBag)
-                if (added = si.Add(newItem))
-                    break;
-            if (!added)
-                Common.InsertItemToCart(_shoppingBag, newItem);
+                ShoppingItem newItem = new ShoppingItem(pluno, qty, price, kind);
+                bool added = false;
+                foreach (ShoppingItem si in _shoppingBag)
+                    if (added = si.Add(newItem))
+                        break;
+                if (!added)
+                    Common.InsertItemToCart(_shoppingBag, newItem);
 
-            var sales = evaluateSales();
-            Common.collapseSales(sales);
-            evaluateChanges(sales);
+                var sales = evaluateSales();
+                Common.collapseSales(sales);
+                evaluateChanges(sales);
 
-            string title;
-            for (int i = 0; i < _availableSales.Count; i++)
-                if ((title = _availableSales[i].IsProductRequire(pluno, kind)) != "")
-                    return title; //### handle multiple sales' titles received
-            return "";
+                string title;
+                for (int i = 0; i < _availableSales.Count; i++)
+                    if ((title = _availableSales[i].IsProductRequire(pluno, kind)) != "")
+                        return title; //### handle multiple sales' titles received
+                return "";
+            }
+            catch (Exception ex)
+            {
+                ActivityLog.Logger.LogError(ex);
+                return null;
+            }
         }
         public void RemoveItem(string pluno, double qty)
         {
-            if (!_init) return;
-            var removeList = _shoppingBag.FindAll(si => si.Pluno == pluno);
-            if (removeList.Count == 0)
+            ActivityLog.Logger.LogCall(pluno, qty);
+            try
             {
-                //### item not found
+                if (!_init) return;
+                var removeList = _shoppingBag.FindAll(si => si.Pluno == pluno);
+                if (removeList.Count == 0)
+                {
+                    //### item not found
+                }
+                else
+                {
+                    if (removeList.Count > 1)
+                    {
+                        //### more than one instance found
+                    }
+                    double newAmount = removeList[0].Reduce(qty);
+                    if (newAmount < 0)
+                    {
+                        //### remove more than exist
+                        _shoppingBag.Remove(removeList[0]);
+                    }
+                    if (newAmount == 0)
+                        _shoppingBag.Remove(removeList[0]);
+                }
+                var sales = evaluateSales();
+                Common.collapseSales(sales);
+                evaluateChanges(sales);
             }
-            else
+            catch (Exception ex)
             {
-                if (removeList.Count > 1)
-                {
-                    //### more than one instance found
-                }
-                double newAmount = removeList[0].Reduce(qty);
-                if (newAmount < 0)
-                {
-                    //### remove more than exist
-                    _shoppingBag.Remove(removeList[0]);
-                }
-                if (newAmount == 0)
-                    _shoppingBag.Remove(removeList[0]);
+                ActivityLog.Logger.LogError(ex);
             }
-            var sales = evaluateSales();
-            Common.collapseSales(sales);
-            evaluateChanges(sales);
         }
 
         public bool IsPlunoActive(string pluno)
@@ -321,6 +237,7 @@ namespace SalesModule
         //### Testing purpose
         public bool InitializeForDebugging()
         {
+            ActivityLog.Logger.LogCall();
             try
             {
                 _previousSales = new List<SaleDiscount>();
@@ -331,8 +248,9 @@ namespace SalesModule
                     EngineRestarted();
                 return _init = true;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return _init = false;
             }
         }

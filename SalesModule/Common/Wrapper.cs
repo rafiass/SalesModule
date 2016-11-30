@@ -57,7 +57,7 @@ namespace SalesModule
             get
             {
                 var v = (new System.Reflection.AssemblyName(
-                    System.Reflection.Assembly.GetExecutingAssembly().FullName)).Version;
+                     System.Reflection.Assembly.GetExecutingAssembly().FullName)).Version;
                 return v.Major + "." + v.Minor;
             }
         }
@@ -70,6 +70,7 @@ namespace SalesModule
 
         public InitResults Init(string ip, string Catalog, string username, string password, int pcid, string empName, string empPass)
         {
+            ActivityLog.Logger.LogCall();
             string connBackup = "";
             try
             {
@@ -82,10 +83,12 @@ namespace SalesModule
                     PCID = pcid;
                     return InitResults.Success;
                 }
+                ActivityLog.Logger.LogMessage("Login failed!");
                 return InitResults.F_Credentials;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 if (connBackup != "")
                     Connection.StoresConn = connBackup;
                 return InitResults.F_Unhandled;
@@ -93,6 +96,7 @@ namespace SalesModule
         }
         public InitResults Init(string store, string userName, string password, int pcid)
         {
+            ActivityLog.Logger.LogCall();
             try
             {
                 UserData user;
@@ -105,30 +109,35 @@ namespace SalesModule
                     PCID = pcid;
                     return InitResults.Success;
                 }
+                ActivityLog.Logger.LogMessage("Login failed!");
                 return InitResults.F_Credentials;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 return InitResults.F_Unhandled;
             }
         }
 
         public bool ChangeUser(string empName, string empPass)
         {
+            ActivityLog.Logger.LogCall(empName, empPass);
             try
             {
-                UserData user;
                 var db = DBService.GetLocalService();
-                if ((user = db.GetUserData(empName, empPass)) != null)
+                var user = db.GetUserData(empName, empPass);
+                if (user != null)
                 {
                     User = user;
                     return true;
                 }
+                ActivityLog.Logger.LogMessage("Change user failed!");
                 MessageBox.Show("אין אפשרות להתחבר למערכת, אנא בדקו את פרטי ההתחברות.");
                 return false;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLog.Logger.LogError(ex);
                 MessageBox.Show("אין אפשרות להתחבר למערכת, אנא בדקו את פרטי ההתחברות.");
                 return false;
             }
