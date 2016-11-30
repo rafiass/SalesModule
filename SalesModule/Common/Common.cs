@@ -1,8 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using SalesModule.Models;
 
 namespace SalesModule
 {
+    internal enum SaleTypes
+    {
+        None = 0, SingularDiscount, SingularLowerPrice,
+        SingularBuyAndGet, AdvancedBuyAndGet, AdvancedBundle
+    }
+
     internal static class Common
     {
         public static string CurrentDirectory { get { return Environment.CurrentDirectory; } }
@@ -80,7 +87,7 @@ namespace SalesModule
             Price = price;
         }
 
-        public bool IsTheSameAs(ComperableProduct cp)
+        public bool IsTheSameAs(ComperableProductM cp)
         {
             return (cp.isPluno && Pluno == cp.ID) ||
                 (!cp.isPluno && Kind != null && Kind.ToString() == cp.ID);
@@ -94,9 +101,9 @@ namespace SalesModule
                 return Pluno == si.Pluno &&
                     Price == si.Price;
             }
-            if (obj is ComperableProduct)
+            if (obj is ComperableProductM)
             {
-                return IsTheSameAs(obj as ComperableProduct);
+                return IsTheSameAs(obj as ComperableProductM);
             }
             return false;
         }
@@ -108,11 +115,11 @@ namespace SalesModule
         {
             return !si1.Equals(si2);
         }
-        public static bool operator ==(ShoppingItem si, ComperableProduct cp)
+        public static bool operator ==(ShoppingItem si, ComperableProductM cp)
         {
             return si.Equals(cp);
         }
-        public static bool operator !=(ShoppingItem si, ComperableProduct cp)
+        public static bool operator !=(ShoppingItem si, ComperableProductM cp)
         {
             return !si.Equals(cp);
         }

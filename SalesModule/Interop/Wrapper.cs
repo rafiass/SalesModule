@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.SqlClient;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using SalesModule.Services;
 
 namespace SalesModule
 {
@@ -70,12 +66,12 @@ namespace SalesModule
 
         public InitResults Init(string ip, string Catalog, string username, string password, int pcid, string empName, string empPass)
         {
-            ActivityLog.Logger.LogCall();
+            ActivityLogService.Logger.LogCall();
             string connBackup = "";
             try
             {
                 UserData user;
-                Connection.StoresConn = connBackup = Connection.CreateConnectionString(ip, username, password, Catalog);
+                ConnectionService.StoresConn = connBackup = ConnectionService.CreateConnectionString(ip, username, password, Catalog);
                 if ((user = DBService.GetService()
                     .GetUserData(empName, empPass)) != null)
                 {
@@ -83,20 +79,20 @@ namespace SalesModule
                     PCID = pcid;
                     return InitResults.Success;
                 }
-                ActivityLog.Logger.LogMessage("Login failed!");
+                ActivityLogService.Logger.LogMessage("Login failed!");
                 return InitResults.F_Credentials;
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 if (connBackup != "")
-                    Connection.StoresConn = connBackup;
+                    ConnectionService.StoresConn = connBackup;
                 return InitResults.F_Unhandled;
             }
         }
         public InitResults Init(string store, string userName, string password, int pcid)
         {
-            ActivityLog.Logger.LogCall();
+            ActivityLogService.Logger.LogCall();
             try
             {
                 UserData user;
@@ -109,19 +105,19 @@ namespace SalesModule
                     PCID = pcid;
                     return InitResults.Success;
                 }
-                ActivityLog.Logger.LogMessage("Login failed!");
+                ActivityLogService.Logger.LogMessage("Login failed!");
                 return InitResults.F_Credentials;
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 return InitResults.F_Unhandled;
             }
         }
 
         public bool ChangeUser(string empName, string empPass)
         {
-            ActivityLog.Logger.LogCall(empName, empPass);
+            ActivityLogService.Logger.LogCall(empName, empPass);
             try
             {
                 var db = DBService.GetLocalService();
@@ -131,13 +127,13 @@ namespace SalesModule
                     User = user;
                     return true;
                 }
-                ActivityLog.Logger.LogMessage("Change user failed!");
+                ActivityLogService.Logger.LogMessage("Change user failed!");
                 MessageBox.Show("אין אפשרות להתחבר למערכת, אנא בדקו את פרטי ההתחברות.");
                 return false;
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 MessageBox.Show("אין אפשרות להתחבר למערכת, אנא בדקו את פרטי ההתחברות.");
                 return false;
             }

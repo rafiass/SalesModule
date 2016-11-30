@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SalesModule.Models;
 
 namespace SalesModule.GUI
 {
@@ -16,9 +17,9 @@ namespace SalesModule.GUI
         private int _index;
         private int _ID;
         private SalesProperties _prop;
-        private Sale _assembled;
+        private SaleM _assembled;
         private SingularBuyAndGet() : this(null) { }
-        private SingularBuyAndGet(Sale s)
+        private SingularBuyAndGet(SaleM s)
         {
             InitializeComponent();
             _assembled = null;
@@ -26,21 +27,21 @@ namespace SalesModule.GUI
             _ID = s != null ? s.SaleID : -1;
             _prop = s != null ? s.Properties :
                 new SalesProperties("קנה וקבל") { InstanceMultiply = 0 };
-            LoadSale(s);
+            LoadSaleM(s);
         }
 
-        private void LoadSale()
+        private void LoadSaleM()
         {
             find_buy.Text = "";
             num_buy.Value = 1;
             find_get.Text = "";
             num_get.Value = 1;
         }
-        private void LoadSale(Sale s)
+        private void LoadSaleM(SaleM s)
         {
             if (s == null)
             {
-                LoadSale();
+                LoadSaleM();
                 return;
             }
             if (s.ReqProducts == null || s.ReqProducts.Count != 1)
@@ -54,11 +55,11 @@ namespace SalesModule.GUI
             num_get.Value = (decimal)s.Discounted[0].MaxMultiply;
         }
 
-        public static Sale Create()
+        public static SaleM Create()
         {
             return Edit(null);
         }
-        public static Sale Edit(Sale s)
+        public static SaleM Edit(SaleM s)
         {
             try
             {
@@ -93,12 +94,12 @@ namespace SalesModule.GUI
                 else isValid = true;
                 if (!isValid) return;
 
-                var reqs = new List<ProdAmount>();
-                reqs.Add(new ProdAmount(find_buy.SelectedProduct.ID, true, (double)num_buy.Value));
-                var outs = new List<DiscountedProduct>();
-                outs.Add(new DiscountedProduct(find_get.SelectedProduct.ID, true,
+                var reqs = new List<ProdAmountM>();
+                reqs.Add(new ProdAmountM(find_buy.SelectedProduct.ID, true, (double)num_buy.Value));
+                var outs = new List<DiscountedProductM>();
+                outs.Add(new DiscountedProductM(find_get.SelectedProduct.ID, true,
                     0, (double)num_get.Value, new Discount(0, DiscountTypes.Fix_Price)));
-                _assembled = new Sale(SaleTypes.SingularBuyAndGet, _prop, reqs, outs, null, _isEditing ? _index : 1, _ID);
+                _assembled = new SaleM(SaleTypes.SingularBuyAndGet, _prop, reqs, outs, null, _isEditing ? _index : 1, _ID);
                 DialogResult = DialogResult.OK;
                 Close();
             }

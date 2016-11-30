@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SalesModule.Models;
 
 namespace SalesModule.GUI
 {
@@ -16,9 +17,9 @@ namespace SalesModule.GUI
         private int _index;
         private int _ID;
         private SalesProperties _prop;
-        private Sale _assembled;
+        private SaleM _assembled;
         private LowPriceProductForm() : this(null) { }
-        private LowPriceProductForm(Sale s)
+        private LowPriceProductForm(SaleM s)
         {
             InitializeComponent();
             _assembled = null;
@@ -26,10 +27,10 @@ namespace SalesModule.GUI
             _ID = s != null ? s.SaleID : -1;
             _prop = s != null ? s.Properties :
                 new SalesProperties("מוצר במבצע");
-            LoadSale(s);
+            LoadSaleM(s);
         }
 
-        private void LoadSale()
+        private void LoadSaleM()
         {
             find_buy.Text = "";
             num_amount.Enabled = check_amount.Checked = true;
@@ -40,11 +41,11 @@ namespace SalesModule.GUI
             find_gift.Text = "";
             discCntrl.Discount = new Discount(10, DiscountTypes.Fix_Discount);
         }
-        private void LoadSale(Sale s)
+        private void LoadSaleM(SaleM s)
         {
             if (s == null)
             {
-                LoadSale();
+                LoadSaleM();
                 return;
             }
 
@@ -65,11 +66,11 @@ namespace SalesModule.GUI
             discCntrl.Discount = discounted.Discount;
         }
 
-        public static Sale Create()
+        public static SaleM Create()
         {
             return Edit(null);
         }
-        public static Sale Edit(Sale s)
+        public static SaleM Edit(SaleM s)
         {
             try
             {
@@ -106,14 +107,14 @@ namespace SalesModule.GUI
                 else isValid = true;
                 if (!isValid) return;
 
-                var outs = new List<DiscountedProduct>();
-                outs.Add(new DiscountedProduct(find_buy.SelectedProduct.ID, true,
+                var outs = new List<DiscountedProductM>();
+                outs.Add(new DiscountedProductM(find_buy.SelectedProduct.ID, true,
                     check_amount.Checked ? (double)num_amount.Value : 0,
                     check_max.Checked ? (double)num_max.Value : 0, disc,
-                    !check_gift.Checked ? null : new GiftedProduct(find_gift.SelectedProduct,
+                    !check_gift.Checked ? null : new GiftedProductM(find_gift.SelectedProduct,
                         1, new Discount(0, DiscountTypes.Fix_Price))));
                 _prop.RecurrencePerInstance = 1;
-                _assembled = new Sale(SaleTypes.SingularLowerPrice, _prop,
+                _assembled = new SaleM(SaleTypes.SingularLowerPrice, _prop,
                     null, outs, null, _isEditing ? _index : 1, _ID);
                 DialogResult = DialogResult.OK;
                 Close();

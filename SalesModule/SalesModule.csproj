@@ -73,18 +73,19 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\ActivityLog.cs" />
-    <Compile Include="Common\IProduct.cs" />
-    <Compile Include="Common\Sale.cs" />
-    <Compile Include="Common\Wrapper.cs" />
+    <Compile Include="Common\DelegateCommand.cs" />
+    <Compile Include="Services\ActivityLogService.cs" />
+    <Compile Include="Models\IProductM.cs" />
+    <Compile Include="Models\SaleM.cs" />
+    <Compile Include="Interop\Wrapper.cs" />
     <Compile Include="Engine\SaleDiscount.cs" />
     <Compile Include="Engine\SalesEngine.cs" />
     <Compile Include="Interop\ActiveXControlHelpers.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Common\Common.cs" />
-    <Compile Include="Common\Connection.cs" />
-    <Compile Include="Common\DBService.cs" />
+    <Compile Include="Services\ConnectionService.cs" />
+    <Compile Include="Services\DBService.cs" />
     <Compile Include="GUI\Controls\DiscountControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -103,18 +104,17 @@
     <Compile Include="GUI\CreateForms\BundleForm.Designer.cs">
       <DependentUpon>BundleForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\PopupProperties.cs" />
+    <Compile Include="Common\PopupProperties.cs" />
     <Compile Include="Services\InteropService.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Common\SaleViewModel.cs" />
     <Compile Include="ViewModels\SomeSaleViewModel.cs" />
+    <Compile Include="Common\ViewModelBase.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PopupView.xaml.cs">
       <DependentUpon>PopupView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SomeSaleView.xaml.cs">
-      <DependentUpon>SomeSaleView.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Utilities\NumPad.cs">
       <SubType>Form</SubType>
@@ -194,6 +194,9 @@
     </Compile>
     <Compile Include="Interop\SalesGUI.Designer.cs">
       <DependentUpon>SalesGUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SomeSaleView.xaml.cs">
+      <DependentUpon>SomeSaleView.xaml</DependentUpon>
     </Compile>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>

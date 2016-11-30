@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SalesModule"
              mc:Ignorable="d" Height="229" Width="378">
     <Grid>
         <Grid.RowDefinitions>
@@ -16,6 +17,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <TextBlock Text="abc" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" />
-        <Button Grid.Column="1" Grid.Row="1" Content="Open Some Sale" Click="Button_Click" />
+        <Button Grid.Column="1" Grid.Row="1" Content="Open Some Sale"
+                Command="{Binding OpenCommand}" CommandParameter="{x:Static local:SaleTypes.None}" />
     </Grid>
 </UserControl>

@@ -15,10 +15,5 @@ namespace SalesModule.Views
             _vm = new ViewModels.MainViewModel();
             DataContext = _vm;
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            _vm.OpenWindow();
-        }
     }
 }

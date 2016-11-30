@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SalesModule
+namespace SalesModule.Services
 {
-    internal class ActivityLog
+    internal class ActivityLogService
     {
-        private static ActivityLog _logger;
+        private static ActivityLogService _logger;
         private const string FILE_NAME = "Sales.log.txt";
 
         private string _path;
 
-        public ActivityLog()
+        public ActivityLogService()
         {
             _path = Common.CurrentDirectory + "\\" + FILE_NAME;
             using (File.Create(_path)) ;
         }
-        public static ActivityLog Logger { get { return _logger ?? (_logger = new ActivityLog()); } }
+        public static ActivityLogService Logger { get { return _logger ?? (_logger = new ActivityLogService()); } }
 
         public void LogCall(params object[] arguments)
         {

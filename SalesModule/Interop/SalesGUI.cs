@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Windows.Forms;
 using SalesModule.GUI;
+using SalesModule.Models;
+using SalesModule.Services;
 
 namespace SalesModule
 {
@@ -290,9 +292,9 @@ namespace SalesModule
                 Enabled = false;
         }
 
-        private void createNewSale(SaleTypes type)
+        private void createNewSaleM(SaleTypes type)
         {
-            Sale s = null;
+            SaleM s = null;
             switch (type)
             {
                 case SaleTypes.SingularLowerPrice: s = LowPriceProductForm.Create(); break;
@@ -302,7 +304,7 @@ namespace SalesModule
             }
             if (s != null)
             {
-                if (DBService.GetService().InsertGroup(new SalesGroup(
+                if (DBService.GetService().InsertGroup(new SalesGroupM(
                     Wrapper.User, DateTime.Now, true, s)) != -1)
                     MessageBox.Show("המבצע נוצר בהצלחה!");
                 else
@@ -318,7 +320,7 @@ namespace SalesModule
 
         private void btn_lowPriced_Click(object sender, EventArgs e)
         {
-            createNewSale(SaleTypes.SingularLowerPrice);
+            createNewSaleM(SaleTypes.SingularLowerPrice);
         }
         private void btn_discountedProduct_Click(object sender, EventArgs e)
         {
@@ -326,7 +328,7 @@ namespace SalesModule
         }
         private void btn_simpleBuyAndGet_Click(object sender, EventArgs e)
         {
-            createNewSale(SaleTypes.SingularBuyAndGet);
+            createNewSaleM(SaleTypes.SingularBuyAndGet);
         }
         private void btn_advBuyAndGet_Click(object sender, EventArgs e)
         {
@@ -334,7 +336,7 @@ namespace SalesModule
         }
         private void btn_advancedBundle_Click(object sender, EventArgs e)
         {
-            createNewSale(SaleTypes.AdvancedBundle);
+            createNewSaleM(SaleTypes.AdvancedBundle);
         }
 
         private void btn_test_Click(object sender, EventArgs e)

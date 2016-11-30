@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
+using SalesModule.Models;
+using SalesModule.Services;
 
 namespace SalesModule
 {
     internal partial class ProductSelector : Form
     {
         private DBService _service;
-        public IProduct SelectedProduct { get; private set; }
+        public IProductM SelectedProduct { get; private set; }
         public bool IsValid { get; private set; }
 
         public ProductSelector()
@@ -67,7 +69,7 @@ namespace SalesModule
                 var senderGrid = sender as DataGridView;
                 var R = DGVProducts.Rows[e.RowIndex];
                 string kind = (senderGrid.DataSource as DataTable).Rows[e.RowIndex]["kind3"].ToString();
-                SelectedProduct = new Product(
+                SelectedProduct = new ProductM(
                     R.Cells["pluno"].Value.ToString(),
                     R.Cells["pname"].Value.ToString(),
                     R.Cells["barcode"].Value.ToString(),

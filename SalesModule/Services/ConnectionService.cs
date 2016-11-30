@@ -1,11 +1,11 @@
 ﻿
-namespace SalesModule
+namespace SalesModule.Services
 {
-    internal class Connection
+    internal class ConnectionService
     {
         public static string StoresConn { get; set; }
 
-        static Connection()
+        static ConnectionService()
         {
             StoresConn = "";
         }

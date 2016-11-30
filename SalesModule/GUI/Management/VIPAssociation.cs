@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SalesModule.Services;
 
 namespace SalesModule.GUI
 {
@@ -66,7 +67,7 @@ namespace SalesModule.GUI
                 e.RowIndex >= 0)
             {
                 var dt = senderGrid.DataSource as DataTable;
-                DBService.GetService().AssociateVIP2Sale(_groupID,
+                DBService.GetService().AssociateVIP2SaleM(_groupID,
                     int.Parse(dt.Rows[e.RowIndex]["vipno"].ToString()), true);
                 pop_assoc();
                 pop_singles();
@@ -79,7 +80,7 @@ namespace SalesModule.GUI
                 e.RowIndex >= 0)
             {
                 var dt = senderGrid.DataSource as DataTable;
-                DBService.GetService().AssociateVIP2Sale(_groupID,
+                DBService.GetService().AssociateVIP2SaleM(_groupID,
                     int.Parse(dt.Rows[e.RowIndex]["groupID"].ToString()), false);
                 pop_assoc();
                 pop_groups();
@@ -92,7 +93,7 @@ namespace SalesModule.GUI
                 e.RowIndex >= 0)
             {
                 var dt = senderGrid.DataSource as DataTable;
-                DBService.GetService().DisassociateVIPfromSale(_groupID,
+                DBService.GetService().DisassociateVIPfromSaleM(_groupID,
                     int.Parse(dt.Rows[e.RowIndex]["VipID"].ToString()),
                     bool.Parse(dt.Rows[e.RowIndex]["isVipno"].ToString()));
                 pop_assoc();

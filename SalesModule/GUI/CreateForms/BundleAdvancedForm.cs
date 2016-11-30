@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using SalesModule.Models;
 
 namespace SalesModule.GUI
 {
@@ -16,10 +12,10 @@ namespace SalesModule.GUI
         private int _index;
         private int _ID;
         private SalesProperties _prop;
-        private Sale _assembled;
-        private List<Tuple<ProdAmount, string>> _bundle;
+        private SaleM _assembled;
+        private List<Tuple<ProdAmountM, string>> _bundle;
         private BundleAdvancedForm() : this(null) { }
-        private BundleAdvancedForm(Sale s)
+        private BundleAdvancedForm(SaleM s)
         {
             InitializeComponent();
             _assembled = null;
@@ -29,12 +25,12 @@ namespace SalesModule.GUI
                 new SalesProperties("חבילת מוצרים במבצע");
             if (s != null && (s.ReqProducts == null || s.ReqProducts.Count == 0))
                 throw new InvalidOperationException("Bundle data mismatch.");
-            LoadSale(s);
+            LoadSaleM(s);
         }
 
-        private void LoadSale(Sale s)
+        private void LoadSaleM(SaleM s)
         {
-            _bundle = new List<Tuple<ProdAmount, string>>();
+            _bundle = new List<Tuple<ProdAmountM, string>>();
             if (s == null)
             {
                 num_price.Value = (decimal)100;
@@ -48,17 +44,17 @@ namespace SalesModule.GUI
             {
                 var news = new ProductFinder();
                 news.Find(s.ReqProducts[0]);
-                _bundle.Add(new Tuple<ProdAmount, string>(req, news.SelectedProduct.Name));
+                _bundle.Add(new Tuple<ProdAmountM, string>(req, news.SelectedProduct.Name));
             });
             populate_DGV();
             num_price.Value = (decimal)s.Discount.Amount;
         }
 
-        public static Sale Create()
+        public static SaleM Create()
         {
             return Edit(null);
         }
-        public static Sale Edit(Sale s)
+        public static SaleM Edit(SaleM s)
         {
             try
             {
@@ -90,8 +86,8 @@ namespace SalesModule.GUI
                     return;
                 }
 
-                var reqs = _bundle.ConvertAll<ProdAmount>(p => p.Item1);
-                _assembled = new Sale(SaleTypes.AdvancedBundle, _prop, reqs, null,
+                var reqs = _bundle.ConvertAll<ProdAmountM>(p => p.Item1);
+                _assembled = new SaleM(SaleTypes.AdvancedBundle, _prop, reqs, null,
                     new Discount((double)num_price.Value, DiscountTypes.Fix_Price), _isEditing ? _index : 1, _ID);
                 DialogResult = DialogResult.OK;
                 Close();
@@ -108,8 +104,8 @@ namespace SalesModule.GUI
             ps.ShowDialog();
             if (ps.SelectedProduct != null)
             {
-                var prod = new ProdAmount(ps.SelectedProduct.ID, ps.SelectedProduct.isPluno, 1);
-                _bundle.Add(new Tuple<ProdAmount, string>(prod, ps.SelectedProduct.Name));
+                var prod = new ProdAmountM(ps.SelectedProduct.ID, ps.SelectedProduct.isPluno, 1);
+                _bundle.Add(new Tuple<ProdAmountM, string>(prod, ps.SelectedProduct.Name));
                 populate_DGV();
             }
         }

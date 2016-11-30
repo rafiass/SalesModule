@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
+using SalesModule.Models;
 
-namespace SalesModule
+namespace SalesModule.Services
 {
     internal class DBService
     {
@@ -27,7 +27,7 @@ namespace SalesModule
         {
             try
             {
-                DBService temp = new DBService(Connection.StoresConn);
+                DBService temp = new DBService(ConnectionService.StoresConn);
                 temp._conn.Open();
                 temp._conn.Close();
                 temp._location = DBLocation.RemoteServer;
@@ -40,10 +40,10 @@ namespace SalesModule
         }
         public static DBService GetLocalService()
         {
-            ActivityLog.Logger.LogCall();
+            ActivityLogService.Logger.LogCall();
             try
             {
-                DBService temp = new DBService(Connection.GetLocalConnectionString());
+                DBService temp = new DBService(ConnectionService.GetLocalConnectionString());
                 temp._conn.Open();
                 temp._conn.Close();
                 temp._location = DBLocation.LocalServer;
@@ -51,14 +51,14 @@ namespace SalesModule
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 throw;
             }
         }
         public bool SetStoresConnString(string store)
         {
             if (_location != DBLocation.LocalServer) return false;
-            ActivityLog.Logger.LogCall(store);
+            ActivityLogService.Logger.LogCall(store);
             string sql, connstr;
             SqlDataReader dr;
             try
@@ -70,15 +70,15 @@ namespace SalesModule
                 OpenConnection();
                 dr = _cmd.ExecuteReader();
                 if (!dr.Read()) return false;
-                connstr = Connection.CreateConnectionString(dr["IP"].ToString(),
+                connstr = ConnectionService.CreateConnectionString(dr["IP"].ToString(),
                     dr["UserName"].ToString(), dr["Password"].ToString(), dr["Catalog"].ToString());
 
-                Connection.StoresConn = connstr;
+                ConnectionService.StoresConn = connstr;
                 return true;
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 return false;
             }
             finally
@@ -88,7 +88,7 @@ namespace SalesModule
         }
         public UserData GetUserData(string empName, string empPass)
         {
-            ActivityLog.Logger.LogCall(empName, empPass);
+            ActivityLogService.Logger.LogCall(empName, empPass);
             if (_location != DBLocation.RemoteServer) return null;
             try
             {
@@ -105,7 +105,7 @@ namespace SalesModule
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -116,13 +116,13 @@ namespace SalesModule
 
         #region PLU
 
-        public List<IProduct> GetProducts()
+        public List<IProductM> GetProducts()
         {
-            ActivityLog.Logger.LogCall();
+            ActivityLogService.Logger.LogCall();
             string sql;
             SqlDataAdapter da;
             DataTable dt = new DataTable();
-            var list = new List<IProduct>();
+            var list = new List<IProductM>();
             try
             {
                 CheckIsRemote();
@@ -133,13 +133,13 @@ namespace SalesModule
                 da = new SqlDataAdapter(_cmd);
                 da.Fill(dt);
                 foreach (DataRow R in dt.Rows)
-                    list.Add(new Product(R["pluno"].ToString(), R["pname"].ToString(),
+                    list.Add(new ProductM(R["pluno"].ToString(), R["pname"].ToString(),
                         R["barcode"].ToString(), R["kind3"] as int?));
                 return list;
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -150,7 +150,7 @@ namespace SalesModule
 
         private DataTable SearchProducts(string term, string colName, bool isLikable = true)
         {
-            ActivityLog.Logger.LogCall(term);
+            ActivityLogService.Logger.LogCall(term);
             CheckIsRemote();
             string sql;
             SqlDataAdapter da;
@@ -171,7 +171,7 @@ namespace SalesModule
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -186,9 +186,9 @@ namespace SalesModule
         #endregion
 
         #region Sales
-        public int InsertGroup(SalesGroup g)
+        public int InsertGroup(SalesGroupM g)
         {
-            ActivityLog.Logger.LogCall();
+            ActivityLogService.Logger.LogCall();
             if (g == null || g.Sales.Count == 0)
                 return -1;
             string sql;
@@ -214,7 +214,7 @@ namespace SalesModule
 
                 //3. Insert sales
                 for (int i = 0; i < g.Sales.Count; i++)
-                    InsertSale(g.Sales[i], GroupID, i + 1);
+                    InsertSaleM(g.Sales[i], GroupID, i + 1);
 
                 //### get PCID associations to here
 
@@ -223,7 +223,7 @@ namespace SalesModule
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 if (_trans != null) _trans.Rollback();
                 return -1;
             }
@@ -232,7 +232,7 @@ namespace SalesModule
                 CloseConnection();
             }
         }
-        private int InsertSale(Sale sale, int GroupID, int OrderID)
+        private int InsertSaleM(SaleM sale, int GroupID, int OrderID)
         {
             CheckIsRemote();
             if (_trans == null)
@@ -298,7 +298,7 @@ namespace SalesModule
                 throw new Exception(msg, ex);
             }
         }
-        private bool InsertRequired(List<ProdAmount> reqs, int SaleID)
+        private bool InsertRequired(List<ProdAmountM> reqs, int SaleID)
         {
             string sql;
             SqlParameter pID, pIsID, pQTY;
@@ -329,7 +329,7 @@ namespace SalesModule
                 return false;
             }
         }
-        private bool InsertDiscounted(List<DiscountedProduct> outs, int SaleID)
+        private bool InsertDiscounted(List<DiscountedProductM> outs, int SaleID)
         {
             string mainSql, giftSql;
             int maxOutID;
@@ -396,9 +396,9 @@ namespace SalesModule
             }
         }
 
-        public bool EditSale(Sale sale)
+        public bool EditSaleM(SaleM sale)
         {
-            ActivityLog.Logger.LogCall();
+            ActivityLogService.Logger.LogCall();
             _trans = null;
 
             string sql;
@@ -455,22 +455,22 @@ namespace SalesModule
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 _trans.Rollback();
                 return false;
             }
         }
 
-        public SalesGroup LoadGroup(int groupID)
+        public SalesGroupM LoadGroup(int groupID)
         {
-            ActivityLog.Logger.LogCall(groupID);
-            List<ProdAmount> Reqs;
-            List<DiscountedProduct> Outs;
-            List<GiftedProduct> Gifted;
+            ActivityLogService.Logger.LogCall(groupID);
+            List<ProdAmountM> Reqs;
+            List<DiscountedProductM> Outs;
+            List<GiftedProductM> Gifted;
             DataTable SalesTable, dt, tempDt;
             SqlDataAdapter da;
             int SaleID, outID;
-            var Sales = new List<Sale>();
+            var Sales = new List<SaleM>();
             try
             {
                 CheckIsRemote();
@@ -497,17 +497,17 @@ namespace SalesModule
                     _cmd.Parameters.Add(new SqlParameter("@saleID", SqlDbType.Int)).Value = SaleID;
 
                     //Requires
-                    Reqs = new List<ProdAmount>();
+                    Reqs = new List<ProdAmountM>();
                     _cmd.CommandText = "select * from PluReqSale where SaleID = @saleID";
                     da = new SqlDataAdapter(_cmd);
                     dt = new DataTable();
                     da.Fill(dt);
                     foreach (DataRow Rq in dt.Rows)
-                        Reqs.Add(new ProdAmount(Rq["pluID"].ToString(),
+                        Reqs.Add(new ProdAmountM(Rq["pluID"].ToString(),
                             bool.Parse(Rq["isPluno"].ToString()), double.Parse(Rq["qty"].ToString())));
 
                     //Discounted
-                    Outs = new List<DiscountedProduct>();
+                    Outs = new List<DiscountedProductM>();
                     _cmd.CommandText = "select * from PluOutSale where SaleID = @saleID";
                     da = new SqlDataAdapter(_cmd);
                     dt = new DataTable();
@@ -515,7 +515,7 @@ namespace SalesModule
                     foreach (DataRow Ro in dt.Rows)
                     {
                         outID = int.Parse(Ro["OutID"].ToString());
-                        Gifted = new List<GiftedProduct>();
+                        Gifted = new List<GiftedProductM>();
 
                         sql = "select * from PluGiftedSale where OutID = @outID";
                         _cmd = new SqlCommand(sql, _conn);
@@ -524,12 +524,12 @@ namespace SalesModule
                         tempDt = new DataTable();
                         da.Fill(tempDt);
                         foreach (DataRow Rg in tempDt.Rows)
-                            Gifted.Add(new GiftedProduct(Rg["pluID"].ToString(),
+                            Gifted.Add(new GiftedProductM(Rg["pluID"].ToString(),
                                 bool.Parse(Rg["isPluno"].ToString()), double.Parse(Rg["MultiUnits"].ToString()),
                                 new Discount(double.Parse(Rg["offPrice"].ToString()),
                                     (DiscountTypes)int.Parse(Rg["offType"].ToString()))));
 
-                        Outs.Add(new DiscountedProduct(Ro["pluID"].ToString(), bool.Parse(Ro["isPluno"].ToString()),
+                        Outs.Add(new DiscountedProductM(Ro["pluID"].ToString(), bool.Parse(Ro["isPluno"].ToString()),
                             double.Parse(Ro["MultiUnits"].ToString()), double.Parse(Ro["MaxRec"].ToString()),
                             new Discount(double.Parse(Ro["offPrice"].ToString()),
                                 (DiscountTypes)int.Parse(Ro["offType"].ToString())), Gifted, outID));
@@ -541,7 +541,7 @@ namespace SalesModule
                     var disc = new Discount(double.Parse(Rs["TotalOffPrice"].ToString()),
                         (DiscountTypes)int.Parse(Rs["TotalOffType"].ToString()));
 
-                    Sales.Add(new Sale((SaleTypes)int.Parse(Rs["SaleType"].ToString()), prop, Reqs, Outs,
+                    Sales.Add(new SaleM((SaleTypes)int.Parse(Rs["SaleType"].ToString()), prop, Reqs, Outs,
                         disc, int.Parse(Rs["GroupIndex"].ToString()), int.Parse(Rs["SaleID"].ToString())));
                 }
 
@@ -558,13 +558,13 @@ namespace SalesModule
                 DataRow Att = dt.Rows[0];
 
                 var emp = new UserData(int.Parse(Att["empno"].ToString()), Att["ename"].ToString(), Att["uid"].ToString());
-                return new SalesGroup(int.Parse(Att["GroupID"].ToString()), emp,
+                return new SalesGroupM(int.Parse(Att["GroupID"].ToString()), emp,
                     DateTime.Parse(Att["DateCreated"].ToString()),
                     bool.Parse(Att["isEnabled"].ToString()), Sales);
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -573,12 +573,12 @@ namespace SalesModule
             }
         }
 
-        public List<SalesGroup> GetAvailableSales(string vipid = null)
+        public List<SalesGroupM> GetAvailableSales(string vipid = null)
         {
-            ActivityLog.Logger.LogCall(vipid);
+            ActivityLogService.Logger.LogCall(vipid);
             DataTable dt;
             SqlDataAdapter da;
-            var Sales = new List<SalesGroup>();
+            var Sales = new List<SalesGroupM>();
             try
             {
                 CheckIsRemote();
@@ -617,13 +617,13 @@ namespace SalesModule
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
         }
         public DataTable GetAllSalesTitles()
         {
-            ActivityLog.Logger.LogCall();
+            ActivityLogService.Logger.LogCall();
             //GroupID, Title, ename, isEnabled, DateCreated
             string sql;
             SqlDataAdapter da;
@@ -644,7 +644,7 @@ namespace SalesModule
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -653,9 +653,9 @@ namespace SalesModule
             }
         }
 
-        public bool DisableSale(int groupID, bool isEnabled)
+        public bool DisableSaleM(int groupID, bool isEnabled)
         {
-            ActivityLog.Logger.LogCall(groupID, isEnabled);
+            ActivityLogService.Logger.LogCall(groupID, isEnabled);
             string sql;
             try
             {
@@ -671,7 +671,7 @@ namespace SalesModule
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 return false;
             }
             finally
@@ -773,7 +773,7 @@ namespace SalesModule
             }
         }
 
-        public bool AssociateVIP2Sale(int groupID, int vipid, bool isVipno)
+        public bool AssociateVIP2SaleM(int groupID, int vipid, bool isVipno)
         {
             CheckIsRemote();
             string sql;
@@ -798,7 +798,7 @@ namespace SalesModule
                 CloseConnection();
             }
         }
-        public bool DisassociateVIPfromSale(int groupID, int vipid, bool isVipno)
+        public bool DisassociateVIPfromSaleM(int groupID, int vipid, bool isVipno)
         {
             CheckIsRemote();
             string sql;
@@ -851,10 +851,10 @@ namespace SalesModule
 
         #region PCID
 
-        public bool AssociatePcid2Sale(int groupID, int pcid,
+        public bool AssociatePcid2SaleM(int groupID, int pcid,
             DateTime from, DateTime? to, TimeSpan start, TimeSpan end)
         {
-            ActivityLog.Logger.LogCall(groupID, pcid);
+            ActivityLogService.Logger.LogCall(groupID, pcid);
             string sql;
             try
             {
@@ -875,7 +875,7 @@ namespace SalesModule
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 return false;
             }
             finally
@@ -883,9 +883,9 @@ namespace SalesModule
                 CloseConnection();
             }
         }
-        public bool DisassociatePcidfromSale(int groupID, int pcid)
+        public bool DisassociatePcidfromSaleM(int groupID, int pcid)
         {
-            ActivityLog.Logger.LogCall(groupID, pcid);
+            ActivityLogService.Logger.LogCall(groupID, pcid);
             string sql;
             try
             {
@@ -901,7 +901,7 @@ namespace SalesModule
             }
             catch (Exception ex)
             {
-                ActivityLog.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex);
                 return false;
             }
             finally

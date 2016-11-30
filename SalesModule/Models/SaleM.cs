@@ -1,36 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SalesModule
+namespace SalesModule.Models
 {
-    internal enum SaleTypes
-    {
-        None = 0, SingularDiscount, SingularLowerPrice,
-        SingularBuyAndGet, AdvancedBuyAndGet, AdvancedBundle
-    }
-
-    internal class SalesGroup
+    internal class SalesGroupM
     {
         public int GroupID { get; private set; }
         public UserData Emp { get; private set; }
         public DateTime DateCreated { get; private set; }
         public bool IsEnabled { get; private set; }
 
-        public List<Sale> Sales { get; set; }
+        public List<SaleM> Sales { get; set; }
 
-        public SalesGroup(Sale sale)
+        public SalesGroupM(SaleM sale)
             : this(null, DateTime.Now, true, sale)
         { }
-        public SalesGroup(UserData emp, DateTime created, bool isEnabled, Sale sale)
+        public SalesGroupM(UserData emp, DateTime created, bool isEnabled, SaleM sale)
             : this(-1, emp, created, isEnabled)
         {
-            Sales = new List<Sale>();
+            Sales = new List<SaleM>();
             Sales.Add(sale);
         }
-        public SalesGroup(int groupID, UserData emp, DateTime created, bool isEnabled, List<Sale> sales = null)
+        public SalesGroupM(int groupID, UserData emp, DateTime created, bool isEnabled, List<SaleM> sales = null)
         {
             GroupID = groupID;
-            Sales = sales ?? new List<Sale>();
+            Sales = sales ?? new List<SaleM>();
             Emp = emp;
             DateCreated = created;
             IsEnabled = isEnabled;
@@ -97,7 +91,7 @@ namespace SalesModule
         }
     }
 
-    internal class Sale
+    internal class SaleM
     {
         public int SaleID { get; private set; }
         public string Title { get { return Properties.Title; } }
@@ -105,20 +99,20 @@ namespace SalesModule
         public int Index { get; private set; }
 
         public SalesProperties Properties { get; private set; }
-        public List<ProdAmount> ReqProducts { get; private set; }
-        public List<DiscountedProduct> Discounted { get; private set; }
+        public List<ProdAmountM> ReqProducts { get; private set; }
+        public List<DiscountedProductM> Discounted { get; private set; }
         public Discount Discount { get; private set; }
 
-        public Sale(SaleTypes type, SalesProperties prop, List<ProdAmount> Reqs,
-            List<DiscountedProduct> discounteds, Discount TotalDiscount = null, int index = 1, int saleID = -1)
+        public SaleM(SaleTypes type, SalesProperties prop, List<ProdAmountM> Reqs,
+            List<DiscountedProductM> discounteds, Discount TotalDiscount = null, int index = 1, int saleID = -1)
         {
             SaleID = saleID;
             Type = type;
             Index = index;
 
             Properties = prop;
-            ReqProducts = Reqs ?? new List<ProdAmount>();
-            Discounted = discounteds ?? new List<DiscountedProduct>();
+            ReqProducts = Reqs ?? new List<ProdAmountM>();
+            Discounted = discounteds ?? new List<DiscountedProductM>();
             Discount = TotalDiscount ?? new Discount(0, DiscountTypes.Nothing);
         }
 
@@ -274,7 +268,7 @@ namespace SalesModule
         {
             var newBag = new List<ShoppingItem>();
             List<ShoppingItem> tempBag;
-            foreach (ProdAmount req in ReqProducts)
+            foreach (ProdAmountM req in ReqProducts)
             {
                 tempBag = findPlu(bag, req.ID, req.isPluno, req.Amount, true);
                 if (tempBag != null)

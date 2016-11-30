@@ -1,15 +1,15 @@
-﻿
-using System.Collections.Generic;
-namespace SalesModule
+﻿using System.Collections.Generic;
+
+namespace SalesModule.Models
 {
-    internal interface IProduct
+    internal interface IProductM
     {
         string ID { get; }
         string Name { get; }
         bool isPluno { get; }
     }
 
-    internal class Product : IProduct
+    internal class ProductM : IProductM
     {
         public string ID { get; private set; }
         public string Name { get; private set; }
@@ -17,7 +17,7 @@ namespace SalesModule
         public int? Kind { get; private set; }
         public bool isPluno { get { return true; } }
 
-        public Product(string id, string name, string barcode, int? kind = null)
+        public ProductM(string id, string name, string barcode, int? kind = null)
         {
             ID = id;
             Name = name;
@@ -26,14 +26,14 @@ namespace SalesModule
         }
     }
 
-    internal class Category : IProduct
+    internal class CategoryM : IProductM
     {
         public string ID { get; private set; }
         public string Name { get; private set; }
         public string Comments { get; private set; }
         public bool isPluno { get { return false; } }
 
-        public Category(string id, string name, string rem)
+        public CategoryM(string id, string name, string rem)
         {
             ID = id;
             Name = name;
@@ -41,12 +41,12 @@ namespace SalesModule
         }
     }
 
-    internal abstract class ComperableProduct
+    internal abstract class ComperableProductM
     {
         public string ID { get; private set; }
         public bool isPluno { get; private set; }
 
-        public ComperableProduct(string id, bool isProduct)
+        public ComperableProductM(string id, bool isProduct)
         {
             ID = id;
             isPluno = isProduct;
@@ -54,76 +54,76 @@ namespace SalesModule
 
         public override bool Equals(object obj)
         {
-            if (!(obj is ComperableProduct)) return false;
-            var cp = obj as ComperableProduct;
+            if (!(obj is ComperableProductM)) return false;
+            var cp = obj as ComperableProductM;
             return isPluno == cp.isPluno && ID == cp.ID;
         }
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
-        public static bool operator ==(ComperableProduct cp1, ComperableProduct cp2)
+        public static bool operator ==(ComperableProductM cp1, ComperableProductM cp2)
         {
             if (((object)cp1 == null) != ((object)cp2 == null)) return false;
             if ((object)cp1 == null) return true;
             return cp1.Equals(cp2);
         }
-        public static bool operator !=(ComperableProduct cp1, ComperableProduct cp2)
+        public static bool operator !=(ComperableProductM cp1, ComperableProductM cp2)
         {
             return !(cp1 == cp2);
         }
     }
 
-    internal class ProdAmount : ComperableProduct
+    internal class ProdAmountM : ComperableProductM
     {
         public double Amount { get; set; }
 
-        public ProdAmount(string id, bool isProduct, double amount)
+        public ProdAmountM(string id, bool isProduct, double amount)
             : base(id, isProduct)
         {
             Amount = amount;
         }
     }
 
-    internal class DiscountedProduct : ComperableProduct
+    internal class DiscountedProductM : ComperableProductM
     {
         public int OutID { get; private set; }
         public double Amount { get; private set; }
         public double MaxMultiply { get; private set; }
         public Discount Discount { get; private set; }
-        public List<GiftedProduct> Discounted { get; private set; }
+        public List<GiftedProductM> Discounted { get; private set; }
 
-        public DiscountedProduct(string id, bool isProduct, double amount,
-            double rec, Discount discount, GiftedProduct gift)
+        public DiscountedProductM(string id, bool isProduct, double amount,
+            double rec, Discount discount, GiftedProductM gift)
             : this(id, isProduct, amount, rec, discount)
         {
             if (gift != null) Discounted.Add(gift);
         }
-        public DiscountedProduct(string id, bool isProduct, double amount,
-            double rec, Discount discount, List<GiftedProduct> gifted = null, int outID = -1)
+        public DiscountedProductM(string id, bool isProduct, double amount,
+            double rec, Discount discount, List<GiftedProductM> gifted = null, int outID = -1)
             : base(id, isProduct)
         {
             Amount = amount;
             MaxMultiply = rec;
             Discount = discount;
-            Discounted = gifted ?? new List<GiftedProduct>();
+            Discounted = gifted ?? new List<GiftedProductM>();
             OutID = outID;
         }
     }
 
-    internal class GiftedProduct : ComperableProduct
+    internal class GiftedProductM : ComperableProductM
     {
         public double Amount { get; private set; }
         public Discount Discount { get; private set; }
 
-        public GiftedProduct(string id, bool isProduct,
+        public GiftedProductM(string id, bool isProduct,
             double amount, Discount discount)
             : base(id, isProduct)
         {
             Amount = amount;
             Discount = discount;
         }
-        public GiftedProduct(IProduct prod, double amount, Discount discount)
+        public GiftedProductM(IProductM prod, double amount, Discount discount)
             : this(prod.ID, prod.isPluno, amount, discount)
         { }
     }

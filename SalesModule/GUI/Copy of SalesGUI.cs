@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Windows.Forms;
 using SalesModule.GUI;
+using SalesModule.Models;
+using SalesModule.Services;
 
 namespace SalesModule
 {
@@ -292,7 +294,7 @@ namespace SalesModule
 
         private void createNewSale(SaleTypes type)
         {
-            Sale s = null;
+            SaleM s = null;
             switch (type)
             {
                 case SaleTypes.SingularLowerPrice: s = LowPriceProductForm.Create(); break;
@@ -302,7 +304,7 @@ namespace SalesModule
             }
             if (s != null)
             {
-                if (DBService.GetService().InsertGroup(new SalesGroup(
+                if (DBService.GetService().InsertGroup(new SalesGroupM(
                     Wrapper.User, DateTime.Now, true, s)) != -1)
                     MessageBox.Show("המבצע נוצר בהצלחה!");
                 else

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using SalesModule.Services;
 
 namespace SalesModule.GUI
 {
@@ -107,7 +103,7 @@ namespace SalesModule.GUI
             if (combo_to.SelectedIndex == 48) tTo -= new TimeSpan(0, 0, 1);
             DateTime? to = dateTimePicker2.Checked ? dateTimePicker2.Value : (DateTime?)null;
 
-            DBService.GetService().AssociatePcid2Sale(_saleID,
+            DBService.GetService().AssociatePcid2SaleM(_saleID,
                 int.Parse(combo_pcid.SelectedValue.ToString()),
                 dateTimePicker1.Value, to, tFrom, tTo);
 
@@ -122,7 +118,7 @@ namespace SalesModule.GUI
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
                 e.RowIndex >= 0)
             {
-                DBService.GetService().DisassociatePcidfromSale(_saleID,
+                DBService.GetService().DisassociatePcidfromSaleM(_saleID,
                     int.Parse(dt.Rows[e.RowIndex]["pcid"].ToString()));
                 populate_DGV();
                 pop_combo_pcid();

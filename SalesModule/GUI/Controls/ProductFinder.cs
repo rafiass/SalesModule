@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using SalesModule.Models;
+using SalesModule.Services;
 
 namespace SalesModule.GUI
 {
@@ -10,10 +12,10 @@ namespace SalesModule.GUI
         private Control ComboParentForm; // Or use type "Form" 
         private ListBox listBoxChild;
         private bool MsgFilterActive = false;
-        private List<IProduct> _products;
-        private IProduct _product;
+        private List<IProductM> _products;
+        private IProductM _product;
 
-        private List<IProduct> Products
+        private List<IProductM> Products
         {
             get
             {
@@ -23,7 +25,7 @@ namespace SalesModule.GUI
             }
         }
 
-        public IProduct SelectedProduct
+        public IProductM SelectedProduct
         {
             get { return _product; }
             set
@@ -38,7 +40,7 @@ namespace SalesModule.GUI
                 }
             }
         }
-        public event Action<IProduct> OnProductChanged;
+        public event Action<IProductM> OnProductChanged;
 
         public ProductFinder()
             : base()
@@ -107,7 +109,7 @@ namespace SalesModule.GUI
 
             return false;
         }
-        public void Find(ComperableProduct prod)
+        public void Find(ComperableProductM prod)
         {
             Find(prod.ID, prod.isPluno);
         }
@@ -185,16 +187,16 @@ namespace SalesModule.GUI
             // Don't show the list when nothing has been typed
             if (!string.IsNullOrEmpty(SearchText))
             {
-                var list = new List<IProduct>();
+                var list = new List<IProductM>();
                 foreach (var Item in this.Products)
                     if (Item != null &&
                         (isContain(Item.Name, SearchText) ||
-                        (Item is Product && isContain((Item as Product).Barcode, SearchText))))
+                        (Item is ProductM && isContain((Item as ProductM).Barcode, SearchText))))
                         list.Add(Item);
                 listBoxChild.Items.AddRange(list.ConvertAll<string>(p => p.Name).ToArray());
             }
             SelectedProduct = Products.Find(p => p.Name == SearchText ||
-                (p is Product && (p as Product).Barcode == SearchText));
+                (p is ProductM && (p as ProductM).Barcode == SearchText));
 
             if (listBoxChild.Items.Count > 0)
             {

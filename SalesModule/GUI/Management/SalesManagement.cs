@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using System.Windows.Forms;
+using SalesModule.Models;
+using SalesModule.Services;
 
 namespace SalesModule.GUI
 {
@@ -46,21 +41,21 @@ namespace SalesModule.GUI
                     }
                     else if (senderGrid.Columns[e.ColumnIndex].Name == "edit_cmd")
                     {
-                        editSale(groupID);
+                        editSaleM(groupID);
                     }
                 }
                 if (senderGrid.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
                 {
-                    DBService.GetService().DisableSale(groupID,
+                    DBService.GetService().DisableSaleM(groupID,
                         !bool.Parse(senderGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()));
                     populate_DGV();
                 }
             }
         }
 
-        private void editSale(int groupID)
+        private void editSaleM(int groupID)
         {
-            SalesGroup group = DBService.GetService().LoadGroup(groupID);
+            SalesGroupM group = DBService.GetService().LoadGroup(groupID);
             if (group.Sales.Count == 1)
             {
                 var sale = group.Sales[0];
@@ -73,7 +68,7 @@ namespace SalesModule.GUI
                 }
                 if (sale != null)
                 {
-                    if (DBService.GetService().EditSale(sale))
+                    if (DBService.GetService().EditSaleM(sale))
                         MessageBox.Show("המבצע עודכן בהצלחה!");
                     else
                         MessageBox.Show("אירעה שגיאה בזמן עריכת המבצע.\nלא בוצעו שינויים במבצע הקיים.");
