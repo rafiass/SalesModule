@@ -11,7 +11,7 @@ namespace SalesModule.GUI
         private bool _isEditing { get { return _index != -1; } }
         private int _index;
         private int _ID;
-        private SalesProperties _prop;
+        private SalesPropertiesM _prop;
         private SaleM _assembled;
         private List<Tuple<ProdAmountM, string>> _bundle;
         private BundleAdvancedForm() : this(null) { }
@@ -22,7 +22,7 @@ namespace SalesModule.GUI
             _index = s != null ? s.Index : -1;
             _ID = s != null ? s.SaleID : -1;
             _prop = s != null ? s.Properties :
-                new SalesProperties("חבילת מוצרים במבצע");
+                new SalesPropertiesM("חבילת מוצרים במבצע");
             if (s != null && (s.ReqProducts == null || s.ReqProducts.Count == 0))
                 throw new InvalidOperationException("Bundle data mismatch.");
             LoadSaleM(s);
@@ -88,7 +88,7 @@ namespace SalesModule.GUI
 
                 var reqs = _bundle.ConvertAll<ProdAmountM>(p => p.Item1);
                 _assembled = new SaleM(SaleTypes.AdvancedBundle, _prop, reqs, null,
-                    new Discount((double)num_price.Value, DiscountTypes.Fix_Price), _isEditing ? _index : 1, _ID);
+                    new DiscountM((double)num_price.Value, DiscountTypes.Fix_Price), _isEditing ? _index : 1, _ID);
                 DialogResult = DialogResult.OK;
                 Close();
             }

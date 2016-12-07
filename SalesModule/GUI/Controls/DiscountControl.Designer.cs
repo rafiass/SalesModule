@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.num_percentage = new SalesModule.GUI.TouchableNumeric();
             this.rad_percentage = new System.Windows.Forms.RadioButton();
-            this.num_disc = new SalesModule.GUI.TouchableNumeric();
-            this.num_fix = new SalesModule.GUI.TouchableNumeric();
             this.lbl_status = new System.Windows.Forms.Label();
             this.rad_fix_price = new System.Windows.Forms.RadioButton();
             this.rad_fix_disc = new System.Windows.Forms.RadioButton();
+            this.num_percentage = new SalesModule.GUI.TouchableNumeric();
+            this.num_disc = new SalesModule.GUI.TouchableNumeric();
+            this.num_fix = new SalesModule.GUI.TouchableNumeric();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.num_percentage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_disc)).BeginInit();
@@ -57,6 +57,48 @@
             this.groupBox1.TabIndex = 69;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "קביעת הנחה";
+            // 
+            // rad_percentage
+            // 
+            this.rad_percentage.AutoSize = true;
+            this.rad_percentage.Location = new System.Drawing.Point(93, 68);
+            this.rad_percentage.Name = "rad_percentage";
+            this.rad_percentage.Size = new System.Drawing.Size(123, 17);
+            this.rad_percentage.TabIndex = 68;
+            this.rad_percentage.Text = "קבע הנחה של       %";
+            this.rad_percentage.UseVisualStyleBackColor = true;
+            this.rad_percentage.CheckedChanged += new System.EventHandler(this.rad_percentage_CheckedChanged);
+            // 
+            // lbl_status
+            // 
+            this.lbl_status.Enabled = false;
+            this.lbl_status.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_status.Location = new System.Drawing.Point(10, 91);
+            this.lbl_status.Name = "lbl_status";
+            this.lbl_status.Size = new System.Drawing.Size(200, 13);
+            this.lbl_status.TabIndex = 67;
+            // 
+            // rad_fix_price
+            // 
+            this.rad_fix_price.AutoSize = true;
+            this.rad_fix_price.Location = new System.Drawing.Point(92, 22);
+            this.rad_fix_price.Name = "rad_fix_price";
+            this.rad_fix_price.Size = new System.Drawing.Size(124, 17);
+            this.rad_fix_price.TabIndex = 54;
+            this.rad_fix_price.Text = "קבע מחיר חדש     ₪";
+            this.rad_fix_price.UseVisualStyleBackColor = true;
+            this.rad_fix_price.CheckedChanged += new System.EventHandler(this.rad_fix_price_CheckedChanged);
+            // 
+            // rad_fix_disc
+            // 
+            this.rad_fix_disc.AutoSize = true;
+            this.rad_fix_disc.Location = new System.Drawing.Point(92, 45);
+            this.rad_fix_disc.Name = "rad_fix_disc";
+            this.rad_fix_disc.Size = new System.Drawing.Size(124, 17);
+            this.rad_fix_disc.TabIndex = 58;
+            this.rad_fix_disc.Text = "קבע הנחה של       ₪";
+            this.rad_fix_disc.UseVisualStyleBackColor = true;
+            this.rad_fix_disc.CheckedChanged += new System.EventHandler(this.rad_fix_disc_CheckedChanged);
             // 
             // num_percentage
             // 
@@ -86,17 +128,6 @@
             0,
             0,
             0});
-            // 
-            // rad_percentage
-            // 
-            this.rad_percentage.AutoSize = true;
-            this.rad_percentage.Location = new System.Drawing.Point(93, 68);
-            this.rad_percentage.Name = "rad_percentage";
-            this.rad_percentage.Size = new System.Drawing.Size(123, 17);
-            this.rad_percentage.TabIndex = 68;
-            this.rad_percentage.Text = "קבע הנחה של       %";
-            this.rad_percentage.UseVisualStyleBackColor = true;
-            this.rad_percentage.CheckedChanged += new System.EventHandler(this.rad_percentage_CheckedChanged);
             // 
             // num_disc
             // 
@@ -156,37 +187,6 @@
             0,
             0});
             // 
-            // lbl_status
-            // 
-            this.lbl_status.Enabled = false;
-            this.lbl_status.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.lbl_status.Location = new System.Drawing.Point(10, 91);
-            this.lbl_status.Name = "lbl_status";
-            this.lbl_status.Size = new System.Drawing.Size(200, 13);
-            this.lbl_status.TabIndex = 67;
-            // 
-            // rad_fix_price
-            // 
-            this.rad_fix_price.AutoSize = true;
-            this.rad_fix_price.Location = new System.Drawing.Point(92, 22);
-            this.rad_fix_price.Name = "rad_fix_price";
-            this.rad_fix_price.Size = new System.Drawing.Size(124, 17);
-            this.rad_fix_price.TabIndex = 54;
-            this.rad_fix_price.Text = "קבע מחיר חדש     ₪";
-            this.rad_fix_price.UseVisualStyleBackColor = true;
-            this.rad_fix_price.CheckedChanged += new System.EventHandler(this.rad_fix_price_CheckedChanged);
-            // 
-            // rad_fix_disc
-            // 
-            this.rad_fix_disc.AutoSize = true;
-            this.rad_fix_disc.Location = new System.Drawing.Point(92, 45);
-            this.rad_fix_disc.Name = "rad_fix_disc";
-            this.rad_fix_disc.Size = new System.Drawing.Size(124, 17);
-            this.rad_fix_disc.TabIndex = 58;
-            this.rad_fix_disc.Text = "קבע הנחה של       ₪";
-            this.rad_fix_disc.UseVisualStyleBackColor = true;
-            this.rad_fix_disc.CheckedChanged += new System.EventHandler(this.rad_fix_disc_CheckedChanged);
-            // 
             // DiscountControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -208,11 +208,11 @@
 
         private System.Windows.Forms.GroupBox groupBox1;
         private TouchableNumeric num_percentage;
-        private System.Windows.Forms.RadioButton rad_percentage;
         private TouchableNumeric num_disc;
         private TouchableNumeric num_fix;
-        private System.Windows.Forms.Label lbl_status;
+        private System.Windows.Forms.RadioButton rad_percentage;
         private System.Windows.Forms.RadioButton rad_fix_price;
         private System.Windows.Forms.RadioButton rad_fix_disc;
+        private System.Windows.Forms.Label lbl_status;
     }
 }

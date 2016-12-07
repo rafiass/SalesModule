@@ -16,7 +16,7 @@ namespace SalesModule.GUI
         private bool _isEditing { get { return _index != -1; } }
         private int _index;
         private int _ID;
-        private SalesProperties _prop;
+        private SalesPropertiesM _prop;
         private SaleM _assembled;
         private SingularBuyAndGet() : this(null) { }
         private SingularBuyAndGet(SaleM s)
@@ -26,7 +26,7 @@ namespace SalesModule.GUI
             _index = s != null ? s.Index : -1;
             _ID = s != null ? s.SaleID : -1;
             _prop = s != null ? s.Properties :
-                new SalesProperties("קנה וקבל") { InstanceMultiply = 0 };
+                new SalesPropertiesM("קנה וקבל") { InstanceMultiply = 0 };
             LoadSaleM(s);
         }
 
@@ -98,7 +98,7 @@ namespace SalesModule.GUI
                 reqs.Add(new ProdAmountM(find_buy.SelectedProduct.ID, true, (double)num_buy.Value));
                 var outs = new List<DiscountedProductM>();
                 outs.Add(new DiscountedProductM(find_get.SelectedProduct.ID, true,
-                    0, (double)num_get.Value, new Discount(0, DiscountTypes.Fix_Price)));
+                    0, (double)num_get.Value, new DiscountM(0, DiscountTypes.Fix_Price)));
                 _assembled = new SaleM(SaleTypes.SingularBuyAndGet, _prop, reqs, outs, null, _isEditing ? _index : 1, _ID);
                 DialogResult = DialogResult.OK;
                 Close();

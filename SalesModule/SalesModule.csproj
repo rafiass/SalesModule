@@ -43,7 +43,7 @@
     <DefineConstants>TRACE;DEBUG;COM_INTEROP_ENABLED</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RegisterForComInterop>true</RegisterForComInterop>
+    <RegisterForComInterop>false</RegisterForComInterop>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
@@ -73,11 +73,21 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Converters.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
+    <Compile Include="Common\ISuggestionProvider.cs" />
+    <Compile Include="Common\SalesException.cs" />
+    <Compile Include="Controls\AutoComplete\AutoCompleteTextBox.cs" />
+    <Compile Include="Controls\AutoComplete\BindingEvaluator.cs" />
+    <Compile Include="Controls\AutoComplete\ProductsSuggestionProvider.cs" />
+    <Compile Include="Controls\AutoComplete\SelectionAdapter.cs" />
+    <Compile Include="Controls\TouchableNumeric.cs" />
+    <Compile Include="Models\DiscountM.cs" />
+    <Compile Include="Models\SalesPropertiesM.cs" />
     <Compile Include="Services\ActivityLogService.cs" />
     <Compile Include="Models\IProductM.cs" />
     <Compile Include="Models\SaleM.cs" />
-    <Compile Include="Interop\Wrapper.cs" />
+    <Compile Include="Engine\Wrapper.cs" />
     <Compile Include="Engine\SaleDiscount.cs" />
     <Compile Include="Engine\SalesEngine.cs" />
     <Compile Include="Interop\ActiveXControlHelpers.cs">
@@ -106,15 +116,16 @@
     </Compile>
     <Compile Include="Common\PopupProperties.cs" />
     <Compile Include="Services\InteropService.cs" />
+    <Compile Include="Services\SalesFactoryService.cs" />
+    <Compile Include="ViewModels\PopupViewModel.cs" />
+    <Compile Include="ViewModels\Sales\LowPricedProductViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="Common\SaleViewModel.cs" />
-    <Compile Include="ViewModels\SomeSaleViewModel.cs" />
-    <Compile Include="Common\ViewModelBase.cs" />
+    <Compile Include="ViewModels\SaleViewModel.cs" />
+    <Compile Include="ViewModels\Utilities\NumPadViewModel.cs" />
+    <Compile Include="ViewModels\Utilities\SalesPropertiesViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PopupView.xaml.cs">
-      <DependentUpon>PopupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Utilities\NumPad.cs">
       <SubType>Form</SubType>
@@ -195,14 +206,27 @@
     <Compile Include="Interop\SalesGUI.Designer.cs">
       <DependentUpon>SalesGUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\SomeSaleView.xaml.cs">
-      <DependentUpon>SomeSaleView.xaml</DependentUpon>
+    <Compile Include="Views\Sales\LowPricedProductView.xaml.cs">
+      <DependentUpon>LowPricedProductView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Utilities\NumPadView.xaml.cs">
+      <DependentUpon>NumPadView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestView.xaml.cs">
+      <DependentUpon>TestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Utilities\DiscountView.xaml.cs">
+      <DependentUpon>DiscountView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Utilities\SalesPropertiesView.xaml.cs">
+      <DependentUpon>SalesPropertiesView.xaml</DependentUpon>
     </Compile>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="InteropUserControl.bmp" />
     <Content Include="InteropUserControl.rc" />
+    <Resource Include="Resources\Images\down.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="InteropUserControl.manifest">
@@ -276,15 +300,43 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\AutoComplete\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TestView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Utilities\DiscountView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Utilities\SalesPropertiesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Resource Include="Resources\ResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+    <Page Include="Resources\DataContextDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\StyledControls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PopupView.xaml">
+    <Page Include="Views\Sales\LowPricedProductView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SomeSaleView.xaml">
+    <Page Include="Views\Utilities\NumPadView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

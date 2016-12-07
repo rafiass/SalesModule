@@ -1,10 +1,22 @@
-﻿
-namespace SalesModule
+﻿namespace SalesModule
 {
-    class PopupProperties
+    internal class PopupProperties
     {
-        //width, height
-        //callback function
-        //init function
+        public string Title { get; set; }
+
+        public double Width { get; set; }
+        public double Height { get; set; }
+
+        public bool IsModal { get; set; }
+        public bool IsShowingOnTaskBar { get; set; }
+
+        public PopupProperties()
+        {
+            Title = "";
+            Width = 300;
+            Height = 300;
+            IsModal = true;
+            IsShowingOnTaskBar = false;
+        }
     }
 }

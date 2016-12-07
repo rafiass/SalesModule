@@ -46,51 +46,6 @@ namespace SalesModule.Models
         }
     }
 
-    internal class SalesProperties
-    {
-        public string Title { get; set; }
-        public double MinPrice { get; set; }
-        public double? MaxPrice { get; set; }
-        public int InstanceMultiply { get; set; }
-        public int RecurrencePerInstance { get; set; }
-        public bool IsBroadSale { get; set; }
-        public DateTime DateFrom { get; set; }
-        public DateTime? DateTo { get; set; }
-
-        public SalesProperties()
-            : this("מבצע") { }
-        public SalesProperties(string title)
-            : this(title, 0, null, 1, 1)
-        { }
-        public SalesProperties(string title, double MinPrice, double? maxPrice, int maxInstances, int maxRecurrences)
-            : this(title, MinPrice, maxPrice, maxInstances, maxRecurrences,
-             true, DateTime.Now, DateTime.Now + new TimeSpan(7, 0, 0, 0))
-        { }
-        public SalesProperties(string title, double minPrice, double? maxPrice,
-            int maxInstances, int maxRecurrences, bool IsBroad, DateTime from, DateTime? to)
-        {
-            Title = title;
-            MinPrice = minPrice;
-            MaxPrice = maxPrice;
-            InstanceMultiply = maxInstances;
-            RecurrencePerInstance = maxRecurrences;
-            IsBroadSale = IsBroad;
-            DateFrom = from;
-            DateTo = to;
-        }
-        public SalesProperties(SalesProperties prop)
-        {
-            Title = prop.Title;
-            MinPrice = prop.MinPrice;
-            MaxPrice = prop.MaxPrice;
-            InstanceMultiply = prop.InstanceMultiply;
-            RecurrencePerInstance = prop.RecurrencePerInstance;
-            IsBroadSale = prop.IsBroadSale;
-            DateFrom = prop.DateFrom;
-            DateTo = prop.DateTo;
-        }
-    }
-
     internal class SaleM
     {
         public int SaleID { get; private set; }
@@ -98,13 +53,13 @@ namespace SalesModule.Models
         public SaleTypes Type { get; private set; }
         public int Index { get; private set; }
 
-        public SalesProperties Properties { get; private set; }
+        public SalesPropertiesM Properties { get; private set; }
         public List<ProdAmountM> ReqProducts { get; private set; }
         public List<DiscountedProductM> Discounted { get; private set; }
-        public Discount Discount { get; private set; }
+        public DiscountM Discount { get; private set; }
 
-        public SaleM(SaleTypes type, SalesProperties prop, List<ProdAmountM> Reqs,
-            List<DiscountedProductM> discounteds, Discount TotalDiscount = null, int index = 1, int saleID = -1)
+        public SaleM(SaleTypes type, SalesPropertiesM prop, List<ProdAmountM> Reqs,
+            List<DiscountedProductM> discounteds, DiscountM TotalDiscount = null, int index = 1, int saleID = -1)
         {
             SaleID = saleID;
             Type = type;
@@ -113,7 +68,7 @@ namespace SalesModule.Models
             Properties = prop;
             ReqProducts = Reqs ?? new List<ProdAmountM>();
             Discounted = discounteds ?? new List<DiscountedProductM>();
-            Discount = TotalDiscount ?? new Discount(0, DiscountTypes.Nothing);
+            Discount = TotalDiscount ?? new DiscountM(0, DiscountTypes.Nothing);
         }
 
         public List<SaleDiscount> GetEfective(List<ShoppingItem> bag, double totalReceipt)

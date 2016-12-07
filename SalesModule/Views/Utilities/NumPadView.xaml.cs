@@ -3,11 +3,11 @@
 namespace SalesModule.Views
 {
     /// <summary>
-    /// Interaction logic for PopupView.xaml
+    /// Interaction logic for NumPadView.xaml
     /// </summary>
-    public partial class MainView : UserControl
+    public partial class NumPadView : UserControl
     {
-        public MainView()
+        public NumPadView()
         {
             InitializeComponent();
         }

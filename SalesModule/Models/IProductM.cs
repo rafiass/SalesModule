@@ -90,17 +90,17 @@ namespace SalesModule.Models
         public int OutID { get; private set; }
         public double Amount { get; private set; }
         public double MaxMultiply { get; private set; }
-        public Discount Discount { get; private set; }
+        public DiscountM Discount { get; private set; }
         public List<GiftedProductM> Discounted { get; private set; }
 
         public DiscountedProductM(string id, bool isProduct, double amount,
-            double rec, Discount discount, GiftedProductM gift)
+            double rec, DiscountM discount, GiftedProductM gift)
             : this(id, isProduct, amount, rec, discount)
         {
             if (gift != null) Discounted.Add(gift);
         }
         public DiscountedProductM(string id, bool isProduct, double amount,
-            double rec, Discount discount, List<GiftedProductM> gifted = null, int outID = -1)
+            double rec, DiscountM discount, List<GiftedProductM> gifted = null, int outID = -1)
             : base(id, isProduct)
         {
             Amount = amount;
@@ -114,16 +114,16 @@ namespace SalesModule.Models
     internal class GiftedProductM : ComperableProductM
     {
         public double Amount { get; private set; }
-        public Discount Discount { get; private set; }
+        public DiscountM Discount { get; private set; }
 
         public GiftedProductM(string id, bool isProduct,
-            double amount, Discount discount)
+            double amount, DiscountM discount)
             : base(id, isProduct)
         {
             Amount = amount;
             Discount = discount;
         }
-        public GiftedProductM(IProductM prod, double amount, Discount discount)
+        public GiftedProductM(IProductM prod, double amount, DiscountM discount)
             : this(prod.ID, prod.isPluno, amount, discount)
         { }
     }

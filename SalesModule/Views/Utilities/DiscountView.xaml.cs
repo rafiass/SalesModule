@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace SalesModule.Views
 {
     /// <summary>
-    /// Interaction logic for SomeSaleView.xaml
+    /// Interaction logic for DiscountView.xaml
     /// </summary>
-    public partial class SomeSaleView : UserControl
+    public partial class DiscountView : UserControl
     {
-        public SomeSaleView()
+        public DiscountView()
         {
             InitializeComponent();
         }

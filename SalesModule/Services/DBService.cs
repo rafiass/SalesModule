@@ -135,6 +135,9 @@ namespace SalesModule.Services
                 foreach (DataRow R in dt.Rows)
                     list.Add(new ProductM(R["pluno"].ToString(), R["pname"].ToString(),
                         R["barcode"].ToString(), R["kind3"] as int?));
+
+                //### fill list with CategoryM 
+
                 return list;
             }
             catch (Exception ex)
@@ -191,8 +194,6 @@ namespace SalesModule.Services
             ActivityLogService.Logger.LogCall();
             if (g == null || g.Sales.Count == 0)
                 return -1;
-            string sql;
-            int GroupID;
             try
             {
                 CheckIsRemote();
@@ -200,7 +201,7 @@ namespace SalesModule.Services
                 _trans = _conn.BeginTransaction();
 
                 //1. create new group
-                sql = "insert into salesGroup (Empno) values (@UserID)";
+                var sql = "insert into salesGroup (Empno) values (@UserID)";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Transaction = _trans;
                 _cmd.Parameters.Add(new SqlParameter("@UserID", SqlDbType.VarChar)).Value = g.Emp.EmpNo;
@@ -210,7 +211,7 @@ namespace SalesModule.Services
                 sql = "select max(GroupID) from SalesGroup";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Transaction = _trans;
-                GroupID = int.Parse(_cmd.ExecuteScalar().ToString());
+                var GroupID = int.Parse(_cmd.ExecuteScalar().ToString());
 
                 //3. Insert sales
                 for (int i = 0; i < g.Sales.Count; i++)
@@ -464,13 +465,8 @@ namespace SalesModule.Services
         public SalesGroupM LoadGroup(int groupID)
         {
             ActivityLogService.Logger.LogCall(groupID);
-            List<ProdAmountM> Reqs;
-            List<DiscountedProductM> Outs;
-            List<GiftedProductM> Gifted;
-            DataTable SalesTable, dt, tempDt;
-            SqlDataAdapter da;
-            int SaleID, outID;
-            var Sales = new List<SaleM>();
+            DataTable dt;
+            var sales = new List<SaleM>();
             try
             {
                 CheckIsRemote();
@@ -480,68 +476,68 @@ namespace SalesModule.Services
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
 
-                SalesTable = new DataTable();
-                da = new SqlDataAdapter(_cmd);
-                da.Fill(SalesTable);
+                var salesTable = new DataTable();
+                var da = new SqlDataAdapter(_cmd);
+                da.Fill(salesTable);
 
-                foreach (DataRow Rs in SalesTable.Rows)
+                foreach (DataRow Rs in salesTable.Rows)
                 {
                     //  Load Sale:
-                    SaleID = int.Parse(Rs["SaleID"].ToString());
+                    var saleId = int.Parse(Rs["SaleID"].ToString());
 
                     //get requires product from PluReqSale (ProdAmount)
                     //get discounted products from PluOutSale (DiscountedProduct)
                     //get Sale's attributes
                     _cmd = new SqlCommand();
                     _cmd.Connection = _conn;
-                    _cmd.Parameters.Add(new SqlParameter("@saleID", SqlDbType.Int)).Value = SaleID;
+                    _cmd.Parameters.Add(new SqlParameter("@saleID", SqlDbType.Int)).Value = saleId;
 
                     //Requires
-                    Reqs = new List<ProdAmountM>();
+                    var reqs = new List<ProdAmountM>();
                     _cmd.CommandText = "select * from PluReqSale where SaleID = @saleID";
                     da = new SqlDataAdapter(_cmd);
                     dt = new DataTable();
                     da.Fill(dt);
                     foreach (DataRow Rq in dt.Rows)
-                        Reqs.Add(new ProdAmountM(Rq["pluID"].ToString(),
+                        reqs.Add(new ProdAmountM(Rq["pluID"].ToString(),
                             bool.Parse(Rq["isPluno"].ToString()), double.Parse(Rq["qty"].ToString())));
 
                     //Discounted
-                    Outs = new List<DiscountedProductM>();
+                    var outs = new List<DiscountedProductM>();
                     _cmd.CommandText = "select * from PluOutSale where SaleID = @saleID";
                     da = new SqlDataAdapter(_cmd);
                     dt = new DataTable();
                     da.Fill(dt);
                     foreach (DataRow Ro in dt.Rows)
                     {
-                        outID = int.Parse(Ro["OutID"].ToString());
-                        Gifted = new List<GiftedProductM>();
+                        var outID = int.Parse(Ro["OutID"].ToString());
+                        var gifted = new List<GiftedProductM>();
 
                         sql = "select * from PluGiftedSale where OutID = @outID";
                         _cmd = new SqlCommand(sql, _conn);
                         _cmd.Parameters.Add("@outID", SqlDbType.Int).Value = outID;
                         da = new SqlDataAdapter(_cmd);
-                        tempDt = new DataTable();
+                        var tempDt = new DataTable();
                         da.Fill(tempDt);
                         foreach (DataRow Rg in tempDt.Rows)
-                            Gifted.Add(new GiftedProductM(Rg["pluID"].ToString(),
+                            gifted.Add(new GiftedProductM(Rg["pluID"].ToString(),
                                 bool.Parse(Rg["isPluno"].ToString()), double.Parse(Rg["MultiUnits"].ToString()),
-                                new Discount(double.Parse(Rg["offPrice"].ToString()),
+                                new DiscountM(double.Parse(Rg["offPrice"].ToString()),
                                     (DiscountTypes)int.Parse(Rg["offType"].ToString()))));
 
-                        Outs.Add(new DiscountedProductM(Ro["pluID"].ToString(), bool.Parse(Ro["isPluno"].ToString()),
+                        outs.Add(new DiscountedProductM(Ro["pluID"].ToString(), bool.Parse(Ro["isPluno"].ToString()),
                             double.Parse(Ro["MultiUnits"].ToString()), double.Parse(Ro["MaxRec"].ToString()),
-                            new Discount(double.Parse(Ro["offPrice"].ToString()),
-                                (DiscountTypes)int.Parse(Ro["offType"].ToString())), Gifted, outID));
+                            new DiscountM(double.Parse(Ro["offPrice"].ToString()),
+                                (DiscountTypes)int.Parse(Ro["offType"].ToString())), gifted, outID));
                     }
                     //Attributes
-                    var prop = new SalesProperties(Rs["Title"].ToString(),
+                    var prop = new SalesPropertiesM(Rs["Title"].ToString(),
                         double.Parse(Rs["MinTotalPrice"].ToString()), Rs["MaxTotalPrice"] as double?,
                         int.Parse(Rs["AllowMultiple"].ToString()), int.Parse(Rs["Recurrences"].ToString()));
-                    var disc = new Discount(double.Parse(Rs["TotalOffPrice"].ToString()),
+                    var disc = new DiscountM(double.Parse(Rs["TotalOffPrice"].ToString()),
                         (DiscountTypes)int.Parse(Rs["TotalOffType"].ToString()));
 
-                    Sales.Add(new SaleM((SaleTypes)int.Parse(Rs["SaleType"].ToString()), prop, Reqs, Outs,
+                    sales.Add(new SaleM((SaleTypes)int.Parse(Rs["SaleType"].ToString()), prop, reqs, outs,
                         disc, int.Parse(Rs["GroupIndex"].ToString()), int.Parse(Rs["SaleID"].ToString())));
                 }
 
@@ -560,7 +556,7 @@ namespace SalesModule.Services
                 var emp = new UserData(int.Parse(Att["empno"].ToString()), Att["ename"].ToString(), Att["uid"].ToString());
                 return new SalesGroupM(int.Parse(Att["GroupID"].ToString()), emp,
                     DateTime.Parse(Att["DateCreated"].ToString()),
-                    bool.Parse(Att["isEnabled"].ToString()), Sales);
+                    bool.Parse(Att["isEnabled"].ToString()), sales);
             }
             catch (Exception ex)
             {

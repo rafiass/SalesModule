@@ -4,7 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SalesModule"
+             xmlns:vm="clr-namespace:SalesModule.ViewModels"
+             xmlns:cntrls="clr-namespace:SalesModule.Controls"
              mc:Ignorable="d" Height="229" Width="378">
+    <UserControl.DataContext>
+        <vm:MainViewModel />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary Source="../Resources/ResourceDictionary.xaml" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*" />
@@ -18,6 +26,9 @@
         </Grid.ColumnDefinitions>
         <TextBlock Text="abc" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" />
         <Button Grid.Column="1" Grid.Row="1" Content="Open Some Sale"
-                Command="{Binding OpenCommand}" CommandParameter="{x:Static local:SaleTypes.None}" />
+                Command="{Binding OpenCommand}" CommandParameter="{x:Static local:SaleTypes.SingularLowerPrice}" />
+        
+        <cntrls:TouchableNumeric Value="100" Increment="0.5" Maximum="1000"
+                                 Grid.Column="1" Grid.Row="2" />
     </Grid>
 </UserControl>

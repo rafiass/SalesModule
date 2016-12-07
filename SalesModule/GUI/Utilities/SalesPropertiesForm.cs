@@ -53,9 +53,9 @@ namespace SalesModule.GUI
             }
         }
 
-        public SalesProperties Properties { get; private set; }
+        public SalesPropertiesM Properties { get; private set; }
 
-        public SalesPropertiesForm(SalesProperties prop)
+        public SalesPropertiesForm(SalesPropertiesM prop)
         {
             InitializeComponent();
             Properties = prop;
@@ -103,7 +103,7 @@ namespace SalesModule.GUI
                 MessageBox.Show("טווח התאריכים אינו תקין");
             else
             {
-                Properties = new SalesProperties(txt_name.Text, (double)num_min.Value,
+                Properties = new SalesPropertiesM(txt_name.Text, (double)num_min.Value,
                     check_max.Checked ? (double?)num_max.Value : null,
                     check_multiply.Checked ? (int)num_multiply.Value : 0,
                     check_rec.Checked ? (int)num_rec.Value : 0,

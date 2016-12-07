@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using SalesModule.Models;
 
@@ -16,7 +10,7 @@ namespace SalesModule.GUI
         private bool _isEditing { get { return _index != -1; } }
         private int _index;
         private int _ID;
-        private SalesProperties _prop;
+        private SalesPropertiesM _prop;
         private SaleM _assembled;
         private LowPriceProductForm() : this(null) { }
         private LowPriceProductForm(SaleM s)
@@ -26,7 +20,7 @@ namespace SalesModule.GUI
             _index = s != null ? s.Index : -1;
             _ID = s != null ? s.SaleID : -1;
             _prop = s != null ? s.Properties :
-                new SalesProperties("מוצר במבצע");
+                new SalesPropertiesM("מוצר במבצע");
             LoadSaleM(s);
         }
 
@@ -39,7 +33,7 @@ namespace SalesModule.GUI
             num_max.Value = 1;
             check_gift.Checked = false;
             find_gift.Text = "";
-            discCntrl.Discount = new Discount(10, DiscountTypes.Fix_Discount);
+            discCntrl.Discount = new DiscountM(10, DiscountTypes.Fix_Discount);
         }
         private void LoadSaleM(SaleM s)
         {
@@ -112,7 +106,7 @@ namespace SalesModule.GUI
                     check_amount.Checked ? (double)num_amount.Value : 0,
                     check_max.Checked ? (double)num_max.Value : 0, disc,
                     !check_gift.Checked ? null : new GiftedProductM(find_gift.SelectedProduct,
-                        1, new Discount(0, DiscountTypes.Fix_Price))));
+                        1, new DiscountM(0, DiscountTypes.Fix_Price))));
                 _prop.RecurrencePerInstance = 1;
                 _assembled = new SaleM(SaleTypes.SingularLowerPrice, _prop,
                     null, outs, null, _isEditing ? _index : 1, _ID);

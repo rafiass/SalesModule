@@ -3,14 +3,13 @@
 namespace SalesModule.Views
 {
     /// <summary>
-    /// Interaction logic for PopupView.xaml
+    /// Interaction logic for SalesPropertiesView.xaml
     /// </summary>
-    public partial class PopupView : UserControl
+    public partial class SalesPropertiesView : UserControl
     {
-        public PopupView(object vm)
+        public SalesPropertiesView()
         {
             InitializeComponent();
-            presenter.Content = vm;
         }
     }
 }

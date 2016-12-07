@@ -7,21 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SalesModule.Models;
 
 namespace SalesModule.GUI
 {
     internal partial class DiscountControl : UserControl
     {
-        public Discount Discount
+        public DiscountM Discount
         {
             get
             {
                 if (rad_fix_price.Checked)
-                    return new Discount((double)num_fix.Value, DiscountTypes.Fix_Price);
+                    return new DiscountM((double)num_fix.Value, DiscountTypes.Fix_Price);
                 else if (rad_fix_disc.Checked)
-                    return new Discount((double)num_disc.Value, DiscountTypes.Fix_Discount);
+                    return new DiscountM((double)num_disc.Value, DiscountTypes.Fix_Discount);
                 else if (rad_percentage.Checked)
-                    return new Discount((double)num_percentage.Value, DiscountTypes.Percentage);
+                    return new DiscountM((double)num_percentage.Value, DiscountTypes.Percentage);
                 else return null;
             }
             set
