@@ -6,7 +6,7 @@ namespace SalesModule.ViewModels
     {
         //### SalesPropertiesViewModel
 
-        public static PopupProperties PopupProperties
+        public override PopupProperties PopupProperties
         {
             get
             {

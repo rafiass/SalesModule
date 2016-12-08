@@ -4,21 +4,61 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:v="clr-namespace:SalesModule.Views"
-             mc:Ignorable="d" d:DesignHeight="405" d:DesignWidth="288">
-    <Grid>
+             xmlns:cntrls="clr-namespace:SalesModule.Controls"
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="350">
+    <Grid Margin="10,5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="7*" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="40*" />
+            <RowDefinition Height="30*" />
+            <RowDefinition Height="100*" />
+            <RowDefinition Height="50*" />
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="60*" />
         </Grid.RowDefinitions>
-        
-        <v:DiscountView Grid.Row="2" />
-        
-        <Button Content="Properties..." Command="{Binding PropertiesCommand}" Width="100"
-                HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <Label Grid.Row="0" Content="מוצר מוזל" FontSize="14"
+               HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <TextBlock Grid.Row="1" Text="בחר מוצר:" Width="65"
+                   HorizontalAlignment="Left" VerticalAlignment="Center" />
+        <cntrls:AutoCompleteTextBox Grid.Row="1" SelectedItem="{Binding SelectedProduct, Mode=TwoWay}" Margin="65,7,5,8" />
+
+        <v:DiscountView Grid.Row="2" DataContext="{Binding Discount, Mode=OneWay}" />
+
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="110" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox Grid.Column="0" Grid.Row="0" IsChecked="{Binding IsDiscountPerAmount}" Content="מבצע על כמות:" VerticalAlignment="Center" />
+            <CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding IsAmountLimited}"  Content="הגבלת כמות:" VerticalAlignment="Center" />
+            <cntrls:TouchableNumeric Grid.Column="1" Grid.Row="0" Value="{Binding AmountDiscounted}" Increment="0.1" Minimum="0.1"
+                                     IsEnabled="{Binding IsDiscountPerAmount}" Margin="15,0" VerticalAlignment="Center" />
+            <cntrls:TouchableNumeric Grid.Column="1" Grid.Row="1" Value="{Binding LimitedAmount}" Increment="0.1" Minimum="0.1"
+                                     IsEnabled="{Binding IsAmountLimited}" Margin="15,0" VerticalAlignment="Center" />
+        </Grid>
+
+        <CheckBox Grid.Row="4" IsChecked="{Binding IsGiftAvailable}" Content="הוסף מוצר במתנה:" VerticalAlignment="Center" />
+        <cntrls:AutoCompleteTextBox Grid.Row="5" SelectedItem="{Binding Gifted, Mode=TwoWay}" Margin="35,5,7,5"
+                                    IsEnabled="{Binding IsGiftAvailable, Mode=OneWay}" />
+
+        <Grid Grid.Row="6" Margin="0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="ביטול" Command="{Binding CancelCommand}" IsCancel ="True" Margin="5,0" />
+            <Button Grid.Column="1" Content="מאפיינים..." Command="{Binding PropertiesCommand}" Margin="5,0" />
+            <Button Grid.Column="2" Content="בצע" Command="{Binding CommitCommand}" IsDefault="True" Margin="5,0" />
+        </Grid>
     </Grid>
 </UserControl>

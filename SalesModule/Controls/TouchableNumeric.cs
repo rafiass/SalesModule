@@ -97,7 +97,7 @@ namespace SalesModule.Controls
 
         private void clickFunction()
         {
-            Value = InteropService.GetNumber(Value);
+            Value = InteropService.GetNumber("הכנס ערך", Value) ?? Value; //null means cancellation
         }
     }
 }

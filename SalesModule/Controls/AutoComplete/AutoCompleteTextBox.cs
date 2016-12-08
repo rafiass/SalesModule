@@ -10,7 +10,7 @@ using System.Windows.Threading;
 
 namespace SalesModule.Controls
 {
-    public enum IconPlacement
+    internal enum IconPlacement
     {
         Left,
         Right

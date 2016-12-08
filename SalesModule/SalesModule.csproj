@@ -73,13 +73,16 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\CommandBehavior\CommandBehavior.cs" />
+    <Compile Include="Common\CommandBehavior\CommandBehaviorBinding.cs" />
+    <Compile Include="Common\CommandBehavior\EventHandlerGenerator.cs" />
     <Compile Include="Common\Converters.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
-    <Compile Include="Common\ISuggestionProvider.cs" />
+    <Compile Include="Controls\AutoComplete\ProductsTemplateSelector.cs" />
+    <Compile Include="Controls\AutoComplete\ISuggestionProvider.cs" />
     <Compile Include="Common\SalesException.cs" />
     <Compile Include="Controls\AutoComplete\AutoCompleteTextBox.cs" />
     <Compile Include="Controls\AutoComplete\BindingEvaluator.cs" />
-    <Compile Include="Controls\AutoComplete\ProductsSuggestionProvider.cs" />
     <Compile Include="Controls\AutoComplete\SelectionAdapter.cs" />
     <Compile Include="Controls\TouchableNumeric.cs" />
     <Compile Include="Models\DiscountM.cs" />
@@ -108,19 +111,15 @@
     <Compile Include="GUI\Copy of SalesGUI.Designer.cs">
       <DependentUpon>Copy of SalesGUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\CreateForms\BundleForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\CreateForms\BundleForm.Designer.cs">
-      <DependentUpon>BundleForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Common\PopupProperties.cs" />
     <Compile Include="Services\InteropService.cs" />
     <Compile Include="Services\SalesFactoryService.cs" />
     <Compile Include="ViewModels\PopupViewModel.cs" />
+    <Compile Include="ViewModels\Sales\BuyAndGetViewModel.cs" />
     <Compile Include="ViewModels\Sales\LowPricedProductViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\SaleViewModel.cs" />
+    <Compile Include="ViewModels\Sales\SaleViewModel.cs" />
+    <Compile Include="ViewModels\TestViewModel.cs" />
     <Compile Include="ViewModels\Utilities\NumPadViewModel.cs" />
     <Compile Include="ViewModels\Utilities\SalesPropertiesViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
@@ -139,23 +138,11 @@
     <Compile Include="GUI\Controls\TouchableNumeric.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\CreateForms\BuyAndGetAdvancedForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\CreateForms\BuyAndGetAdvancedForm.Designer.cs">
-      <DependentUpon>BuyAndGetAdvancedForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\CreateForms\BundleAdvancedForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\CreateForms\BundleAdvancedForm.Designer.cs">
       <DependentUpon>BundleAdvancedForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\CreateForms\LowPriceProductForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\CreateForms\LowPriceProductForm.Designer.cs">
-      <DependentUpon>LowPriceProductForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\CreateForms\SingularBuyAndGet.cs">
       <SubType>Form</SubType>
@@ -206,6 +193,9 @@
     <Compile Include="Interop\SalesGUI.Designer.cs">
       <DependentUpon>SalesGUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Sales\BuyAndGetView.xaml.cs">
+      <DependentUpon>BuyAndGetView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Sales\LowPricedProductView.xaml.cs">
       <DependentUpon>LowPricedProductView.xaml</DependentUpon>
     </Compile>
@@ -226,6 +216,7 @@
   <ItemGroup>
     <Content Include="InteropUserControl.bmp" />
     <Content Include="InteropUserControl.rc" />
+    <Resource Include="Resources\Images\search_icon.png" />
     <Resource Include="Resources\Images\down.png" />
   </ItemGroup>
   <ItemGroup>
@@ -258,20 +249,11 @@
       <DependentUpon>Copy of SalesGUI.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\CreateForms\BundleForm.resx">
-      <DependentUpon>BundleForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GUI\Utilities\NumPad.resx">
       <DependentUpon>NumPad.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\CreateForms\BundleAdvancedForm.resx">
       <DependentUpon>BundleAdvancedForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\CreateForms\BuyAndGetAdvancedForm.resx">
-      <DependentUpon>BuyAndGetAdvancedForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\CreateForms\LowPriceProductForm.resx">
-      <DependentUpon>LowPriceProductForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\CreateForms\SingularBuyAndGet.resx">
       <DependentUpon>SingularBuyAndGet.cs</DependentUpon>
@@ -300,9 +282,17 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\AutoComplete\Generic.xaml">
+    <Page Include="Controls\AutoComplete\AutoCompleteLook.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\CommonDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Sales\BuyAndGetView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TestView.xaml">
       <SubType>Designer</SubType>

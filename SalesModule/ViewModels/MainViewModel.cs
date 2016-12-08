@@ -8,10 +8,15 @@ namespace SalesModule.ViewModels
     internal class MainViewModel
     {
         public DelegateCommand<SaleTypes> OpenCommand { get; private set; }
+        public DelegateCommand ManagementCommand { get; private set; }
+
+        public DelegateCommand TestCommand { get; private set; }
 
         public MainViewModel()
         {
             OpenCommand = new DelegateCommand<SaleTypes>(openNewSale);
+            ManagementCommand = new DelegateCommand(openManagement);
+            TestCommand = new DelegateCommand(testFunc);
         }
 
         private void openNewSale(SaleTypes type)
@@ -23,6 +28,17 @@ namespace SalesModule.ViewModels
                 MessageBox.Show("המבצע נוצר בהצלחה!");
             else
                 MessageBox.Show("אירעה שגיאה בזמן יצירת המבצע אנא פנה אל מרכז התמיכה");
+        }
+
+        private void openManagement()
+        {
+            //### InteropService.OpenWindow(openManagement);
+        }
+
+        private void testFunc()
+        {
+            var vm = new TestViewModel();
+            InteropService.OpenWindow(vm, vm.PopupProperties);
         }
     }
 }

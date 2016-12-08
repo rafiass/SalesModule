@@ -12,29 +12,37 @@ namespace SalesModule
             if (value == null || parameter == null) return Visibility.Collapsed;
             if (targetType == typeof(Visibility))
                 return value.Equals(parameter) ? Visibility.Visible : Visibility.Collapsed;
-            else if (targetType == typeof(bool))
+            else if (targetType.GenericTypeArguments.Length > 0 &&
+                targetType.GenericTypeArguments[0].FullName == "System.Boolean" ||
+                targetType.FullName == "System.Boolean")
                 return value.Equals(parameter);
             else throw new NotImplementedException();
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
+            if ((bool)value) return parameter;
+            else return Binding.DoNothing;
         }
     }
     //internal class BoolToVisibilityConverter : IValueConverter
     //{
     //    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     //    {
-    //        if (value == null || parameter == null) return Visibility.Collapsed;
-    //        if (targetType == typeof(Visibility))
-    //            return value.Equals(parameter) ? Visibility.Visible : Visibility.Collapsed;
-    //        else if (targetType == typeof(bool))
-    //            return value.Equals(parameter);
-    //        else throw new NotImplementedException();
     //    }
     //    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     //    {
-    //        return null;
     //    }
     //}
+
+    internal class NoOpConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value;
+        }
+    }
 }

@@ -150,6 +150,44 @@ namespace SalesModule.Services
                 CloseConnection();
             }
         }
+        public IProductM GetProduct(string id, bool isPluno)
+        {
+            ActivityLogService.Logger.LogCall(id, isPluno);
+            var dt = new DataTable();
+            string sql;
+            try
+            {
+                CheckIsRemote();
+                if (isPluno)
+                {
+                    sql = "select pname,barcode,kind3 from plu where pluno=@pluno";
+                    _cmd = new SqlCommand(sql, _conn);
+                    _cmd.Parameters.Add(new SqlParameter("@pluno", SqlDbType.VarChar)).Value = id;
+
+                    OpenConnection();
+                    var da = new SqlDataAdapter(_cmd);
+                    da.Fill(dt);
+
+                    var R = dt.Rows[0];
+                    return new ProductM(id, R["pname"].ToString(),
+                        R["barcode"].ToString(), R["kind3"] as int?);
+                }
+                else
+                {
+                    //### get CategoryM 
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                ActivityLogService.Logger.LogError(ex);
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
 
         private DataTable SearchProducts(string term, string colName, bool isLikable = true)
         {
@@ -399,6 +437,7 @@ namespace SalesModule.Services
 
         public bool EditSaleM(SaleM sale)
         {
+            if (sale == null) return false;
             ActivityLogService.Logger.LogCall();
             _trans = null;
 

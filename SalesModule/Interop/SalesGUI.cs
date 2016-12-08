@@ -297,7 +297,6 @@ namespace SalesModule
             SaleM s = null;
             switch (type)
             {
-                case SaleTypes.SingularLowerPrice: s = LowPriceProductForm.Create(); break;
                 case SaleTypes.SingularBuyAndGet: s = SingularBuyAndGet.Create(); break;
                 //case SaleTypes.Buy2GetAdvanced: s = Buy2GetAdvancedForm.Create(); break;
                 case SaleTypes.AdvancedBundle: s = BundleAdvancedForm.Create(); break;

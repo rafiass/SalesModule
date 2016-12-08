@@ -61,7 +61,6 @@ namespace SalesModule.GUI
                 var sale = group.Sales[0];
                 switch (sale.Type)
                 {
-                    case SaleTypes.SingularLowerPrice: sale = LowPriceProductForm.Edit(sale); break;
                     case SaleTypes.SingularBuyAndGet: sale = SingularBuyAndGet.Edit(sale); break;
                     //case SaleTypes.Buy2GetAdvanced: sale = Buy2GetAdvancedForm.Edit(sale); break;
                     case SaleTypes.AdvancedBundle: sale = BundleAdvancedForm.Edit(sale); break;

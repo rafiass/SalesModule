@@ -1,16 +1,37 @@
 ﻿
+using SalesModule.ViewModels;
 namespace SalesModule.Models
 {
     internal enum DiscountTypes { Nothing = 1, Percentage, Fix_Price, Fix_Discount };
-    internal class DiscountM
+    internal class DiscountM : ViewModelBase
     {
-        public double Amount { get; private set; }
-        public DiscountTypes Type { get; private set; }
+        private double _amount;
+        private DiscountTypes _type;
+
+        public double Amount
+        {
+            get { return _amount; }
+            set
+            {
+                if (SetProperty(ref _amount, value))
+                    OnPropertyChanged("Summary");
+            }
+        }
+        public DiscountTypes Type
+        {
+            get { return _type; }
+            set
+            {
+                if (SetProperty(ref _type, value))
+                    OnPropertyChanged("Summary");
+            }
+        }
+        public string Summary { get { return ToString(); } }
 
         public DiscountM(double amount, DiscountTypes type)
         {
-            Amount = amount;
-            Type = type;
+            _amount = amount;
+            _type = type;
         }
 
         public double GetDiscount(double productPrice)

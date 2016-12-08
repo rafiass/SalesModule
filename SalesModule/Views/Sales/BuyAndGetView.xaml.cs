@@ -3,11 +3,11 @@
 namespace SalesModule.Views
 {
     /// <summary>
-    /// Interaction logic for DiscountView.xaml
+    /// Interaction logic for BuyAndGetView.xaml
     /// </summary>
-    public partial class DiscountView : UserControl
+    public partial class BuyAndGetView : UserControl
     {
-        public DiscountView()
+        public BuyAndGetView()
         {
             InitializeComponent();
         }

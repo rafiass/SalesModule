@@ -4,12 +4,28 @@
                     xmlns:vm="clr-namespace:SalesModule.ViewModels"
                     xmlns:v="clr-namespace:SalesModule.Views">
 
+    <!-- Common: -->
+    <DataTemplate DataType="{x:Type vm:SalesPropertiesViewModel}">
+        <v:SalesPropertiesView DataContext="{Binding}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:NumPadViewModel}">
+        <v:NumPadView DataContext="{Binding}" />
+    </DataTemplate>
+
+    <!-- Sales: -->
     <DataTemplate DataType="{x:Type vm:LowPricedProductViewModel}">
         <v:LowPricedProductView DataContext="{Binding}" />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type vm:SalesPropertiesViewModel}">
-        <v:SalesPropertiesView DataContext="{Binding}" />
+    <DataTemplate DataType="{x:Type vm:BuyAndGetViewModel}">
+        <v:BuyAndGetView DataContext="{Binding}" />
+    </DataTemplate>
+
+    
+    <!-- Misc -->
+    <DataTemplate DataType="{x:Type vm:TestViewModel}">
+        <v:TestView DataContext="{Binding}" />
     </DataTemplate>
 
 </ResourceDictionary>

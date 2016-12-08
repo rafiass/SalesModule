@@ -15,7 +15,7 @@ namespace SalesModule.ViewModels
 
         protected bool SetProperty<T>(ref T property, T val, [CallerMemberName] string propertyname = null)
         {
-            if (property.Equals(val)) return false;
+            if (property != null && val != null && property.Equals(val)) return false;
 
             property = val;
             if (!string.IsNullOrEmpty(propertyname))

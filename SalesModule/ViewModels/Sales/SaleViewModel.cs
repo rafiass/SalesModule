@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using SalesModule.Models;
 using SalesModule.Services;
@@ -7,14 +8,13 @@ namespace SalesModule.ViewModels
 {
     internal abstract class SaleViewModel : PopupViewModel
     {
-        private bool _isEditing { get { return _index != -1; } }
-        private int _index;
-        private int _ID;
-        private SalesPropertiesM _prop;
+        protected bool _isEditing { get { return _index != -1; } }
+        protected int _index { get; private set; }
+        protected int _ID { get; private set; }
+        protected SalesPropertiesM _prop { get; private set; }
         private SaleM _assembled;
 
         public SaleM Conducted { get; private set; }
-        public abstract PopupProperties PopupProperties { get; }
 
         public DelegateCommand PropertiesCommand { get; private set; }
         public DelegateCommand CommitCommand { get; private set; }
@@ -30,13 +30,13 @@ namespace SalesModule.ViewModels
             _index = s != null ? s.Index : -1;
             _ID = s != null ? s.SaleID : -1;
             _prop = s != null ? s.Properties :
-                new SalesPropertiesM("מוצר במבצע");
+                CreateSaleProperties();
 
             PropertiesCommand = new DelegateCommand(propertiesFunc);
             CommitCommand = new DelegateCommand(CommitFunc);
             CancelCommand = new DelegateCommand(CancelFunc);
 
-            if (s == null) LoadSale(s);
+            if (s != null) LoadSale(s);
             else LoadSale();
         }
 
@@ -44,13 +44,19 @@ namespace SalesModule.ViewModels
         protected abstract void LoadSale(SaleM s);
         protected abstract SaleM CreateSale();
 
+        protected virtual SalesPropertiesM CreateSaleProperties()
+        {
+            return new SalesPropertiesM("מוצר במבצע");
+        }
+        protected virtual SalesPropertiesViewModel CreatePropertiesSettings()
+        {
+            return new SalesPropertiesViewModel(_prop) { DatesEnabled = !_isEditing };
+        }
+
         private void propertiesFunc()
         {
-            var propVM = new SalesPropertiesViewModel(_prop);
-            //prop.RecurrenceEnabled = false;
-            propVM.DatesEnabled = !_isEditing;
-
-            InteropService.OpenWindow(propVM, SalesPropertiesViewModel.PopupProperties);
+            var propVM = CreatePropertiesSettings();
+            InteropService.OpenWindow(propVM, propVM.PopupProperties);
             _prop = propVM.Conducted;
         }
 
@@ -73,13 +79,23 @@ namespace SalesModule.ViewModels
         }
         private void CancelFunc()
         {
-            //### SaleViewModel: are you sure you want to quit?
+            if (MessageBox.Show("שינויים שעשית לא נשמרו. האם אתה בטוח שברצונך לצאת?",
+                "ביטול שינויים", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                return;
             Conducted = _assembled;
             CloseWindow();
         }
-        protected internal override void WindowClosed()
+        protected internal override void WindowClosing(CancelEventArgs e)
         {
-            CancelFunc();
+            if (Conducted != null) return;
+
+            if (MessageBox.Show("שינויים שעשית לא נשמרו. האם אתה בטוח שברצונך לצאת?",
+                "ביטול שינויים", MessageBoxButton.YesNo) == MessageBoxResult.No)
+            {
+                e.Cancel = true;
+                return;
+            }
+            Conducted = _assembled;
         }
     }
 }

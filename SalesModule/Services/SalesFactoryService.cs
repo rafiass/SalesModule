@@ -15,7 +15,7 @@ namespace SalesModule.Services
             {
                 case SaleTypes.SingularLowerPrice: svm = new LowPricedProductViewModel(); break;
                 case SaleTypes.SingularDiscount: svm = null; break;
-                case SaleTypes.SingularBuyAndGet: svm = null; break;
+                case SaleTypes.SingularBuyAndGet: svm = new BuyAndGetViewModel(); break;
                 case SaleTypes.AdvancedBuyAndGet: svm = null; break;
                 case SaleTypes.AdvancedBundle: svm = null; break;
                 default: svm = null; break;
@@ -36,7 +36,7 @@ namespace SalesModule.Services
                 {
                     case SaleTypes.SingularLowerPrice: svm = new LowPricedProductViewModel(sale); break;
                     case SaleTypes.SingularDiscount: svm = null; break;
-                    case SaleTypes.SingularBuyAndGet: svm = null; break;
+                    case SaleTypes.SingularBuyAndGet: svm = new BuyAndGetViewModel(sale); break;
                     case SaleTypes.AdvancedBuyAndGet: svm = null; break;
                     case SaleTypes.AdvancedBundle: svm = null; break;
                     default: svm = null; break;

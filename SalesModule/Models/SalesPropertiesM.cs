@@ -19,8 +19,7 @@ namespace SalesModule.Models
             : this(title, 0, null, 1, 1)
         { }
         public SalesPropertiesM(string title, double MinPrice, double? maxPrice, int maxInstances, int maxRecurrences)
-            : this(title, MinPrice, maxPrice, maxInstances, maxRecurrences,
-             true, DateTime.Now, DateTime.Now + new TimeSpan(7, 0, 0, 0))
+            : this(title, MinPrice, maxPrice, maxInstances, maxRecurrences, true, DateTime.Now, null)
         { }
         public SalesPropertiesM(string title, double minPrice, double? maxPrice,
             int maxInstances, int maxRecurrences, bool IsBroad, DateTime from, DateTime? to)
