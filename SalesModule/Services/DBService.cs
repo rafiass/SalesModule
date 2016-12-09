@@ -577,7 +577,7 @@ namespace SalesModule.Services
                         (DiscountTypes)int.Parse(Rs["TotalOffType"].ToString()));
 
                     sales.Add(new SaleM((SaleTypes)int.Parse(Rs["SaleType"].ToString()), prop, reqs, outs,
-                        disc, int.Parse(Rs["GroupIndex"].ToString()), int.Parse(Rs["SaleID"].ToString())));
+                        disc, int.Parse(Rs["GroupIndex"].ToString()), saleId));
                 }
 
                 sql = "select g.*, e.ename, e.uid from SalesGroup as g inner join emp as e on g.empno = e.empno where g.GroupID= @groupID";
@@ -666,9 +666,10 @@ namespace SalesModule.Services
             try
             {
                 CheckIsRemote();
-                //string sqlTitle = "case when (Max(GroupIndex) from Sales == 1) then " +
-                //    "(select the first sale's Title) else ('Sale #' + CONVERT(varchar(10), g.GroupID)) end";
-                sql = "select g.GroupID, ('Sale #' + CONVERT(varchar(10), g.GroupID)) as Title, e.ename, g.isEnabled, g.DateCreated " +
+                string sqlTitle = "IIF((select Max(GroupIndex) from Sales where SaleGroupID=g.GroupID) = 1, " +
+                                  "(select Top 1 Title from Sales where SaleGroupID=g.groupID), " +
+                                  "('Sales Group #' + CONVERT(varchar(10), g.GroupID)))";
+                sql = "select g.GroupID, " + sqlTitle + " as Title, e.ename, g.isEnabled, g.DateCreated " +
                     "from SalesGroup as g inner join emp as e on e.empno = g.empno order by g.DateCreated";
                 _cmd = new SqlCommand(sql, _conn);
 
@@ -687,8 +688,8 @@ namespace SalesModule.Services
                 CloseConnection();
             }
         }
-
-        public bool DisableSaleM(int groupID, bool isEnabled)
+        
+        public bool DisableSaleGroupM(int groupID, bool isEnabled)
         {
             ActivityLogService.Logger.LogCall(groupID, isEnabled);
             string sql;

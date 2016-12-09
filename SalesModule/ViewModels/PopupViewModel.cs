@@ -5,6 +5,8 @@ namespace SalesModule.ViewModels
 {
     internal abstract class PopupViewModel : ViewModelBase
     {
+        protected bool IsClosing { get; set; }
+
         //internal can set but only protected can execute
         protected Action CloseWindow { get; private set; }
         public abstract PopupProperties PopupProperties { get; }
@@ -12,6 +14,7 @@ namespace SalesModule.ViewModels
         public PopupViewModel()
         {
             CloseWindow = () => { };
+            IsClosing = false;
         }
 
         protected internal virtual void WindowClosed()
@@ -22,7 +25,7 @@ namespace SalesModule.ViewModels
         }
         internal void SetCloseAction(Action closeWin)
         {
-            CloseWindow = closeWin;
+            CloseWindow = () => { IsClosing = true; closeWin(); };
         }
     }
 }

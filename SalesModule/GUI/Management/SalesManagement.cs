@@ -46,7 +46,7 @@ namespace SalesModule.GUI
                 }
                 if (senderGrid.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
                 {
-                    DBService.GetService().DisableSaleM(groupID,
+                    DBService.GetService().DisableSaleGroupM(groupID,
                         !bool.Parse(senderGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString()));
                     populate_DGV();
                 }
@@ -63,7 +63,7 @@ namespace SalesModule.GUI
                 {
                     case SaleTypes.SingularBuyAndGet: sale = SingularBuyAndGet.Edit(sale); break;
                     //case SaleTypes.Buy2GetAdvanced: sale = Buy2GetAdvancedForm.Edit(sale); break;
-                    case SaleTypes.AdvancedBundle: sale = BundleAdvancedForm.Edit(sale); break;
+                    case SaleTypes.Bundle: sale = BundleAdvancedForm.Edit(sale); break;
                 }
                 if (sale != null)
                 {

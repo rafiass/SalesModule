@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:v="clr-namespace:SalesModule.Views"
              xmlns:cntrls="clr-namespace:SalesModule.Controls"
-             FlowDirection="RightToLeft" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
+             FlowDirection="RightToLeft" mc:Ignorable="d" d:DesignHeight="700" d:DesignWidth="600">
     <Grid Margin="7">
         <Grid.RowDefinitions>
             <RowDefinition Height="40*" />
@@ -12,24 +13,26 @@
             <RowDefinition Height="35*" />
             <RowDefinition Height="30*" />
             <RowDefinition Height="35*" />
+            <RowDefinition Height="80*" />
             <RowDefinition Height="60*" />
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Content="מבצע 'קנה וקבל'" FontSize="18"
                HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-
         <TextBlock Grid.Row="1" Text="קנה פריט" Width="65"
                    HorizontalAlignment="Left" VerticalAlignment="Center" />
         <cntrls:TouchableNumeric Grid.Row="1" Margin="65,6,0,6" Value="{Binding BuyAmount}" Increment="0.1" Minimum="0.1" />
-        <cntrls:AutoCompleteTextBox Grid.Row="2" SelectedItem="{Binding BuyProduct, Mode=TwoWay}" Margin="5,8" />
+        <cntrls:AutoCompleteTextBox Grid.Row="2" SelectedItem="{Binding BuyProduct}" Margin="5,8" />
 
         <TextBlock Grid.Row="3" Text="קבל פריט" Width="65"
                    HorizontalAlignment="Left" VerticalAlignment="Center" />
         <cntrls:TouchableNumeric Grid.Row="3" Margin="65,6,0,6" Value="{Binding GetAmount}" Increment="0.1" Minimum="0.1" />
-        <cntrls:AutoCompleteTextBox Grid.Row="4" SelectedItem="{Binding GetProduct, Mode=TwoWay}" Margin="5,8" />
+        <cntrls:AutoCompleteTextBox Grid.Row="4" SelectedItem="{Binding GetProduct}" Margin="5,8" />
 
-        <Grid Grid.Row="5" Margin="0,5">
+        <v:DiscountView Grid.Row="5" DataContext="{Binding GetDiscount}" />
+        
+        <Grid Grid.Row="6" Margin="0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -38,7 +41,7 @@
 
             <Button Grid.Column="0" Content="ביטול" Command="{Binding CancelCommand}" IsCancel ="True" Margin="5,0" />
             <Button Grid.Column="1" Content="מאפיינים..." Command="{Binding PropertiesCommand}" Margin="5,0" />
-            <Button Grid.Column="2" Content="בצע" Command="{Binding CommitCommand}" IsDefault="True" Margin="5,0" />
-        </Grid>
+            <Button Grid.Column="2" Content="בצע" Command="{Binding CommitCommand}" Margin="5,0" />
+           </Grid>
     </Grid>
 </UserControl>

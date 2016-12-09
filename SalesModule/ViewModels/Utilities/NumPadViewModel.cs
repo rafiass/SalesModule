@@ -18,8 +18,7 @@ namespace SalesModule.ViewModels
                 {
                     Title = "בחר ערך",
                     Width = 348,
-                    Height = 529,
-                    IsModal = true
+                    Height = 529
                 };
             }
         }
@@ -78,7 +77,7 @@ namespace SalesModule.ViewModels
         }
         protected internal override void WindowClosing(CancelEventArgs e)
         {
-            if (Results != null) return;
+            if (IsClosing) return;
 
             if (Value != 0.0 && MessageBox.Show("שינויים שעשית לא נשמרו. האם אתה בטוח שברצונך לצאת?",
                 "ביטול שינויים", MessageBoxButton.YesNo) == MessageBoxResult.No)

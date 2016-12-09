@@ -2,10 +2,114 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            <Label Content="Properties" />
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:cntrls="clr-namespace:SalesModule.Controls"
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="TextAlignment" Value="Center" />
+            </Style>
+            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="12,7">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*" />
+            <RowDefinition Height="9*" />
+            <RowDefinition Height="7*" />
+            <RowDefinition Height="7*" />
+            <RowDefinition Height="7*" />
+            <RowDefinition Height="7*" />
+            <RowDefinition Height="23*" />
+            <RowDefinition Height="15*" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.ColumnSpan="2" Content="הגדרות מתקדמות" FontSize="14"
+               HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <TextBlock Grid.Row="1" Text="שם המבצע" />
+        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding SaleTitle}" Margin="75,8,0,8" />
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="160" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="ערך מינימאלי של הסל" />
+            <cntrls:TouchableNumeric Grid.Column="1" Value="{Binding MinPrice}"
+                                     Increment="0.1" Margin="7,5,0,5" />
+        </Grid>
+
+        <Grid Grid.Row="3" IsEnabled="{Binding IsMaxEnabled}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="160" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="0" IsChecked="{Binding IsPriceLimited}" />
+            <TextBlock Grid.Column="0" Text="ערך מקסימאלי של הסל" Margin="20,0,0,0" />
+            <cntrls:TouchableNumeric Grid.Column="1" Value="{Binding MaxPrice}" IsEnabled="{Binding IsPriceLimited}"
+                                     Minimum="0.1" Increment="0.1" Margin="7,5,0,5" />
+        </Grid>
+
+        <Grid Grid.Row="4" IsEnabled="{Binding IsMultiplyEnabled}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="160" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="0" IsChecked="{Binding IsMultiplyLimited}" />
+            <TextBlock Grid.Column="0" Text="הגבל כפל מבצעים" Margin="20,0,0,0" />
+            <cntrls:TouchableNumeric Grid.Column="1" Value="{Binding InstanceMultiply}" IsEnabled="{Binding IsMultiplyLimited}"
+                                     DecimalPlaces="0" Minimum="1" Margin="7,5,0,5" />
+        </Grid>
+
+        <Grid Grid.Row="5" IsEnabled="{Binding IsRecurrenceEnabled}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="160" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="0" IsChecked="{Binding IsRecurrenceLimited}" />
+            <TextBlock Grid.Column="0" Text="חזרות עבור כל כפילות" Margin="20,0,0,0" />
+            <cntrls:TouchableNumeric Grid.Column="1" Value="{Binding RecurrencePerInstance}" IsEnabled="{Binding IsRecurrenceLimited}"
+                                     DecimalPlaces="0" Minimum="1" Margin="7,5,0,5" />
+        </Grid>
+
+        <Grid Grid.Row="6" IsEnabled="{Binding IsDatesEnabled}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="50" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Row="0" IsChecked="{Binding IsBroadSale}" />
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="החל על כל הסניפים" Margin="20,0,0,0" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="מ-" />
+            <DatePicker Grid.Row="1" Grid.Column="1" Margin="0,7" SelectedDate="{Binding DateFrom}" IsEnabled="{Binding IsBroadSale}" />
+
+            <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding IsSaleDatesLimited}" IsEnabled="{Binding IsBroadSale}" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="עד-" Margin="20,0,0,0" />
+            <Grid Grid.Row="2" Grid.Column="1" Margin="0,7" IsEnabled="{Binding IsBroadSale}">
+                <DatePicker SelectedDate="{Binding DateTo}" IsEnabled="{Binding IsSaleDatesLimited}" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="7" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="ביטול" Command="{Binding CancelCommand}" IsCancel ="True" Margin="0,8" />
+            <Button Grid.Column="2" Content="אישור" Command="{Binding CommitCommand}" IsDefault="True" Margin="0,8" />
+        </Grid>
     </Grid>
 </UserControl>

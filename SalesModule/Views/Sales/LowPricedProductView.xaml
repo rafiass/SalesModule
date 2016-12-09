@@ -23,9 +23,9 @@
 
         <TextBlock Grid.Row="1" Text="בחר מוצר:" Width="65"
                    HorizontalAlignment="Left" VerticalAlignment="Center" />
-        <cntrls:AutoCompleteTextBox Grid.Row="1" SelectedItem="{Binding SelectedProduct, Mode=TwoWay}" Margin="65,7,5,8" />
+        <cntrls:AutoCompleteTextBox Grid.Row="1" SelectedItem="{Binding SelectedProduct}" Margin="65,7,5,8" />
 
-        <v:DiscountView Grid.Row="2" DataContext="{Binding Discount, Mode=OneWay}" />
+        <v:DiscountView Grid.Row="2" DataContext="{Binding Discount}" />
 
         <Grid Grid.Row="3">
             <Grid.RowDefinitions>
@@ -39,14 +39,14 @@
 
             <CheckBox Grid.Column="0" Grid.Row="0" IsChecked="{Binding IsDiscountPerAmount}" Content="מבצע על כמות:" VerticalAlignment="Center" />
             <CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding IsAmountLimited}"  Content="הגבלת כמות:" VerticalAlignment="Center" />
-            <cntrls:TouchableNumeric Grid.Column="1" Grid.Row="0" Value="{Binding AmountDiscounted}" Increment="0.1" Minimum="0.1"
+            <cntrls:TouchableNumeric Grid.Column="1" Grid.Row="0" Value="{Binding AmountDiscounted}" Increment="1" Minimum="1"
                                      IsEnabled="{Binding IsDiscountPerAmount}" Margin="15,0" VerticalAlignment="Center" />
-            <cntrls:TouchableNumeric Grid.Column="1" Grid.Row="1" Value="{Binding LimitedAmount}" Increment="0.1" Minimum="0.1"
+            <cntrls:TouchableNumeric Grid.Column="1" Grid.Row="1" Value="{Binding LimitedAmount}" Increment="1" Minimum="1"
                                      IsEnabled="{Binding IsAmountLimited}" Margin="15,0" VerticalAlignment="Center" />
         </Grid>
 
         <CheckBox Grid.Row="4" IsChecked="{Binding IsGiftAvailable}" Content="הוסף מוצר במתנה:" VerticalAlignment="Center" />
-        <cntrls:AutoCompleteTextBox Grid.Row="5" SelectedItem="{Binding Gifted, Mode=TwoWay}" Margin="35,5,7,5"
+        <cntrls:AutoCompleteTextBox Grid.Row="5" SelectedItem="{Binding Gifted}" Margin="35,5,7,5"
                                     IsEnabled="{Binding IsGiftAvailable, Mode=OneWay}" />
 
         <Grid Grid.Row="6" Margin="0,5">

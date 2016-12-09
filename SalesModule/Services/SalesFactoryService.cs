@@ -13,15 +13,14 @@ namespace SalesModule.Services
             SaleViewModel svm;
             switch (type)
             {
+                case SaleTypes.TargetPrice: svm = null; break;
                 case SaleTypes.SingularLowerPrice: svm = new LowPricedProductViewModel(); break;
-                case SaleTypes.SingularDiscount: svm = null; break;
                 case SaleTypes.SingularBuyAndGet: svm = new BuyAndGetViewModel(); break;
-                case SaleTypes.AdvancedBuyAndGet: svm = null; break;
-                case SaleTypes.AdvancedBundle: svm = null; break;
+                case SaleTypes.Bundle: svm = null; break;
                 default: svm = null; break;
             }
             if (svm == null)
-                return null;
+                throw new ArgumentException("לא ניתן ליצור את המבצע הנדרש");
 
             InteropService.OpenWindow(svm, svm.PopupProperties);
             return svm.Conducted;
@@ -34,15 +33,14 @@ namespace SalesModule.Services
                 SaleViewModel svm;
                 switch (sale.Type)
                 {
+                    case SaleTypes.TargetPrice: svm = null; break;
                     case SaleTypes.SingularLowerPrice: svm = new LowPricedProductViewModel(sale); break;
-                    case SaleTypes.SingularDiscount: svm = null; break;
                     case SaleTypes.SingularBuyAndGet: svm = new BuyAndGetViewModel(sale); break;
-                    case SaleTypes.AdvancedBuyAndGet: svm = null; break;
-                    case SaleTypes.AdvancedBundle: svm = null; break;
+                    case SaleTypes.Bundle: svm = null; break;
                     default: svm = null; break;
                 }
                 if (svm == null)
-                    return null;
+                    throw new ArgumentException("לא ניתן לערוך את המבצע הקיים");
 
                 InteropService.OpenWindow(svm, svm.PopupProperties);
                 return svm.Conducted;

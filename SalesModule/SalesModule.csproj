@@ -55,7 +55,7 @@
     <DefineConstants>TRACE;COM_INTEROP_ENABLED</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RegisterForComInterop>true</RegisterForComInterop>
+    <RegisterForComInterop>false</RegisterForComInterop>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -85,6 +85,7 @@
     <Compile Include="Controls\AutoComplete\BindingEvaluator.cs" />
     <Compile Include="Controls\AutoComplete\SelectionAdapter.cs" />
     <Compile Include="Controls\TouchableNumeric.cs" />
+    <Compile Include="Engine\ShoppingItem.cs" />
     <Compile Include="Models\DiscountM.cs" />
     <Compile Include="Models\SalesPropertiesM.cs" />
     <Compile Include="Services\ActivityLogService.cs" />
@@ -114,13 +115,16 @@
     <Compile Include="Common\PopupProperties.cs" />
     <Compile Include="Services\InteropService.cs" />
     <Compile Include="Services\SalesFactoryService.cs" />
+    <Compile Include="ViewModels\Management\SalesManagementViewModel.cs" />
     <Compile Include="ViewModels\PopupViewModel.cs" />
     <Compile Include="ViewModels\Sales\BuyAndGetViewModel.cs" />
     <Compile Include="ViewModels\Sales\LowPricedProductViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\Sales\SaleViewModel.cs" />
+    <Compile Include="ViewModels\Sales\TargetPriceViewModel.cs" />
     <Compile Include="ViewModels\TestViewModel.cs" />
     <Compile Include="ViewModels\Utilities\NumPadViewModel.cs" />
+    <Compile Include="ViewModels\Utilities\ProductFinderViewModel.cs" />
     <Compile Include="ViewModels\Utilities\SalesPropertiesViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\MainView.xaml.cs">
@@ -193,11 +197,17 @@
     <Compile Include="Interop\SalesGUI.Designer.cs">
       <DependentUpon>SalesGUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Management\SalesManagementView.xaml.cs">
+      <DependentUpon>SalesManagementView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Sales\BuyAndGetView.xaml.cs">
       <DependentUpon>BuyAndGetView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Sales\LowPricedProductView.xaml.cs">
       <DependentUpon>LowPricedProductView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Sales\TargetPriceView.xaml.cs">
+      <DependentUpon>TargetPriceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Utilities\NumPadView.xaml.cs">
       <DependentUpon>NumPadView.xaml</DependentUpon>
@@ -207,6 +217,9 @@
     </Compile>
     <Compile Include="Views\Utilities\DiscountView.xaml.cs">
       <DependentUpon>DiscountView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Utilities\ProductFinderView.xaml.cs">
+      <DependentUpon>ProductFinderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Utilities\SalesPropertiesView.xaml.cs">
       <DependentUpon>SalesPropertiesView.xaml</DependentUpon>
@@ -290,7 +303,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Management\SalesManagementView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Sales\BuyAndGetView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Sales\TargetPriceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -299,6 +320,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Utilities\DiscountView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Utilities\ProductFinderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

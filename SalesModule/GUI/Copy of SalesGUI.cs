@@ -299,7 +299,7 @@ namespace SalesModule
             {
                 case SaleTypes.SingularBuyAndGet: s = SingularBuyAndGet.Create(); break;
                 //case SaleTypes.Buy2GetAdvanced: s = Buy2GetAdvancedForm.Create(); break;
-                case SaleTypes.AdvancedBundle: s = BundleAdvancedForm.Create(); break;
+                case SaleTypes.Bundle: s = BundleAdvancedForm.Create(); break;
             }
             if (s != null)
             {
@@ -335,7 +335,7 @@ namespace SalesModule
         }
         private void btn_advancedBundle_Click(object sender, EventArgs e)
         {
-            createNewSale(SaleTypes.AdvancedBundle);
+            createNewSale(SaleTypes.Bundle);
         }
 
         private void btn_test_Click(object sender, EventArgs e)

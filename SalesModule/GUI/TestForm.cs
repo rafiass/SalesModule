@@ -11,6 +11,7 @@ namespace SalesModule.GUI
             InitializeComponent();
             _engine = new SalesEngine();
             _engine.Initialize();
+            _engine.LoadSales();
             _engine.SaleApplied += s => label2.Text = s.Title + " Applied!";
             _engine.SaleCancelled += id => label2.Text = id + " Cancelled!";
             _engine.EngineRestarted += () => label2.Text = "restarted";

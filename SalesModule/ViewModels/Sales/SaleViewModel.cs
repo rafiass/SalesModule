@@ -12,7 +12,6 @@ namespace SalesModule.ViewModels
         protected int _index { get; private set; }
         protected int _ID { get; private set; }
         protected SalesPropertiesM _prop { get; private set; }
-        private SaleM _assembled;
 
         public SaleM Conducted { get; private set; }
 
@@ -26,7 +25,6 @@ namespace SalesModule.ViewModels
         }
         protected SaleViewModel(SaleM s)
         {
-            _assembled = s;
             _index = s != null ? s.Index : -1;
             _ID = s != null ? s.SaleID : -1;
             _prop = s != null ? s.Properties :
@@ -50,14 +48,14 @@ namespace SalesModule.ViewModels
         }
         protected virtual SalesPropertiesViewModel CreatePropertiesSettings()
         {
-            return new SalesPropertiesViewModel(_prop) { DatesEnabled = !_isEditing };
+            return new SalesPropertiesViewModel(_prop) { IsDatesEnabled = !_isEditing };
         }
 
         private void propertiesFunc()
         {
             var propVM = CreatePropertiesSettings();
             InteropService.OpenWindow(propVM, propVM.PopupProperties);
-            _prop = propVM.Conducted;
+            _prop = propVM.Conducted ?? _prop;
         }
 
         private void CommitFunc()
@@ -82,12 +80,12 @@ namespace SalesModule.ViewModels
             if (MessageBox.Show("שינויים שעשית לא נשמרו. האם אתה בטוח שברצונך לצאת?",
                 "ביטול שינויים", MessageBoxButton.YesNo) == MessageBoxResult.No)
                 return;
-            Conducted = _assembled;
+            Conducted = null;
             CloseWindow();
         }
         protected internal override void WindowClosing(CancelEventArgs e)
         {
-            if (Conducted != null) return;
+            if (IsClosing) return;
 
             if (MessageBox.Show("שינויים שעשית לא נשמרו. האם אתה בטוח שברצונך לצאת?",
                 "ביטול שינויים", MessageBoxButton.YesNo) == MessageBoxResult.No)
@@ -95,7 +93,7 @@ namespace SalesModule.ViewModels
                 e.Cancel = true;
                 return;
             }
-            Conducted = _assembled;
+            Conducted = null;
         }
     }
 }

@@ -13,8 +13,7 @@ namespace SalesModule.ViewModels
                 {
                     Title = "טסט",
                     Width = 500,
-                    Height = 400,
-                    IsModal = true
+                    Height = 400
                 };
             }
         }
@@ -32,6 +31,7 @@ namespace SalesModule.ViewModels
         {
             _engine = new SalesEngine();
             _engine.Initialize();
+            _engine.LoadSales();
             _engine.SaleApplied += s => Status = s.Title + " Applied!";
             _engine.SaleCancelled += id => Status = id + " Cancelled!";
             _engine.EngineRestarted += () => Status = "restarted";

@@ -32,7 +32,8 @@ namespace SalesModule.ViewModels
 
         private void openManagement()
         {
-            //### InteropService.OpenWindow(openManagement);
+            var vm = new SalesManagementViewModel();
+            InteropService.OpenWindow(vm, vm.PopupProperties);
         }
 
         private void testFunc()

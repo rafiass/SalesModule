@@ -50,15 +50,11 @@ namespace SalesModule
         [DispId(5)]
         Image BackgroundImage { get; set; }
 
-        /// <summary>
-        /// Forces the control to invalidate its client area and immediately redraw 
-        /// itself and any child controls.
-        /// </summary>
         [DispId(6)]
-        void Refresh();
+        void Initialize();
 
         [DispId(7)]
-        void Initialize();
+        void Resize(int width, int heigth);
     }
     #endregion
 
@@ -286,6 +282,11 @@ namespace SalesModule
             if (!Enabled)
                 MessageBox.Show("אין אפשרות להפעיל מודל המבצעים.\nאירעה שגיאה בזמן טעינת המודל");
         }
+        public void Resize(int width, int heigth)
+        {
+            mainView1.Width = elementHost1.Width = Width = width;
+            mainView1.Height = elementHost1.Height = Height = heigth;
+        }
         private void SalesGUI_EnabledChanged(object sender, EventArgs e)
         {
             if (Enabled && Wrapper.User == null)
@@ -299,7 +300,7 @@ namespace SalesModule
             {
                 case SaleTypes.SingularBuyAndGet: s = SingularBuyAndGet.Create(); break;
                 //case SaleTypes.Buy2GetAdvanced: s = Buy2GetAdvancedForm.Create(); break;
-                case SaleTypes.AdvancedBundle: s = BundleAdvancedForm.Create(); break;
+                case SaleTypes.Bundle: s = BundleAdvancedForm.Create(); break;
             }
             if (s != null)
             {
@@ -335,7 +336,7 @@ namespace SalesModule
         }
         private void btn_advancedBundle_Click(object sender, EventArgs e)
         {
-            createNewSaleM(SaleTypes.AdvancedBundle);
+            createNewSaleM(SaleTypes.Bundle);
         }
 
         private void btn_test_Click(object sender, EventArgs e)

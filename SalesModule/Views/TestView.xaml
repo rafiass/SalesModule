@@ -8,8 +8,7 @@
     <UserControl.Resources>
         <ResourceDictionary Source="../Resources/ResourceDictionary.xaml" />
     </UserControl.Resources>
-    <Grid>
-        <cntrls:TouchableNumeric Value="100" Maximum="1000"
-                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
+    <Grid IsEnabled="False">
+        <TextBox IsEnabled="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="25" />
     </Grid>
 </UserControl>

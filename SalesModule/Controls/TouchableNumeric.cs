@@ -19,10 +19,10 @@ namespace SalesModule.Controls
             "Maximum", typeof(double?), typeof(TouchableNumeric), new PropertyMetadata(null, callback));
 
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-            "Value", typeof(double), typeof(TouchableNumeric), new PropertyMetadata(0.0, callback));
+            "Value", typeof(double), typeof(TouchableNumeric), new FrameworkPropertyMetadata(0.0, callback) { BindsTwoWayByDefault = true });
 
         public static readonly DependencyProperty DecimalPlacesProperty = DependencyProperty.Register(
-            "DecimalPlaces", typeof(int), typeof(TouchableNumeric), new PropertyMetadata(3, callback));
+            "DecimalPlaces", typeof(int), typeof(TouchableNumeric), new PropertyMetadata(2, callback));
 
         public static readonly DependencyProperty UpCommandProperty = DependencyProperty.Register(
             "UpCommand", typeof(ICommand), typeof(TouchableNumeric), new PropertyMetadata(null));

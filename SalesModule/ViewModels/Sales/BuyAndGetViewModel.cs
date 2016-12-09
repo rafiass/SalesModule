@@ -14,9 +14,8 @@ namespace SalesModule.ViewModels
                 return new PopupProperties()
                 {
                     Title = "קנה וקבל",
-                    Width = 300,
-                    Height = 300,
-                    IsModal = true
+                    Width = 500,
+                    Height = 700
                 };
             }
         }
@@ -25,6 +24,7 @@ namespace SalesModule.ViewModels
         public double BuyAmount { get; set; }
         public IProductM GetProduct { get; set; }
         public double GetAmount { get; set; }
+        public DiscountM GetDiscount { get; private set; }
 
         public BuyAndGetViewModel() : base() { }
         public BuyAndGetViewModel(SaleM s) : base(s) { }
@@ -35,6 +35,7 @@ namespace SalesModule.ViewModels
             BuyAmount = 1;
             GetProduct = null;
             GetAmount = 1;
+            GetDiscount = new DiscountM(0, DiscountTypes.Fix_Price);
         }
         protected override void LoadSale(SaleM s)
         {
@@ -47,6 +48,7 @@ namespace SalesModule.ViewModels
             BuyAmount = s.ReqProducts[0].Amount;
             GetProduct = DBService.GetService().GetProduct(s.Discounted[0].ID, s.Discounted[0].isPluno);
             GetAmount = s.Discounted[0].MaxMultiply;
+            GetDiscount = s.Discounted[0].Discount;
         }
         protected override SaleM CreateSale()
         {
@@ -59,18 +61,18 @@ namespace SalesModule.ViewModels
             reqs.Add(new ProdAmountM(BuyProduct.ID, true, BuyAmount));
             var outs = new List<DiscountedProductM>();
             outs.Add(new DiscountedProductM(GetProduct.ID, true,
-                0, GetAmount, new DiscountM(0, DiscountTypes.Fix_Price)));
+                0, GetAmount, GetDiscount));
             return new SaleM(SaleTypes.SingularBuyAndGet, _prop, reqs, outs, null, _isEditing ? _index : 1, _ID);
         }
 
         protected override SalesPropertiesM CreateSaleProperties()
         {
-            return new SalesPropertiesM("קנה וקבל") {InstanceMultiply = 0};
+            return new SalesPropertiesM("קנה וקבל") { InstanceMultiply = 0 };
         }
         protected override SalesPropertiesViewModel CreatePropertiesSettings()
         {
             var vm = base.CreatePropertiesSettings();
-            //VM.RecurrenceEnabled = false;//###
+            vm.IsRecurrenceEnabled = false;
             return vm;
         }
     }

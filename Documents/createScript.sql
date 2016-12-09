@@ -68,7 +68,7 @@ CREATE TABLE [dbo].[Sales](
 	[GroupIndex] [int] NOT NULL,
 	[SaleType] [int] NOT NULL,
 	[Title] [nvarchar](50) NOT NULL,
-	[MinTotalPrice] [real] default 0, --minimum total price from which the sale is effective
+	[MinTotalPrice] [real] NOT NULL default 0, --minimum total price from which the sale is effective
 	[MaxTotalPrice] [real] default NULL, --maximum total price to which the sale is effective, NULL - unlimited
 	[TotalOffPrice] [real] default 0,
 	[TotalOffType] [int] default 1,
@@ -167,8 +167,7 @@ CREATE TABLE [dbo].SaleTypes(
 ) ON [PRIMARY]
 GO
 
-insert into SaleTypes (TypeName) values ('מוצר בהנחה') -- 1
+insert into SaleTypes (TypeName) values ('מחיר מטרה') -- 1
 insert into SaleTypes (TypeName) values ('מוצר מוזל') -- 2
-insert into SaleTypes (TypeName) values ('קנה וקבל פשוט') -- 3
-insert into SaleTypes (TypeName) values ('קנה וקבל מתקדם') -- 4
-insert into SaleTypes (TypeName) values ('חבילה במבצע מתקדם') -- 5
+insert into SaleTypes (TypeName) values ('קנה קבל') -- 3
+insert into SaleTypes (TypeName) values ('חבילה במבצע') -- 4

@@ -36,6 +36,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.lblInSale = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnDebug
@@ -112,11 +113,24 @@
             this.lblInSale.Size = new System.Drawing.Size(0, 13);
             this.lblInSale.TabIndex = 7;
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(503, 128);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(74, 17);
+            this.checkBox1.TabIndex = 8;
+            this.checkBox1.Text = "Eval sales";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // CashierManualTester
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(590, 489);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.lblInSale);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -142,5 +156,6 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label lblInSale;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

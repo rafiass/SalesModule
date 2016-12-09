@@ -13,6 +13,7 @@ namespace SalesModule
         string Title { get; }
         double Quantity { get; }
         double Discount { get; }
+        ShoppingItem[] Products { get; }
 
         bool IsContainProduct(string pluno);
     }
@@ -50,17 +51,17 @@ namespace SalesModule
         public string Title { get; private set; }
         public double Quantity { get; private set; }
         public double Discount { get; private set; }
-        public List<string> Plunos { get; private set; }
+        public ShoppingItem[] Products { get; private set; }
 
-        public SaleDiscount() : this(-1, "", 0, 0, new List<string>()) { }
-        internal SaleDiscount(int saleID, string title, double QTY, double dis, List<string> plunos)
+        public SaleDiscount() : this(-1, "", 0, 0, new List<ShoppingItem>()) { }
+        internal SaleDiscount(int saleID, string title, double QTY, double dis, List<ShoppingItem> plus)
         {
             SaleID = saleID;
             ID = -1;
             Title = title;
             Quantity = QTY;
             Discount = dis;
-            Plunos = plunos;
+            Products = plus.ToArray();
         }
         static SaleDiscount()
         {
@@ -109,7 +110,10 @@ namespace SalesModule
         }
         public bool IsContainProduct(string pluno)
         {
-            return Plunos.Exists(p => p == pluno);
+            foreach (var p in Products)
+                if (p.Pluno == pluno)
+                    return true;
+            return false;
         }
     }
 

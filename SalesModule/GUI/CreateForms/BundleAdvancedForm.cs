@@ -87,7 +87,7 @@ namespace SalesModule.GUI
                 }
 
                 var reqs = _bundle.ConvertAll<ProdAmountM>(p => p.Item1);
-                _assembled = new SaleM(SaleTypes.AdvancedBundle, _prop, reqs, null,
+                _assembled = new SaleM(SaleTypes.Bundle, _prop, reqs, null,
                     new DiscountM((double)num_price.Value, DiscountTypes.Fix_Price), _isEditing ? _index : 1, _ID);
                 DialogResult = DialogResult.OK;
                 Close();

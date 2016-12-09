@@ -6,8 +6,8 @@ namespace SalesModule
 {
     internal enum SaleTypes
     {
-        None = 0, SingularDiscount, SingularLowerPrice,
-        SingularBuyAndGet, AdvancedBuyAndGet, AdvancedBundle
+        None = 0, TargetPrice, SingularLowerPrice,
+        SingularBuyAndGet, Bundle
     }
 
     internal static class Common
@@ -64,88 +64,6 @@ namespace SalesModule
                         if (sales[i].Add(sales[j]))
                             sales.RemoveAt(j--);
             }
-        }
-    }
-
-    internal class ShoppingItem
-    {
-        public string Pluno { get; private set; }
-        public int? Kind { get; private set; }
-        public double Amount { get; private set; }
-        public double Price { get; private set; }
-
-        public ShoppingItem(string pluno, double amount, double price)
-            : this(pluno, amount, price, null) { }
-        public ShoppingItem(ShoppingItem si)
-            : this(si.Pluno, si.Amount, si.Price, si.Kind)
-        { }
-        public ShoppingItem(string pluno, double amount, double price, int? kind)
-        {
-            Pluno = pluno;
-            Kind = kind;
-            Amount = amount;
-            Price = price;
-        }
-
-        public bool IsTheSameAs(ComperableProductM cp)
-        {
-            return (cp.isPluno && Pluno == cp.ID) ||
-                (!cp.isPluno && Kind != null && Kind.ToString() == cp.ID);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is ShoppingItem)
-            {
-                var si = obj as ShoppingItem;
-                return Pluno == si.Pluno &&
-                    Price == si.Price;
-            }
-            if (obj is ComperableProductM)
-            {
-                return IsTheSameAs(obj as ComperableProductM);
-            }
-            return false;
-        }
-        public static bool operator ==(ShoppingItem si1, ShoppingItem si2)
-        {
-            return si1.Equals(si2);
-        }
-        public static bool operator !=(ShoppingItem si1, ShoppingItem si2)
-        {
-            return !si1.Equals(si2);
-        }
-        public static bool operator ==(ShoppingItem si, ComperableProductM cp)
-        {
-            return si.Equals(cp);
-        }
-        public static bool operator !=(ShoppingItem si, ComperableProductM cp)
-        {
-            return !si.Equals(cp);
-        }
-        public override int GetHashCode()
-        {
-            try
-            {
-                return int.Parse(Pluno);
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        public bool Add(ShoppingItem si)
-        {
-            if (si != this)
-                return false;
-            if (Kind == null) Kind = si.Kind;
-            Amount += si.Amount;
-            return true;
-        }
-        public double Reduce(double amount)
-        {
-            return Amount -= amount;
         }
     }
 

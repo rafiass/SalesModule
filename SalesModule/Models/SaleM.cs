@@ -83,7 +83,7 @@ namespace SalesModule.Models
             if (newBag == null)
                 return discounts;
 
-            List<string> plunosIn = newBag.ConvertAll<string>(si => si.Pluno);
+            var plunosIn = new List<ShoppingItem>(newBag);
             while ((Properties.InstanceMultiply == 0 || saleInstaceCounter <= Properties.InstanceMultiply) &&
                 (saleInstaceCounter * Properties.MinPrice <= totalReceipt) && newBag != null && DiscountFound)
             {

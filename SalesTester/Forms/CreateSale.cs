@@ -16,6 +16,8 @@ namespace SalesTester
         {
             InitializeComponent();
             salesGUI1.Initialize();
+            salesGUI1.Resize(ClientSize.Width, ClientSize.Height);
+            Resize += (s, e) => salesGUI1.Resize(ClientSize.Width, ClientSize.Height);
         }
     }
 }

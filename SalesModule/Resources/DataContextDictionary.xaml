@@ -9,10 +9,15 @@
         <v:SalesPropertiesView DataContext="{Binding}" />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type vm:ProductFinderViewModel}">
+        <v:ProductFinderView DataContext="{Binding}" />
+    </DataTemplate>
+    
     <DataTemplate DataType="{x:Type vm:NumPadViewModel}">
         <v:NumPadView DataContext="{Binding}" />
     </DataTemplate>
 
+    
     <!-- Sales: -->
     <DataTemplate DataType="{x:Type vm:LowPricedProductViewModel}">
         <v:LowPricedProductView DataContext="{Binding}" />
@@ -21,7 +26,15 @@
     <DataTemplate DataType="{x:Type vm:BuyAndGetViewModel}">
         <v:BuyAndGetView DataContext="{Binding}" />
     </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type vm:TargetPriceViewModel}">
+        <v:TargetPriceView DataContext="{Binding}" />
+    </DataTemplate>
 
+    <!-- Management -->
+    <DataTemplate DataType="{x:Type vm:SalesManagementViewModel}">
+        <v:SalesManagementView DataContext="{Binding}" />
+    </DataTemplate>
     
     <!-- Misc -->
     <DataTemplate DataType="{x:Type vm:TestViewModel}">

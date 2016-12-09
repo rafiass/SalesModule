@@ -12,6 +12,19 @@ namespace SalesModule.ViewModels
         public IProductM SelectedProduct { get; set; }
         public DiscountM Discount { get; private set; }
 
+        public override PopupProperties PopupProperties
+        {
+            get
+            {
+                return new PopupProperties()
+                {
+                    Title = "מוצר מוזל",
+                    Width = 350,
+                    Height = 500
+                };
+            }
+        }
+
         public bool IsDiscountPerAmount
         {
             get { return _isDiscountPerAmount; }
@@ -30,20 +43,6 @@ namespace SalesModule.ViewModels
             set { SetProperty(ref _isGiftAvailable, value); }
         }
         public IProductM Gifted { get; set; }
-
-        public override PopupProperties PopupProperties
-        {
-            get
-            {
-                return new PopupProperties()
-                {
-                    Title = "מוצר מוזל",
-                    Width = 350,
-                    Height = 500,
-                    IsModal = true
-                };
-            }
-        }
 
         public LowPricedProductViewModel() : base() { }
         public LowPricedProductViewModel(SaleM s) : base(s) { }
@@ -105,7 +104,7 @@ namespace SalesModule.ViewModels
         protected override SalesPropertiesViewModel CreatePropertiesSettings()
         {
             var vm = base.CreatePropertiesSettings();
-            //VM.RecurrenceEnabled = false;//###
+            vm.IsRecurrenceEnabled = false;
             return vm;
         }
     }

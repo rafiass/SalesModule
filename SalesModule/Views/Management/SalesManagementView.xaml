@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="SalesModule.Views.SalesManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SalesModule"
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="700">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type ListViewItem}">
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="local:CommandBehavior.Event" Value="MouseDoubleClick" />
+                <Setter Property="local:CommandBehavior.Command" Value="{Binding DataContext.EditSaleCommand,
+                    RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                <Setter Property="local:CommandBehavior.CommandParameter" Value="{Binding}" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="ניהול מבצעים" FontSize="18"
+               HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <ListView Grid.Row="1" ItemsSource="{Binding Groups}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="פעיל" Width="{Binding ActualWidth, ElementName=enabledCol}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsEnabled}" HorizontalAlignment="Center" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn DisplayMemberBinding="{Binding GroupID}" Header="#" Width="{Binding ActualWidth, ElementName=IDCol}"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="שם המבצע" Width="{Binding ActualWidth, ElementName=titleCol}"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Ename}" Header="יוצר" Width="{Binding ActualWidth, ElementName=creatorCol}"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding DateCreated}" Header="תאריך" Width="{Binding ActualWidth, ElementName=creationCol}"/>
+
+                    <!-- GridViewColumn Header="לקוחות" Width="{Binding ActualWidth, ElementName=vipCol}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="X" CommandParameter="{Binding}" HorizontalAlignment="Center"
+                                        Command="{Binding DataContext.GroupVipCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    <GridViewColumn/ -->
+                    <!-- GridViewColumn Header="סניפים" Width="{Binding ActualWidth, ElementName=pcidCol}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="X" CommandParameter="{Binding}" HorizontalAlignment="Center"
+                                        Command="{Binding DataContext.GroupPCIDCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    <GridViewColumn/ -->
+                    <GridViewColumn Header="עריכה" Width="{Binding ActualWidth, ElementName=editCol}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="X" CommandParameter="{Binding}" HorizontalAlignment="Center"
+                                        Command="{Binding DataContext.EditSaleCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ScrollViewer Grid.Row="1" Visibility="Hidden" VerticalScrollBarVisibility="Visible"
+                      HorizontalScrollBarVisibility="Visible">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="70" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" x:Name="enabledCol" />
+                <Grid Grid.Column="1" x:Name="IDCol" />
+                <Grid Grid.Column="2" x:Name="titleCol" />
+                <Grid Grid.Column="3" x:Name="creatorCol" />
+                <Grid Grid.Column="4" x:Name="creationCol" />
+                <!-- Grid Grid.Column="5" x:Name="vipCol" / -->
+                <!-- Grid Grid.Column="6" x:Name="pcidCol" / -->
+                <Grid Grid.Column="5" x:Name="editCol" />
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

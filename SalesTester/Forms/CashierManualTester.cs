@@ -22,6 +22,7 @@ namespace SalesTester
             _ActionID = 0;
             _sales = new List<SaleDiscount>();
             InitEngine();
+            Engine.LoadSales();
         }
         private int getID()
         {
@@ -34,6 +35,7 @@ namespace SalesTester
             //Engine.InitializeForDebugging();
             Engine.EngineRestarted += CallReset;
             Engine.SaleApplied += CallApplied;
+            Engine.SaleApplied += sd => addProduct("999902", sd.Quantity, sd.Discount);
             Engine.SaleCancelled += CallRemoved;
         }
 
@@ -41,24 +43,24 @@ namespace SalesTester
         {
             string str = getID() + ". Product " + pluno + ": " + qty + " * " + price;
             listCashier.Items.Add(new KeyValuePair<int, string>(-1, str));
-            lblInSale.Text = Engine.AddItem(pluno, qty, price);
+            lblInSale.Text = Engine.AddItem(pluno, qty, price, checkBox1.Checked);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            addProduct("10001", 1, 5);
+            addProduct("999902", 1, 5);
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            addProduct("10002", 1, 10);
+            addProduct("10006", 1, 10);
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            addProduct("10003", 1, 50);
+            addProduct("10007", 1, 10);
         }
         private void button4_Click(object sender, EventArgs e)
         {
-            addProduct("10004", 1, 100);
+            addProduct("10004", 1, 9);
         }
         private void btnDebug_Click(object sender, EventArgs e)
         {
