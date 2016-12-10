@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using SalesModule.Models;
 
 namespace SalesModule.Services
@@ -33,9 +34,10 @@ namespace SalesModule.Services
                 temp._location = DBLocation.RemoteServer;
                 return temp;
             }
-            catch
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("Remote service: connection could not established.");
+                ActivityLogService.Logger.LogError(ex);
+                throw;
             }
         }
         public static DBService GetLocalService()
@@ -59,18 +61,16 @@ namespace SalesModule.Services
         {
             if (_location != DBLocation.LocalServer) return false;
             ActivityLogService.Logger.LogCall(store);
-            string sql, connstr;
-            SqlDataReader dr;
             try
             {
-                sql = "select IP, UserName, Password, Catalog from Stores where StoreName = @StoreName";
+                string sql = "select IP, UserName, Password, Catalog from Stores where StoreName = @StoreName";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@StoreName", SqlDbType.NVarChar)).Value = store;
 
                 OpenConnection();
-                dr = _cmd.ExecuteReader();
+                var dr = _cmd.ExecuteReader();
                 if (!dr.Read()) return false;
-                connstr = ConnectionService.CreateConnectionString(dr["IP"].ToString(),
+                var connstr = ConnectionService.CreateConnectionString(dr["IP"].ToString(),
                     dr["UserName"].ToString(), dr["Password"].ToString(), dr["Catalog"].ToString());
 
                 ConnectionService.StoresConn = connstr;
@@ -159,13 +159,12 @@ namespace SalesModule.Services
         {
             ActivityLogService.Logger.LogCall(id, isPluno);
             var dt = new DataTable();
-            string sql;
             try
             {
                 CheckIsRemote();
                 if (isPluno)
                 {
-                    sql = "select pname,barcode,kind3 from plu where pluno=@pluno";
+                    string sql = "select pname,barcode,kind3 from plu where pluno=@pluno";
                     _cmd = new SqlCommand(sql, _conn);
                     _cmd.Parameters.Add(new SqlParameter("@pluno", SqlDbType.VarChar)).Value = id;
 
@@ -179,7 +178,7 @@ namespace SalesModule.Services
                 }
                 else
                 {
-                    sql = "select KindName, Rem from kind3 where KindNo=@kindno";
+                    string sql = "select KindName, Rem from kind3 where KindNo=@kindno";
                     _cmd = new SqlCommand(sql, _conn);
                     _cmd.Parameters.Add(new SqlParameter("@kindno", SqlDbType.VarChar)).Value = id;
 
@@ -204,13 +203,11 @@ namespace SalesModule.Services
         private DataTable SearchProducts(string term, string colName, bool isLikable = true)
         {
             ActivityLogService.Logger.LogCall(term);
-            CheckIsRemote();
-            string sql;
-            SqlDataAdapter da;
             DataTable dt = new DataTable();
             try
             {
-                sql = "select pname,pluno,barcode,kind3 from plu where " + colName;
+                CheckIsRemote();
+                string sql = "select pname,pluno,barcode,kind3 from plu where " + colName;
                 sql += isLikable ? " like '%' + " : " = ";
                 sql += "@Term";
                 sql += isLikable ? " + '%'" : "";
@@ -218,7 +215,7 @@ namespace SalesModule.Services
                 _cmd.Parameters.Add(new SqlParameter("@Term", SqlDbType.VarChar)).Value = term;
 
                 OpenConnection();
-                da = new SqlDataAdapter(_cmd);
+                var da = new SqlDataAdapter(_cmd);
                 da.Fill(dt);
                 return dt;
             }
@@ -241,7 +238,7 @@ namespace SalesModule.Services
         #region Sales
         public int InsertGroup(SalesGroupM g)
         {
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogCall(g.GroupID);
             if (g == null || g.Sales.Count == 0)
                 return -1;
             try
@@ -343,22 +340,19 @@ namespace SalesModule.Services
             }
             catch (Exception ex)
             {
-                string msg = "Sale insertion failed. (" +
-                    (SaleID != -1 ? "SaleID: " + SaleID :
-                    "OrderID=" + OrderID) + ")";
-                throw new Exception(msg, ex);
+                ActivityLogService.Logger.LogError(ex);
+                throw;
             }
         }
-        private bool InsertRequired(List<ProdAmountM> reqs, int SaleID)
+        private void InsertRequired(List<ProdAmountM> reqs, int SaleID)
         {
             string sql;
             SqlParameter pID, pIsID, pQTY;
             if (_trans == null || _conn.State != ConnectionState.Open)
-                return false;
+                throw new InvalidOperationException("Transaction must be started before calling InsertRequired function.");
             try
             {
-                sql = "insert into PluReqSale (SaleID, pluID, isPluno, qty) " +
-                    "values (@SaleID, @PluID, @isPluno, @Amount)";
+                sql = "insert into PluReqSale (SaleID, pluID, isPluno, qty) values (@SaleID, @PluID, @isPluno, @Amount)";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Transaction = _trans;
                 _cmd.Parameters.Add(new SqlParameter("@SaleID", SqlDbType.Int)).Value = SaleID;
@@ -372,27 +366,26 @@ namespace SalesModule.Services
                     pQTY.Value = p.Amount;
                     _cmd.ExecuteNonQuery();
                 }
-
-                return true;
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                ActivityLogService.Logger.LogError(ex);
+                throw;
             }
         }
-        private bool InsertDiscounted(List<DiscountedProductM> outs, int SaleID)
+        private void InsertDiscounted(List<DiscountedProductM> outs, int SaleID)
         {
             string mainSql, giftSql;
             int maxOutID;
             SqlParameter pOutID, pID, pIsID, pQTY, pMax, pDiscQ, pDiscT;
             if (_trans == null || _conn.State != ConnectionState.Open)
-                return false;
+                throw new InvalidOperationException("Transaction must be started before calling InsertDiscounted function.");
             try
             {
                 mainSql = "select max(OutID) from PluOutSale";
                 _cmd = new SqlCommand(mainSql, _conn);
                 _cmd.Transaction = _trans;
-                maxOutID = (int)((_cmd.ExecuteScalar() as int?) ?? 0);
+                maxOutID = _cmd.ExecuteScalar() as int? ?? 0;
 
                 mainSql = "insert into PluOutSale (OutID, SaleID, pluID, isPluno, MultiUnits, MaxRec, offPrice, offType) " +
                 "values (@OutID ,@SaleID, @PluID, @isPluno, @Amount, @Max, @discPrice, @discType)";
@@ -438,22 +431,19 @@ namespace SalesModule.Services
                         _cmd.ExecuteScalar();
                     }
                 }
-
-                return true;
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                ActivityLogService.Logger.LogError(ex);
+                throw;
             }
         }
 
-        public bool EditSaleM(SaleM sale)
+        public bool EditSale(SaleM sale)
         {
             if (sale == null) return false;
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogCall(sale.SaleID);
             _trans = null;
-
-            string sql;
             try
             {
                 CheckIsRemote();
@@ -461,7 +451,7 @@ namespace SalesModule.Services
                 _trans = _conn.BeginTransaction();
 
                 //1. Edit core properties
-                sql = "update sales set Title = @Title, TotalOffPrice = @disAmount, TotalOffType = @disType, " +
+                string sql = "update sales set Title = @Title, TotalOffPrice = @disAmount, TotalOffType = @disType, " +
                     "MinTotalPrice = @minPrice, MaxTotalPrice = @maxPrice, AllowMultiple = @multiple, " +
                     "Recurrences = @recurrence where SaleID = @saleID";
                 _cmd = new SqlCommand(sql, _conn);
@@ -485,22 +475,18 @@ namespace SalesModule.Services
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Transaction = _trans;
                 _cmd.Parameters.Add(new SqlParameter("@saleID", SqlDbType.Int)).Value = sale.SaleID;
-                if (_cmd.ExecuteNonQuery() == 0)
-                    throw new InvalidOperationException("Something went wrong while deleting required products to sale #" + sale.SaleID + ".");
+                _cmd.ExecuteNonQuery();
 
-                if (!InsertRequired(sale.ReqProducts, sale.SaleID))
-                    throw new InvalidOperationException("Something went wrong while re-inserting required products to sale #" + sale.SaleID + ".");
+                InsertRequired(sale.ReqProducts, sale.SaleID);
 
                 //4. insert discounted products
                 sql = "delete from PluOutSale where SaleID = @saleID";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Transaction = _trans;
                 _cmd.Parameters.Add(new SqlParameter("@saleID", SqlDbType.Int)).Value = sale.SaleID;
-                if (_cmd.ExecuteNonQuery() == 0)
-                    throw new InvalidOperationException("Something went wrong while deleting discounted products to sale #" + sale.SaleID + ".");
+                _cmd.ExecuteNonQuery();
 
-                if (!InsertDiscounted(sale.Discounted, sale.SaleID))
-                    throw new InvalidOperationException("Something went wrong while re-inserting discounted products to sale #" + sale.SaleID + ".");
+                InsertDiscounted(sale.Discounted, sale.SaleID);
 
                 _trans.Commit();
                 return true;
@@ -508,7 +494,7 @@ namespace SalesModule.Services
             catch (Exception ex)
             {
                 ActivityLogService.Logger.LogError(ex);
-                _trans.Rollback();
+                if (_trans != null) _trans.Rollback();
                 return false;
             }
         }
@@ -624,7 +610,6 @@ namespace SalesModule.Services
         {
             ActivityLogService.Logger.LogCall(vipid);
             DataTable dt;
-            SqlDataAdapter da;
             var Sales = new List<SalesGroupM>();
             try
             {
@@ -644,20 +629,23 @@ namespace SalesModule.Services
                 if (vipid != null)
                 {
                     //this sql is a where clause to get all the vip table restrictions that the user does NOT meet
-                    string getVipGroup = "select ClubNo from vip where vipno = @vip";
-                    vipOwness = "select u.SaleGroupID from SalesUser as u " +
-                        "where (u.isVipno = 1 and u.VipID <> @vip) or (u.isVipno = 0 and u.VipID <> (" + getVipGroup + "))";
+                    string getMyVipGroup = "select ClubNo from vip where vipno = @vip";
+                    vipOwness = "g.GroupID in (select u.SaleGroupID from SalesUser as u " +
+                        "where (u.isVipno = 1 and u.VipID = @vip) or (u.isVipno = 0 and u.VipID in (" + getMyVipGroup + "))";
                     _cmd.Parameters.Add(new SqlParameter("@vip", SqlDbType.VarChar)).Value = vipid;
                 }
-                string sql = "select g.GroupID from SalesPcid as p inner join SalesGroup as g on p.SaleGroupID = g.GroupID " +
+                else
+                    vipOwness = "(select count(*) from SalesUser as u where u.SaleGroupID=g.GroupID) = 0";
+
+                string sql =
+                    "select g.GroupID from SalesPcid as p inner join SalesGroup as g on p.SaleGroupID = g.GroupID " +
                     "where p.PCID = @pcid and p.isEnabled = 1 and g.isEnabled = 1 and " +
                     "p.DateFrom <= @nowDate and (p.DateTo is NULL or @nowDate < p.DateTo) and " +
-                    "(@nowTime between p.HourFrom and p.HourTo) and " +
-                    "p.SaleGroupID not in (" + vipOwness + ")";
+                    "(p.HourFrom is NULL or @nowTime between p.HourFrom and p.HourTo) and " + vipOwness;
                 _cmd.CommandText = sql;
 
                 dt = new DataTable();
-                da = new SqlDataAdapter(_cmd);
+                var da = new SqlDataAdapter(_cmd);
                 da.Fill(dt);
                 foreach (DataRow R in dt.Rows)
                     Sales.Add(LoadGroup(int.Parse(R[0].ToString())));
@@ -671,10 +659,8 @@ namespace SalesModule.Services
         }
         public DataTable GetAllSalesTitles()
         {
-            ActivityLogService.Logger.LogCall();
             //GroupID, Title, ename, isEnabled, DateCreated
-            string sql;
-            SqlDataAdapter da;
+            ActivityLogService.Logger.LogCall();
             DataTable dt = new DataTable();
             try
             {
@@ -682,12 +668,12 @@ namespace SalesModule.Services
                 string sqlTitle = "IIF((select Max(GroupIndex) from Sales where SaleGroupID=g.GroupID) = 1, " +
                                   "(select Top 1 Title from Sales where SaleGroupID=g.groupID), " +
                                   "('Sales Group #' + CONVERT(varchar(10), g.GroupID)))";
-                sql = "select g.GroupID, " + sqlTitle + " as Title, e.ename, g.isEnabled, g.DateCreated " +
+                string sql = "select g.GroupID, " + sqlTitle + " as Title, e.ename, g.isEnabled, g.DateCreated " +
                     "from SalesGroup as g inner join emp as e on e.empno = g.empno order by g.DateCreated";
                 _cmd = new SqlCommand(sql, _conn);
 
                 OpenConnection();
-                da = new SqlDataAdapter(_cmd);
+                var da = new SqlDataAdapter(_cmd);
                 da.Fill(dt);
                 return dt;
             }
@@ -705,11 +691,10 @@ namespace SalesModule.Services
         public bool DisableSaleGroupM(int groupID, bool isEnabled)
         {
             ActivityLogService.Logger.LogCall(groupID, isEnabled);
-            string sql;
             try
             {
                 CheckIsRemote();
-                sql = "update SalesGroup set isEnabled = @status where GroupID = @GroupID";
+                string sql = "update SalesGroup set isEnabled = @status where GroupID = @GroupID";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
                 _cmd.Parameters.Add(new SqlParameter("@status", SqlDbType.Bit)).Value = isEnabled;
@@ -736,24 +721,24 @@ namespace SalesModule.Services
         public DataTable GetVIPSingles(int groupID)
         {
             //vipno, vname
-            CheckIsRemote();
-            string sql, assoc;
-            SqlDataAdapter da;
             DataTable dt = new DataTable();
+            ActivityLogService.Logger.LogCall(groupID);
             try
             {
-                assoc = "select VipID from SalesUser where isVipno = 1 and SaleGroupID = @GroupID";
-                sql = "select vipno, vname from vip where vipno not in (" + assoc + ")";
+                CheckIsRemote();
+                var assoc = "select VipID from SalesUser where isVipno = 1 and SaleGroupID = @GroupID";
+                var sql = "select vipno, vname from vip where vipno not in (" + assoc + ")";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
 
                 OpenConnection();
-                da = new SqlDataAdapter(_cmd);
+                var da = new SqlDataAdapter(_cmd);
                 da.Fill(dt);
                 return dt;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -764,11 +749,11 @@ namespace SalesModule.Services
         public DataTable GetVIPGroups(int groupID)
         {
             //clubno, clubName, membersCount
-            CheckIsRemote();
-            SqlDataAdapter da;
             DataTable dt = new DataTable();
+            ActivityLogService.Logger.LogCall(groupID);
             try
             {
+                CheckIsRemote();
                 string assoc = "select VipID from SalesUser where isVipno = 0 and SaleGroupID = @GroupID";
                 string count = "select count(v.vipno) from vip as v where v.ClubNo = c.ClubNo";
                 string sql = "select c.ClubNo, c.ClubName, (" + count + ") as membersCount from clubs as c where c.ClubNo not in (" + assoc + ")";
@@ -776,12 +761,13 @@ namespace SalesModule.Services
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
 
                 OpenConnection();
-                da = new SqlDataAdapter(_cmd);
+                var da = new SqlDataAdapter(_cmd);
                 da.Fill(dt);
                 return dt;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -792,16 +778,15 @@ namespace SalesModule.Services
         public DataTable GetSalesVIPs(int groupID)
         {
             //isVipno, VipID, name, membersCount
-            CheckIsRemote();
-            string sql;
-            string vname = "select v.vname from vip as v where v.vipno = su.VipID";
-            string gname = "select c.ClubName from clubs as c where c.ClubNo = su.VipID";
-            string count = "select count(v.vipno) from vip as v where v.ClubNo = su.VipID";
-            SqlDataAdapter da;
             DataTable dt = new DataTable();
+            ActivityLogService.Logger.LogCall(groupID);
             try
             {
-                sql = "select su.isVipno, su.VipID, " +
+                CheckIsRemote();
+                string vname = "select v.vname from vip as v where v.vipno = su.VipID";
+                string gname = "select c.ClubName from clubs as c where c.ClubNo = su.VipID";
+                string count = "select count(v.vipno) from vip as v where v.ClubNo = su.VipID";
+                string sql = "select su.isVipno, su.VipID, " +
                     "IIF(su.isVipno = 1, (" + vname + "), (" + gname + ")) as name, " +
                     "IIF(su.isVipno = 1, 0, (" + count + ")) as membersCount " +
                     "from SalesUser as su where su.SaleGroupID = @GroupID";
@@ -809,12 +794,13 @@ namespace SalesModule.Services
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
 
                 OpenConnection();
-                da = new SqlDataAdapter(_cmd);
+                var da = new SqlDataAdapter(_cmd);
                 da.Fill(dt);
                 return dt;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -825,11 +811,11 @@ namespace SalesModule.Services
 
         public bool AssociateVIP2Sale(int groupID, int vipid, bool isVipno)
         {
-            CheckIsRemote();
-            string sql;
+            ActivityLogService.Logger.LogCall(groupID, vipid, isVipno);
             try
             {
-                sql = "insert into SalesUser(SaleGroupID, VipID, isVipno) values (@GroupID, @vipid, @isvipno)";
+                CheckIsRemote();
+                string sql = "insert into SalesUser(SaleGroupID, VipID, isVipno) values (@GroupID, @vipid, @isvipno)";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
                 _cmd.Parameters.Add(new SqlParameter("@vipid", SqlDbType.Int)).Value = vipid;
@@ -839,8 +825,9 @@ namespace SalesModule.Services
                 _cmd.ExecuteNonQuery();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLogService.Logger.LogError(ex);
                 return false;
             }
             finally
@@ -850,11 +837,11 @@ namespace SalesModule.Services
         }
         public bool DisassociateVIPfromSale(int groupID, int vipid, bool isVipno)
         {
-            CheckIsRemote();
-            string sql;
+            ActivityLogService.Logger.LogCall(groupID, vipid, isVipno);
             try
             {
-                sql = "delete from SalesUser where SaleGroupID = @GroupID and VipID = @vipid and isVipno = @isvipno";
+                CheckIsRemote();
+                string sql = "delete from SalesUser where SaleGroupID = @GroupID and VipID = @vipid and isVipno = @isvipno";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
                 _cmd.Parameters.Add(new SqlParameter("@vipid", SqlDbType.Int)).Value = vipid;
@@ -864,8 +851,9 @@ namespace SalesModule.Services
                 _cmd.ExecuteNonQuery();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLogService.Logger.LogError(ex);
                 return false;
             }
             finally
@@ -876,19 +864,20 @@ namespace SalesModule.Services
 
         public bool IsSaleRestricted(int groupID)
         {
-            CheckIsRemote();
-            string sql;
+            ActivityLogService.Logger.LogCall(groupID);
             try
             {
-                sql = "select VipID from SalesUser where SaleGroupID = @GroupID";
+                CheckIsRemote();
+                string sql = "select VipID from SalesUser where SaleGroupID = @GroupID";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
 
                 OpenConnection();
                 return _cmd.ExecuteScalar() == null;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLogService.Logger.LogError(ex);
                 return false;
             }
             finally
@@ -915,11 +904,10 @@ namespace SalesModule.Services
             DateTime from, DateTime? to, TimeSpan? start, TimeSpan? end)
         {
             ActivityLogService.Logger.LogCall(groupID, pcid);
-            string sql;
             try
             {
                 CheckIsRemote();
-                sql = "insert into SalesPCID(SaleGroupID, pcid, isEnabled, DateFrom, DateTo, HourFrom, HourTo) " +
+                string sql = "insert into SalesPCID(SaleGroupID, pcid, isEnabled, DateFrom, DateTo, HourFrom, HourTo) " +
                     "values (@GroupID, @pcid, 1, @dateFrom, @dateTo, @hourFrom, @hourTo)";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
@@ -947,11 +935,10 @@ namespace SalesModule.Services
         public bool DisassociatePcidfromSaleM(int groupID, int pcid)
         {
             ActivityLogService.Logger.LogCall(groupID, pcid);
-            string sql;
             try
             {
                 CheckIsRemote();
-                sql = "delete from SalesPcid where SaleGroupID = @GroupID and pcid = @pcid";
+                string sql = "delete from SalesPcid where SaleGroupID = @GroupID and pcid = @pcid";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
                 _cmd.Parameters.Add(new SqlParameter("@pcid", SqlDbType.Int)).Value = pcid;
@@ -973,11 +960,11 @@ namespace SalesModule.Services
 
         public bool DisablePCID(int groupID, int pcid, bool isEnabled)
         {
-            CheckIsRemote();
-            string sql;
+            ActivityLogService.Logger.LogCall(groupID, pcid, isEnabled);
             try
             {
-                sql = "update SalesPcid set isEnabled = @status where SaleGroupID = @GroupID and pcid = @pcid";
+                CheckIsRemote();
+                string sql = "update SalesPcid set isEnabled = @status where SaleGroupID = @GroupID and pcid = @pcid";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
                 _cmd.Parameters.Add(new SqlParameter("@pcid", SqlDbType.Int)).Value = pcid;
@@ -987,8 +974,9 @@ namespace SalesModule.Services
                 _cmd.ExecuteNonQuery();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLogService.Logger.LogError(ex);
                 return false;
             }
             finally
@@ -1000,24 +988,24 @@ namespace SalesModule.Services
         public DataTable GetUnattachedPcid(int groupID)
         {
             //bhno, bhname
-            CheckIsRemote();
-            string sql, assoc;
-            SqlDataAdapter da;
             DataTable dt = new DataTable();
+            ActivityLogService.Logger.LogCall(groupID);
             try
             {
-                assoc = "select pcid from salespcid where SaleGroupID = @GroupID";
-                sql = "select bhno, bhname from branch where bhno not in (" + assoc + ")";
+                CheckIsRemote();
+                string assoc = "select pcid from salespcid where SaleGroupID = @GroupID";
+                string sql = "select bhno, bhname from branch where bhno not in (" + assoc + ")";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
 
                 OpenConnection();
-                da = new SqlDataAdapter(_cmd);
+                var da = new SqlDataAdapter(_cmd);
                 da.Fill(dt);
                 return dt;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -1027,23 +1015,23 @@ namespace SalesModule.Services
         }
         public DataTable GetSalesBranches(int groupID)
         {
-            CheckIsRemote();
-            string sql;
-            SqlDataAdapter da;
             DataTable dt = new DataTable();
+            ActivityLogService.Logger.LogCall(groupID);
             try
             {
-                sql = "select p.*, b.bhname from SalesPcid as p inner join branch as b on b.bhno = p.pcid where p.SaleGroupID = @GroupID";
+                CheckIsRemote();
+                string sql = "select p.*, b.bhname from SalesPcid as p inner join branch as b on b.bhno = p.pcid where p.SaleGroupID = @GroupID";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
 
                 OpenConnection();
-                da = new SqlDataAdapter(_cmd);
+                var da = new SqlDataAdapter(_cmd);
                 da.Fill(dt);
                 return dt;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
             finally
@@ -1061,32 +1049,30 @@ namespace SalesModule.Services
 
         private DataTable GetDictionaryTable(string table, string TitleCol, string IDCol)
         {
-            CheckIsRemote();
-            string sql;
             DataTable dt = new DataTable();
-            DataRow R;
-            SqlDataReader dr;
             try
             {
+                CheckIsRemote();
                 dt.Columns.Add("Title");
                 dt.Columns.Add("ID");
 
-                sql = "select " + TitleCol + ", " + IDCol + " from " + table;
+                string sql = "select " + TitleCol + ", " + IDCol + " from " + table;
                 _cmd = new SqlCommand(sql, _conn);
 
                 OpenConnection();
-                dr = _cmd.ExecuteReader();
+                var dr = _cmd.ExecuteReader();
                 while (dr.Read())
                 {
-                    R = dt.NewRow();
+                    var R = dt.NewRow();
                     R["Title"] = dr[TitleCol].ToString();
                     R["ID"] = int.Parse(dr[IDCol].ToString());
                     dt.Rows.Add(R);
                 }
                 return dt;
             }
-            catch
+            catch (Exception ex)
             {
+                ActivityLogService.Logger.LogError(ex);
                 return null;
             }
             finally

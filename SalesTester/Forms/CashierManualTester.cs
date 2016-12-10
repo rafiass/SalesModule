@@ -35,7 +35,6 @@ namespace SalesTester
             //Engine.InitializeForDebugging();
             Engine.EngineRestarted += CallReset;
             Engine.SaleApplied += CallApplied;
-            Engine.SaleApplied += sd => addProduct("999902", sd.Quantity, sd.Discount);
             Engine.SaleCancelled += CallRemoved;
         }
 
@@ -56,7 +55,7 @@ namespace SalesTester
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            addProduct("10007", 1, 10);
+            addProduct("10003", 1, 10);
         }
         private void button4_Click(object sender, EventArgs e)
         {

@@ -105,7 +105,7 @@ namespace SalesModule.ViewModels
                     sale = SalesFactoryService.EditSale(sale);
                     if (sale == null) return;
 
-                    if (DBService.GetService().EditSaleM(sale))
+                    if (DBService.GetService().EditSale(sale))
                         MessageBox.Show("המבצע עודכן בהצלחה!");
                     else
                         MessageBox.Show("אירעה שגיאה בזמן עריכת המבצע.\nלא בוצעו שינויים במבצע הקיים.");
