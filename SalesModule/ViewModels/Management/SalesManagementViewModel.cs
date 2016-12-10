@@ -1,9 +1,7 @@
 ﻿using System;
-using SalesModule.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
-using SalesModule.GUI;
 using SalesModule.Services;
 
 namespace SalesModule.ViewModels
@@ -44,6 +42,9 @@ namespace SalesModule.ViewModels
 
     internal class SalesManagementViewModel : PopupViewModel
     {
+        private string _criteria;
+        private List<SaleGroupViewModel> _groups;
+
         public override PopupProperties PopupProperties
         {
             get
@@ -51,13 +52,21 @@ namespace SalesModule.ViewModels
                 return new PopupProperties()
                 {
                     Title = "חלון ניהול",
-                    Width = 700,
-                    Height = 400
+                    Width = 900,
+                    MinWidth = 650,
+                    Height = 500
                 };
             }
         }
 
-        public List<SaleGroupViewModel> Groups { get; private set; }
+        public string Criteria
+        {
+            get { return _criteria; }
+            set { if (SetProperty(ref _criteria, value)) OnPropertyChanged("Groups"); }
+        }
+
+        public List<SaleGroupViewModel> Groups
+        { get { return _groups.FindAll(g => g.Ename.Contains(Criteria) || g.Title.Contains(Criteria)); } }
 
         public DelegateCommand<SaleGroupViewModel> EditSaleCommand { get; private set; }
         public DelegateCommand<SaleGroupViewModel> GroupPCIDCommand { get; private set; }
@@ -69,17 +78,19 @@ namespace SalesModule.ViewModels
             GroupPCIDCommand = new DelegateCommand<SaleGroupViewModel>(pcidFunction);
             GroupVipCommand = new DelegateCommand<SaleGroupViewModel>(vipFunction);
 
+            _criteria = "";
             refreshGroups();
         }
 
         private void refreshGroups()
         {
             var s = DBService.GetService().GetAllSalesTitles();
-            Groups = new List<SaleGroupViewModel>();
+            _groups = new List<SaleGroupViewModel>();
             foreach (DataRow r in s.Rows)
-                Groups.Add(new SaleGroupViewModel(
+                _groups.Add(new SaleGroupViewModel(
                     int.Parse(r["GroupID"].ToString()), r["Title"].ToString(), r["ename"].ToString(),
                     bool.Parse(r["isEnabled"].ToString()), DateTime.Parse(r["DateCreated"].ToString())));
+            OnPropertyChanged("Groups");
         }
 
         public void editFunction(SaleGroupViewModel sgvm)
@@ -113,8 +124,8 @@ namespace SalesModule.ViewModels
         public void pcidFunction(SaleGroupViewModel sgvm)
         {
             ActivityLogService.Logger.LogCall(sgvm.GroupID);
-            //var pcidVM = new PcidAssociationViewModel(sgvm.GroupID);
-            //InteropService.OpenWindow(pcidVM, null);
+            var pcidVM = new PCIDAssociationViewModel(sgvm.GroupID);
+            InteropService.OpenWindow(pcidVM, pcidVM.PopupProperties);
         }
         public void vipFunction(SaleGroupViewModel sgvm)
         {

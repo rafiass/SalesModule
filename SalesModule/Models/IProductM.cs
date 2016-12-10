@@ -7,6 +7,8 @@ namespace SalesModule.Models
         string ID { get; }
         string Name { get; }
         bool isPluno { get; }
+
+        bool Contains(string filter);
     }
 
     internal class ProductM : IProductM
@@ -24,6 +26,12 @@ namespace SalesModule.Models
             Barcode = barcode;
             Kind = kind;
         }
+
+        public bool Contains(string filter)
+        {
+            return ID.Contains(filter) || Name.Contains(filter) ||
+                (Kind != null && Kind.ToString().Contains(filter));
+        }
     }
 
     internal class CategoryM : IProductM
@@ -38,6 +46,12 @@ namespace SalesModule.Models
             ID = id;
             Name = name;
             Comments = rem;
+        }
+
+        public bool Contains(string filter)
+        {
+            return ID.Contains(filter) || Name.Contains(filter) ||
+                Comments.Contains(filter);
         }
     }
 

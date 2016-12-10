@@ -1,0 +1,157 @@
+﻿<UserControl x:Class="SalesModule.Views.PCIDAssociationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SalesModule"
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <local:NullValueConverter x:Key="nullValConverter" />
+            <Style TargetType="{x:Type ListViewItem}">
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="Height" Value="35" />
+            </Style>
+            <Style TargetType="{x:Type Image}">
+                <Setter Property="Width" Value="30" />
+                <Setter Property="Height" Value="30" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="4*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="ניהול מבצע בסניפים" FontSize="20"
+               HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <GroupBox Grid.Row="1" Header="הוספת סניף חדש" DataContext="{Binding NewPcid}" Margin="5">
+            <GroupBox.Style>
+                <Style TargetType="{x:Type GroupBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Branches.Count}" Value="1">
+                            <Setter Property="IsEnabled" Value="false" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </GroupBox.Style>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Content="לא קיימים סניפים לא משוייכים" FontSize="17" FontWeight="Bold" HorizontalAlignment="Right">
+                    <Label.Style>
+                        <Style TargetType="{x:Type Label}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Branches.Count}" Value="1">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Style>
+                    </Label.Style>
+                </Label>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="בחר סניף:" />
+                    <ComboBox ItemsSource="{Binding Branches}" SelectedValue="{Binding BranchNo}" Width="150"
+                              DisplayMemberPath="Item1" SelectedValuePath="Item2" Margin="20,0" />
+                </StackPanel>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="טווח תאריכים" />
+                    <DatePicker Grid.Column="1" SelectedDate="{Binding DateFrom}" Margin="30,5" />
+                    <CheckBox Grid.Column="2" IsChecked="{Binding IsDatesLimited}"
+                          HorizontalAlignment="Left" VerticalAlignment="Center" Width="20" />
+                    <DatePicker Grid.Column="2" SelectedDate="{Binding DateTo}" IsEnabled="{Binding IsDatesLimited}" Margin="30,5" />
+                </Grid>
+
+                <CheckBox Grid.Row="2" IsChecked="{Binding IsHoursLimited}"
+                          HorizontalAlignment="Left" VerticalAlignment="Center" Width="20" />
+                <StackPanel Grid.Row="2" Orientation="Horizontal" IsEnabled="{Binding IsHoursLimited}"
+                            VerticalAlignment="Center" >
+                    <TextBlock Text="הגבלת שעות פעילות" Margin="20,0,10,0" />
+                    <ComboBox ItemsSource="{Binding Hours}" SelectedIndex="{Binding FromIndexTime}" Width="100" />
+                    <TextBlock Text="עד" Margin="10,0" />
+                    <ComboBox ItemsSource="{Binding Hours}" SelectedIndex="{Binding ToIndexTime}" Width="100" />
+                </StackPanel>
+
+                <Button Grid.Row="3" Content="הוסף" Width="100" Margin="10,0" FontSize="15" HorizontalAlignment="Right"
+                        Command="{Binding DataContext.AssociateCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+            </Grid>
+        </GroupBox>
+
+        <ListView Grid.Row="2" ItemsSource="{Binding Associations}" Margin="0,0,5,0"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="פעיל" Width="{Binding ActualWidth, ElementName=enabledCol}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsEnabled}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn DisplayMemberBinding="{Binding BranchName}" Header="שם הסניף" Width="{Binding ActualWidth, ElementName=nameCol}"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding DateFrom, StringFormat={}{0:dd/MM/yyyy}}" Header="החל" Width="{Binding ActualWidth, ElementName=fromCol}"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding DateTo, StringFormat={}{0:dd/MM/yyyy}, Converter={StaticResource nullValConverter}, ConverterParameter='לא מוגבל', Mode=OneWay}"
+                                    Header="תוקף" Width="{Binding ActualWidth, ElementName=toCol}"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding FromTime, StringFormat=\{0:h\\:mm\}, Converter={StaticResource nullValConverter}, ConverterParameter='לא מוגבל', Mode=OneWay}"
+                                    Header="משעה" Width="{Binding ActualWidth, ElementName=startCol}"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding ToTime, StringFormat=\{0:h\\:mm\}, Converter={StaticResource nullValConverter}, ConverterParameter='לא מוגבל', Mode=OneWay}"
+                                    Header="עד שעה" Width="{Binding ActualWidth, ElementName=endCol}"/>
+
+                    <GridViewColumn Header="הסר" Width="{Binding ActualWidth, ElementName=deleteCol}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button CommandParameter="{Binding}" HorizontalAlignment="Center"
+                                        Command="{Binding DataContext.DisassociateCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Grid Background="Transparent">
+                                                <Image Source="../../Resources/Images/delete.jpg" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ScrollViewer Grid.Row="2" Visibility="Hidden" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden">
+            <Grid Margin="0,0,5,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="70" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" x:Name="enabledCol" />
+                <Grid Grid.Column="1" x:Name="nameCol" />
+                <Grid Grid.Column="2" x:Name="fromCol" />
+                <Grid Grid.Column="3" x:Name="toCol" />
+                <Grid Grid.Column="4" x:Name="startCol" />
+                <Grid Grid.Column="5" x:Name="endCol" />
+                <Grid Grid.Column="6" x:Name="deleteCol" />
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

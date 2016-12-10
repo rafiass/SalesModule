@@ -5,8 +5,8 @@
     <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
 
     <DataTemplate x:Key="prodTemplate">
-        <Border Padding="5">
-            <Grid>
+        <Border BorderBrush="LightGreen" BorderThickness="2">
+            <Grid Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="40"/>
                     <ColumnDefinition/>
@@ -15,22 +15,22 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="{Binding Name}" FontWeight="Bold" Grid.Column="1" 
-                           Grid.Row="0" FontFamily="Segoe UI" VerticalAlignment="Bottom"/>
-                <TextBlock Text="{Binding ID, StringFormat='ID: {0}'}"
-                           Grid.Column="1" Grid.Row="1" VerticalAlignment="Top"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" VerticalAlignment="Center" Text="מוצר: " />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" FontWeight="Bold" FontFamily="Segoe UI" VerticalAlignment="Bottom"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ID, StringFormat='ID: {0}'}" VerticalAlignment="Top"/>
             </Grid>
         </Border>
     </DataTemplate>
     <DataTemplate x:Key="cateTemplate">
-        <Border Padding="5">
-            <Grid>
+        <Border BorderBrush="Chocolate"  BorderThickness="2">
+            <Grid Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="40"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Grid.Column="1" 
-                           Grid.Row="0" FontFamily="Segoe UI" FontSize="14" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="0" Text="קטגוריה: " />
+                <TextBlock Grid.Column="1"  Text="{Binding Name}" FontWeight="SemiBold"
+                           FontFamily="Segoe UI" FontSize="14" VerticalAlignment="Center"/>
             </Grid>
         </Border>
     </DataTemplate>

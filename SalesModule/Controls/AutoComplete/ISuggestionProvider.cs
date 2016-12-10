@@ -39,15 +39,8 @@ namespace SalesModule.Controls
             if (string.IsNullOrEmpty(filter))
                 yield break;
 
-            Func<string, string, bool> isContain = (searchIn, searchFor) =>
-            {
-                if (searchFor.Length > searchIn.Length) return false;
-                return searchIn.ToLower().Substring(0, searchFor.Length) == searchFor.ToLower();
-            };
-
             foreach (var item in Products)
-                if (isContain(item.Name, filter) ||
-                    (item is ProductM && isContain((item as ProductM).Barcode, filter)))
+                if (item.Contains(filter))
                     yield return item;
         }
     }

@@ -127,7 +127,7 @@ namespace SalesModule.ViewModels
 
             IsBroadSale = prop.IsBroadSale;
             DateFrom = prop.DateFrom;
-            DateTo = prop.DateTo ?? DateTime.Now + new TimeSpan(7, 0, 0, 0);
+            DateTo = prop.DateTo ?? DateFrom + new TimeSpan(7, 0, 0, 0);
             IsSaleDatesLimited = prop.DateTo == null;
         }
 

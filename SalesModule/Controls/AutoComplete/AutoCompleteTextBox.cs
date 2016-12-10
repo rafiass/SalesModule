@@ -7,6 +7,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using SalesModule.Services;
+using SalesModule.ViewModels;
 
 namespace SalesModule.Controls
 {
@@ -424,6 +426,17 @@ namespace SalesModule.Controls
             SelectedItem = item;
             _isUpdatingText = false;
         }
+
+        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
+        {
+            base.OnMouseDoubleClick(e);
+
+            var vm = new ProductFinderViewModel();
+            InteropService.OpenWindow(vm, vm.PopupProperties);
+            if (vm.Choosen != null)
+                SelectedItem = vm.Choosen;
+        }
+
         #endregion
 
         #region "Nested Types"

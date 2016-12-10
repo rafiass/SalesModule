@@ -143,6 +143,7 @@ namespace SalesModule
         /// </summary>
         private static void OnEventChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            if (string.IsNullOrEmpty(e.NewValue.ToString())) return;
             CommandBehaviorBinding binding = FetchOrCreateBinding(d);
             //check if the Event is set. If yes we need to rebind the Command to the new event and unregister the old one
             if (binding.Event != null && binding.Owner != null)

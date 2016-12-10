@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using SalesModule.ViewModels;
@@ -21,15 +23,30 @@ namespace SalesModule.Services
                 Title = prop.Title,
                 Width = prop.Width,
                 Height = prop.Height,
+                MinWidth = prop.MinWidth,
+                MinHeight = prop.MinHeigth,
                 ShowInTaskbar = prop.IsShowingOnTaskBar,
                 Content = vm,
                 FlowDirection = FlowDirection.RightToLeft,
                 Background = new SolidColorBrush(Color.FromRgb(240, 240, 240))
             };
+            var bb = new MultiBinding()
+            {
+                NotifyOnSourceUpdated = true,
+                Bindings =
+                {
+                    new Binding("Width") { Source = win },
+                    new Binding("Height") { Source = win }
+                },
+                StringFormat = "Width = {0:0}, Height = {1:0}"
+            };
+            BindingOperations.SetBinding(win, Window.TitleProperty, bb);
+
             win.Resources.Source = new Uri(
                 "pack://application:,,,/SalesModule;component/Resources/ResourceDictionary.xaml", UriKind.Absolute);
             win.InputBindings.Add(new KeyBinding(new DelegateCommand(win.Close), new KeyGesture(Key.Escape)));
             win.Closed += (s, e) => callbackFunction();
+
             if (vm is PopupViewModel)
             {
                 win.Closed += (s, e) => (vm as PopupViewModel).WindowClosed();

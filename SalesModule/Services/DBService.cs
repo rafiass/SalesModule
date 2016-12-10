@@ -119,24 +119,29 @@ namespace SalesModule.Services
         public List<IProductM> GetProducts()
         {
             ActivityLogService.Logger.LogCall();
-            string sql;
-            SqlDataAdapter da;
             DataTable dt = new DataTable();
             var list = new List<IProductM>();
             try
             {
                 CheckIsRemote();
-                sql = "select pname,pluno,barcode,kind3 from plu";
+                var sql = "select pname,pluno,barcode,kind3 from plu";
                 _cmd = new SqlCommand(sql, _conn);
 
                 OpenConnection();
-                da = new SqlDataAdapter(_cmd);
+                var da = new SqlDataAdapter(_cmd);
                 da.Fill(dt);
                 foreach (DataRow R in dt.Rows)
                     list.Add(new ProductM(R["pluno"].ToString(), R["pname"].ToString(),
                         R["barcode"].ToString(), R["kind3"] as int?));
 
-                //### fill list with CategoryM 
+                sql = "select * from kind3";
+                _cmd = new SqlCommand(sql, _conn);
+
+                da = new SqlDataAdapter(_cmd);
+                dt = new DataTable();
+                da.Fill(dt);
+                foreach (DataRow R in dt.Rows)
+                    list.Add(new CategoryM(R["KindNo"].ToString(), R["KindName"].ToString(), R["Rem"].ToString()));
 
                 return list;
             }
@@ -318,7 +323,7 @@ namespace SalesModule.Services
                 if (sale.Properties.IsBroadSale)
                 {
                     sql = "insert into SalesPCID(SaleGroupID, pcid, isEnabled, DateFrom, DateTo, HourFrom, HourTo) " +
-                        "select @groupID, bhno, 1, @dateFrom, @dateTo, '00:00:00', '23:59:59' from branch";
+                        "select @groupID, bhno, 1, @dateFrom, @dateTo, NULL, NULL from branch";
                     _cmd = new SqlCommand(sql, _conn);
                     _cmd.Transaction = _trans;
                     _cmd.Parameters.Add(new SqlParameter("@groupID", SqlDbType.Int)).Value = GroupID;
@@ -688,7 +693,7 @@ namespace SalesModule.Services
                 CloseConnection();
             }
         }
-        
+
         public bool DisableSaleGroupM(int groupID, bool isEnabled)
         {
             ActivityLogService.Logger.LogCall(groupID, isEnabled);
@@ -888,7 +893,17 @@ namespace SalesModule.Services
         #region PCID
 
         public bool AssociatePcid2SaleM(int groupID, int pcid,
+            DateTime from, DateTime? to)
+        {
+            return associatePcid2SaleM(groupID, pcid, from, to, null, null);
+        }
+        public bool AssociatePcid2SaleM(int groupID, int pcid,
             DateTime from, DateTime? to, TimeSpan start, TimeSpan end)
+        {
+            return associatePcid2SaleM(groupID, pcid, from, to, start, end);
+        }
+        private bool associatePcid2SaleM(int groupID, int pcid,
+            DateTime from, DateTime? to, TimeSpan? start, TimeSpan? end)
         {
             ActivityLogService.Logger.LogCall(groupID, pcid);
             string sql;
@@ -902,8 +917,8 @@ namespace SalesModule.Services
                 _cmd.Parameters.Add(new SqlParameter("@pcid", SqlDbType.Int)).Value = pcid;
                 _cmd.Parameters.Add(new SqlParameter("@dateFrom", SqlDbType.DateTime)).Value = from;
                 _cmd.Parameters.Add(new SqlParameter("@dateTo", SqlDbType.DateTime)).Value = to ?? (object)DBNull.Value;
-                _cmd.Parameters.Add(new SqlParameter("@hourFrom", SqlDbType.Time)).Value = start;
-                _cmd.Parameters.Add(new SqlParameter("@hourTo", SqlDbType.Time)).Value = end;
+                _cmd.Parameters.Add(new SqlParameter("@hourFrom", SqlDbType.Time)).Value = start ?? (object)DBNull.Value;
+                _cmd.Parameters.Add(new SqlParameter("@hourTo", SqlDbType.Time)).Value = end ?? (object)DBNull.Value;
 
                 OpenConnection();
                 _cmd.ExecuteNonQuery();
@@ -919,6 +934,7 @@ namespace SalesModule.Services
                 CloseConnection();
             }
         }
+
         public bool DisassociatePcidfromSaleM(int groupID, int pcid)
         {
             ActivityLogService.Logger.LogCall(groupID, pcid);
@@ -1089,5 +1105,34 @@ namespace SalesModule.Services
         }
 
         #endregion
+
+        public DataTable Test()
+        {
+            ActivityLogService.Logger.LogCall();
+            DataTable dt = new DataTable();
+            var list = new List<IProductM>();
+            try
+            {
+                CheckIsRemote();
+                //Kind3: REM, KINDNAME, KINDNO
+                var sql = "select * from plu where kind3=1";
+                _cmd = new SqlCommand(sql, _conn);
+
+                OpenConnection();
+                var da = new SqlDataAdapter(_cmd);
+                da.Fill(dt);
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                ActivityLogService.Logger.LogError(ex);
+                return null;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
     }
 }
