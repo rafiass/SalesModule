@@ -3,11 +3,11 @@
 namespace SalesModule.Views
 {
     /// <summary>
-    /// Interaction logic for PCIDAssociationView.xaml
+    /// Interaction logic for VIPAssociationView.xaml
     /// </summary>
-    public partial class PcidAssociationView : UserControl
+    public partial class VipAssociationView : UserControl
     {
-        public PcidAssociationView()
+        public VipAssociationView()
         {
             InitializeComponent();
         }

@@ -64,7 +64,7 @@ namespace SalesModule
 #endif
         #endregion
 
-        private static object _locker = new object();
+        private object _locker = new object();
         private bool _init;
         private string _vipno;
         private List<SalesGroupM> _availableSales;

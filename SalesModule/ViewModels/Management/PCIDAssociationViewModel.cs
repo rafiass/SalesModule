@@ -123,7 +123,7 @@ namespace SalesModule.ViewModels
         }
     }
 
-    internal class PCIDAssociationViewModel : PopupViewModel
+    internal class PcidAssociationViewModel : PopupViewModel
     {
         private int _groupID;
         private PCIDViewModel _newPcid;
@@ -153,7 +153,7 @@ namespace SalesModule.ViewModels
         public DelegateCommand AssociateCommand { get; private set; }
         public DelegateCommand<PCIDViewModel> DisassociateCommand { get; private set; }
 
-        public PCIDAssociationViewModel(int groupID)
+        public PcidAssociationViewModel(int groupID)
         {
             _groupID = groupID;
             AssociateCommand = new DelegateCommand(associateFunction);

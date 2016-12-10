@@ -1,0 +1,188 @@
+﻿<UserControl x:Class="SalesModule.Views.VipAssociationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SalesModule"
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="700">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type ListViewItem}">
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="Height" Value="26" />
+            </Style>
+            <Style TargetType="{x:Type Image}">
+                <Setter Property="Width" Value="20" />
+                <Setter Property="Height" Value="20" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.ColumnSpan="2" Content="ניהול לקוחות למבצע" FontSize="20"
+               HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Label Grid.Row="2" Grid.Column="0" Content="לקוחות פרטיים" FontSize="17"
+               HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Label Grid.Row="2" Grid.Column="1" Content="לקוחות רשומים" FontSize="17"
+               HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Label Grid.Row="4" Grid.Column="0" Content="מועדוני לקוחות" FontSize="17"
+               HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="5,0">
+            <TextBlock FontSize="15" Text="סינון לקוחות: " HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Criteria, UpdateSourceTrigger=PropertyChanged}" Margin="100,5,20,5" />
+        </Grid>
+
+        <ListView Grid.Row="3" Grid.Column="0" ItemsSource="{Binding AvailableCostumers}" Margin="0,0,5,0"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                    <Setter Property="local:CommandBehavior.Event" Value="MouseDoubleClick" />
+                    <Setter Property="local:CommandBehavior.Command" Value="{Binding DataContext.AssociateVipCommand,
+                        RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                    <Setter Property="local:CommandBehavior.CommandParameter" Value="{Binding}" />
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="שם הלקוח" Width="{Binding ActualWidth, ElementName=pNameCol}"/>
+                    
+                    <GridViewColumn Header="הוסף" Width="{Binding ActualWidth, ElementName=pCmdCol}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button CommandParameter="{Binding}" HorizontalAlignment="Center"
+                                        Command="{Binding DataContext.AssociateVipCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Grid Background="Transparent">
+                                                <Image Source="../../Resources/Images/link.png" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ScrollViewer Grid.Row="3" Grid.Column="0" Visibility="Hidden" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden">
+            <Grid Margin="0,0,5,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="70" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" x:Name="pNameCol" />
+                <Grid Grid.Column="1" x:Name="pCmdCol" />
+            </Grid>
+        </ScrollViewer>
+
+        <ListView Grid.Row="5" Grid.Column="0" ItemsSource="{Binding AvailableClubs}" Margin="0,0,5,0"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                    <Setter Property="local:CommandBehavior.Event" Value="MouseDoubleClick" />
+                    <Setter Property="local:CommandBehavior.Command" Value="{Binding DataContext.AssociateVipCommand,
+                        RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                    <Setter Property="local:CommandBehavior.CommandParameter" Value="{Binding}" />
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="שם הלקוח" Width="{Binding ActualWidth, ElementName=cNameCol}"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding MembersCount}" Header="משתתפים" Width="{Binding ActualWidth, ElementName=cCountCol}"/>
+
+                    <GridViewColumn Header="הוסף" Width="{Binding ActualWidth, ElementName=cCmdCol}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button CommandParameter="{Binding}" HorizontalAlignment="Center"
+                                        Command="{Binding DataContext.AssociateVipCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Grid Background="Transparent">
+                                                <Image Source="../../Resources/Images/link.png" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ScrollViewer Grid.Row="5" Grid.Column="0" Visibility="Hidden" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden">
+            <Grid Margin="0,0,5,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="70" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" x:Name="cNameCol" />
+                <Grid Grid.Column="1" x:Name="cCountCol" />
+                <Grid Grid.Column="2" x:Name="cCmdCol" />
+            </Grid>
+        </ScrollViewer>
+
+        <ListView Grid.Row="3" Grid.Column="1" Grid.RowSpan="3" ItemsSource="{Binding AssociatedVips}" Margin="0,0,5,0"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                    <Setter Property="local:CommandBehavior.Event" Value="MouseDoubleClick" />
+                    <Setter Property="local:CommandBehavior.Command" Value="{Binding DataContext.DisassociateVipCommand,
+                        RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                    <Setter Property="local:CommandBehavior.CommandParameter" Value="{Binding}" />
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="סוג" Width="{Binding ActualWidth, ElementName=aTypeCol}"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="שם" Width="{Binding ActualWidth, ElementName=aNameCol}"/>
+
+                    <GridViewColumn Header="הוסף" Width="{Binding ActualWidth, ElementName=aDeleteCol}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button CommandParameter="{Binding}" HorizontalAlignment="Center"
+                                        Command="{Binding DataContext.DisassociateVipCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Grid Background="Transparent">
+                                                <Image Source="../../Resources/Images/delete.jpg" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ScrollViewer Grid.Row="3" Grid.Column="1" Grid.RowSpan="3" Visibility="Hidden" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden">
+            <Grid Margin="0,0,5,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="60" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" x:Name="aTypeCol" />
+                <Grid Grid.Column="1" x:Name="aNameCol" />
+                <Grid Grid.Column="2" x:Name="aDeleteCol" />
+            </Grid>
+        </ScrollViewer>
+
+    </Grid>
+</UserControl>

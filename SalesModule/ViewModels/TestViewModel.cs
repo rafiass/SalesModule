@@ -5,6 +5,7 @@ namespace SalesModule.ViewModels
 {
     internal class TestViewModel : PopupViewModel
     {
+        private string _criteria;
         public override PopupProperties PopupProperties
         {
             get
@@ -17,12 +18,19 @@ namespace SalesModule.ViewModels
                 };
             }
         }
-        
-        public DataTable DataTable { get; private set; }
+
+        public string Criteria
+        {
+            get { return _criteria; }
+            set { SetProperty(ref _criteria, value); }
+        }
+        public DataTable DataTable { get { return DBService.GetService().Test(Criteria); } }
+
+        public DelegateCommand RefreshCommand { get; private set; }
 
         public TestViewModel()
         {
-            DataTable = DBService.GetService().Test();
+            RefreshCommand = new DelegateCommand(() => OnPropertyChanged("DataTable"));
         }
     }
 }

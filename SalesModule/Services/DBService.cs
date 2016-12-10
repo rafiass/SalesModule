@@ -179,8 +179,15 @@ namespace SalesModule.Services
                 }
                 else
                 {
-                    //### get CategoryM 
-                    return null;
+                    sql = "select KindName, Rem from kind3 where KindNo=@kindno";
+                    _cmd = new SqlCommand(sql, _conn);
+                    _cmd.Parameters.Add(new SqlParameter("@kindno", SqlDbType.VarChar)).Value = id;
+
+                    OpenConnection();
+                    var da = new SqlDataAdapter(_cmd);
+                    da.Fill(dt);
+
+                    return new CategoryM(id, dt.Rows[0]["KindName"].ToString(), dt.Rows[0]["Rem"].ToString());
                 }
             }
             catch (Exception ex)
@@ -637,15 +644,16 @@ namespace SalesModule.Services
                 if (vipid != null)
                 {
                     //this sql is a where clause to get all the vip table restrictions that the user does NOT meet
-                    string getVipGroup = "select VipType from vip where vipno = @vip";
-                    vipOwness = "where (u.isVipno = 1 and u.VipID <> @vip) or (u.isVipno = 0 and u.VipID <> (" + getVipGroup + "))";
+                    string getVipGroup = "select ClubNo from vip where vipno = @vip";
+                    vipOwness = "select u.SaleGroupID from SalesUser as u " +
+                        "where (u.isVipno = 1 and u.VipID <> @vip) or (u.isVipno = 0 and u.VipID <> (" + getVipGroup + "))";
                     _cmd.Parameters.Add(new SqlParameter("@vip", SqlDbType.VarChar)).Value = vipid;
                 }
                 string sql = "select g.GroupID from SalesPcid as p inner join SalesGroup as g on p.SaleGroupID = g.GroupID " +
                     "where p.PCID = @pcid and p.isEnabled = 1 and g.isEnabled = 1 and " +
                     "p.DateFrom <= @nowDate and (p.DateTo is NULL or @nowDate < p.DateTo) and " +
                     "(@nowTime between p.HourFrom and p.HourTo) and " +
-                    "p.SaleGroupID not in (select u.SaleGroupID from SalesUser as u " + vipOwness + ")";
+                    "p.SaleGroupID not in (" + vipOwness + ")";
                 _cmd.CommandText = sql;
 
                 dt = new DataTable();
@@ -755,16 +763,15 @@ namespace SalesModule.Services
         }
         public DataTable GetVIPGroups(int groupID)
         {
-            //groupID, gname, membersCount
-            return new DataTable(); //###
+            //clubno, clubName, membersCount
             CheckIsRemote();
-            string sql, assoc;
             SqlDataAdapter da;
             DataTable dt = new DataTable();
             try
             {
-                assoc = "select VipID from SalesUser where isVipno = 0 and SaleGroupID = @SaleID";
-                sql = "select groupID, (select count) as membersCount from vipGroups where groupID not in (" + assoc + ")";
+                string assoc = "select VipID from SalesUser where isVipno = 0 and SaleGroupID = @GroupID";
+                string count = "select count(v.vipno) from vip as v where v.ClubNo = c.ClubNo";
+                string sql = "select c.ClubNo, c.ClubName, (" + count + ") as membersCount from clubs as c where c.ClubNo not in (" + assoc + ")";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
 
@@ -784,17 +791,19 @@ namespace SalesModule.Services
         }
         public DataTable GetSalesVIPs(int groupID)
         {
-            //isVipno, VipID, name
+            //isVipno, VipID, name, membersCount
             CheckIsRemote();
             string sql;
             string vname = "select v.vname from vip as v where v.vipno = su.VipID";
-            string gname = "NULL"; //select g.gname from vGroups as g where g.groupno = su.VipID"; //###
+            string gname = "select c.ClubName from clubs as c where c.ClubNo = su.VipID";
+            string count = "select count(v.vipno) from vip as v where v.ClubNo = su.VipID";
             SqlDataAdapter da;
             DataTable dt = new DataTable();
             try
             {
                 sql = "select su.isVipno, su.VipID, " +
-                    "(CASE WHEN su.isVipno = 1 THEN (" + vname + ") ELSE (" + gname + ") END) as name " +
+                    "IIF(su.isVipno = 1, (" + vname + "), (" + gname + ")) as name, " +
+                    "IIF(su.isVipno = 1, 0, (" + count + ")) as membersCount " +
                     "from SalesUser as su where su.SaleGroupID = @GroupID";
                 _cmd = new SqlCommand(sql, _conn);
                 _cmd.Parameters.Add(new SqlParameter("@GroupID", SqlDbType.Int)).Value = groupID;
@@ -814,7 +823,7 @@ namespace SalesModule.Services
             }
         }
 
-        public bool AssociateVIP2SaleM(int groupID, int vipid, bool isVipno)
+        public bool AssociateVIP2Sale(int groupID, int vipid, bool isVipno)
         {
             CheckIsRemote();
             string sql;
@@ -839,7 +848,7 @@ namespace SalesModule.Services
                 CloseConnection();
             }
         }
-        public bool DisassociateVIPfromSaleM(int groupID, int vipid, bool isVipno)
+        public bool DisassociateVIPfromSale(int groupID, int vipid, bool isVipno)
         {
             CheckIsRemote();
             string sql;
@@ -1106,7 +1115,7 @@ namespace SalesModule.Services
 
         #endregion
 
-        public DataTable Test()
+        public DataTable Test(string table)
         {
             ActivityLogService.Logger.LogCall();
             DataTable dt = new DataTable();
@@ -1115,7 +1124,9 @@ namespace SalesModule.Services
             {
                 CheckIsRemote();
                 //Kind3: REM, KINDNAME, KINDNO
-                var sql = "select * from plu where kind3=1";
+                //VIP: VipType / clubno
+                //clubs: clubname,  clubno, isactive
+                var sql = "select * from " + table;
                 _cmd = new SqlCommand(sql, _conn);
 
                 OpenConnection();

@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Windows.Forms;
-using SalesModule.GUI;
 using SalesModule.Models;
 using SalesModule.Services;
 
@@ -223,50 +222,6 @@ namespace SalesModule
 
         #endregion
 
-        /* ReadMe
-         * Controls:
-         * 1. ProductFinder - Search for product:
-         *  - TextBox with auto-fill with product names
-         *  - search by name or barcode with 'like' operator (where <field> like '%<Text>%')
-         *  - Product typed member - if there is only one result product
-         *
-         * Sales types:
-         *  Simple Sales
-         *      * Common to all
-         *          - a button for sales properties form
-         *          - button for submit
-         *      1. Discounted Product Form
-         *          - ProductFinder
-         *          - RadioButton options for discount type - fix price as default
-         *          - CheckBox for adding a gift
-         *              - if checked - enable another ProductFinder
-         *          - CheckBox for minimum amount
-         *              - if checked - enable a QTYAdjuster for choosing a positive natural number
-         *      2. Discounted Category Form
-         *          - search for category by name - search OnTextChanged
-         *      3. buy and get - same product
-         *          - ProductFinder
-         *          - two QTYAdjusters - how many to buy? how many to get?
-         *  Advanced Sales
-         *      1. bundle
-         *      2. Advanced buy and get
-         *      3. 
-         * 
-         * 
-         * 1. Bundle - (X+Y+Z..) for special price
-         *  - set products table - pluno and qty
-         *  - set fix price
-         * 2. Buy & Get - buy X and get Y for a special price
-         *  - select product and qty
-         *  - select discounted product
-         *  - select discount type
-         *  - set discount value
-         * 3. Receipt - buy over X$ and get Y for special price
-         *  - set minimum receipt value
-         *  - set products table to be discounted each with type and amount
-         * 4. New Price - select product, set discount
-        */
-
         public SalesGUI()
         {
             // This call is required by the Windows Form Designer.
@@ -291,58 +246,6 @@ namespace SalesModule
         {
             if (Enabled && Wrapper.User == null)
                 Enabled = false;
-        }
-
-        private void createNewSaleM(SaleTypes type)
-        {
-            SaleM s = null;
-            switch (type)
-            {
-                case SaleTypes.SingularBuyAndGet: s = SingularBuyAndGet.Create(); break;
-                //case SaleTypes.Buy2GetAdvanced: s = Buy2GetAdvancedForm.Create(); break;
-                case SaleTypes.Bundle: s = BundleAdvancedForm.Create(); break;
-            }
-            if (s != null)
-            {
-                if (DBService.GetService().InsertGroup(new SalesGroupM(
-                    Wrapper.User, DateTime.Now, true, s)) != -1)
-                    MessageBox.Show("המבצע נוצר בהצלחה!");
-                else
-                    MessageBox.Show("אירעה שגיאה בזמן יצירת המבצע אנא פנה אל מרכז התמיכה");
-            }
-        }
-
-        private void btnMngmnt_Click(object sender, EventArgs e)
-        {
-            var f = new SalesManagement();
-            f.ShowDialog();
-        }
-
-        private void btn_lowPriced_Click(object sender, EventArgs e)
-        {
-            createNewSaleM(SaleTypes.SingularLowerPrice);
-        }
-        private void btn_discountedProduct_Click(object sender, EventArgs e)
-        {
-            //### btn_discountedProduct_Click do nothing...
-        }
-        private void btn_simpleBuyAndGet_Click(object sender, EventArgs e)
-        {
-            createNewSaleM(SaleTypes.SingularBuyAndGet);
-        }
-        private void btn_advBuyAndGet_Click(object sender, EventArgs e)
-        {
-            //### btn_advBuyAndGet_Click do nothing
-        }
-        private void btn_advancedBundle_Click(object sender, EventArgs e)
-        {
-            createNewSaleM(SaleTypes.Bundle);
-        }
-
-        private void btn_test_Click(object sender, EventArgs e)
-        {
-            (new TestForm()).ShowDialog();
-            //DBService.GetService().ChangeDBDebug();
         }
     }
 }

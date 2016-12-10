@@ -112,7 +112,7 @@ namespace SalesModule.ViewModels
                 }
                 else
                 {
-                    //TODO: edit group form
+                    //### TODO: edit group form
                     MessageBox.Show("כרגע, לא ניתן לערוך קבוצת מבצעים.");
                 }
             }
@@ -124,14 +124,30 @@ namespace SalesModule.ViewModels
         public void pcidFunction(SaleGroupViewModel sgvm)
         {
             ActivityLogService.Logger.LogCall(sgvm.GroupID);
-            var pcidVM = new PCIDAssociationViewModel(sgvm.GroupID);
-            InteropService.OpenWindow(pcidVM, pcidVM.PopupProperties);
+            try
+            {
+                var pcidVM = new PcidAssociationViewModel(sgvm.GroupID);
+                InteropService.OpenWindow(pcidVM, pcidVM.PopupProperties);
+            }
+            catch (Exception ex)
+            {
+                ActivityLogService.Logger.LogError(ex);
+                MessageBox.Show("אירעה שגיאה בעת פתיחת חלון הסניפים לעריכה. אנא נסה שוב מאוחר יותר.");
+            }
         }
         public void vipFunction(SaleGroupViewModel sgvm)
         {
             ActivityLogService.Logger.LogCall(sgvm.GroupID);
-            //var vipVM = new VipAssociationViewModel(sgvm.GroupID);
-            //InteropService.OpenWindow(vipVM, null);
+            try
+            {
+                var vipVM = new VipAssociationViewModel(sgvm.GroupID);
+                InteropService.OpenWindow(vipVM, vipVM.PopupProperties);
+            }
+            catch (Exception ex)
+            {
+                ActivityLogService.Logger.LogError(ex);
+                MessageBox.Show("אירעה שגיאה בעת פתיחת חלון הלקוחות לעריכה. אנא נסה שוב מאוחר יותר.");
+            }
         }
     }
 }

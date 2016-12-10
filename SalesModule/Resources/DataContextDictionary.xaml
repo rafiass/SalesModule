@@ -36,8 +36,12 @@
         <v:SalesManagementView DataContext="{Binding}" />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type vm:PCIDAssociationViewModel}">
-        <v:PCIDAssociationView DataContext="{Binding}" />
+    <DataTemplate DataType="{x:Type vm:PcidAssociationViewModel}">
+        <v:PcidAssociationView DataContext="{Binding}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:VipAssociationViewModel}">
+        <v:VipAssociationView DataContext="{Binding}" />
     </DataTemplate>
 
     <!-- Misc -->

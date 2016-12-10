@@ -10,13 +10,20 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Content="חיפוש מוצרים" FontSize="20"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-        <DataGrid Grid.Row="1" ItemsSource="{Binding DataTable}" />
+        <Grid Grid.Row="1" Margin="5,0">
+            <TextBlock FontSize="15" Text="חפש מבצע: " Width="80" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <TextBox Text="{Binding Criteria, UpdateSourceTrigger=PropertyChanged}" Margin="95,5,60,5" />
+            <Button Content="חפש" Margin="10,0" IsDefault="True" Command="{Binding RefreshCommand}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        </Grid>
+        
+        <DataGrid Grid.Row="2" ItemsSource="{Binding DataTable}" />
     </Grid>
 </UserControl>
 

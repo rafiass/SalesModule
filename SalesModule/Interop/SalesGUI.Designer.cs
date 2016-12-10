@@ -54,9 +54,6 @@ namespace SalesModule
 
         private System.Windows.Forms.Integration.ElementHost elementHost1;
         private Views.MainView mainView1;
-
-
-
     }
 }
 
