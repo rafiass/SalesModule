@@ -30,18 +30,6 @@ namespace SalesModule.Services
                 FlowDirection = FlowDirection.RightToLeft,
                 Background = new SolidColorBrush(Color.FromRgb(240, 240, 240))
             };
-            var bb = new MultiBinding()
-            {
-                NotifyOnSourceUpdated = true,
-                Bindings =
-                {
-                    new Binding("Width") { Source = win },
-                    new Binding("Height") { Source = win }
-                },
-                StringFormat = "Width = {0:0}, Height = {1:0}"
-            };
-            BindingOperations.SetBinding(win, Window.TitleProperty, bb);
-
             win.Resources.Source = new Uri(
                 "pack://application:,,,/SalesModule;component/Resources/ResourceDictionary.xaml", UriKind.Absolute);
             win.InputBindings.Add(new KeyBinding(new DelegateCommand(win.Close), new KeyGesture(Key.Escape)));

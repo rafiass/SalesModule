@@ -101,11 +101,5 @@ namespace SalesModule.ViewModels
         {
             return new SalesPropertiesM("מוצר במבצע");
         }
-        protected override SalesPropertiesViewModel CreatePropertiesSettings()
-        {
-            var vm = base.CreatePropertiesSettings();
-            vm.IsRecurrenceEnabled = false;
-            return vm;
-        }
     }
 }

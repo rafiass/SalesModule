@@ -9,6 +9,8 @@ namespace SalesModule.ViewModels
     {
         private bool _isMaxEnabled, _isMultiplyEnabled, _isRecurrenceEnabled, _isDatesEnabled;
         private bool _isPriceLimited, _isMultiplyLimited, _isRecurrenceLimited;
+        private double _maxPrice;
+        private int _multiply, _recerrences;
         private bool _isBroadSale, _isSaleDatesLimited;
 
         public override PopupProperties PopupProperties
@@ -40,9 +42,13 @@ namespace SalesModule.ViewModels
         public bool IsPriceLimited
         {
             get { return _isPriceLimited; }
-            set { SetProperty(ref _isPriceLimited, value); }
+            set { if (SetProperty(ref _isPriceLimited, value)) MaxPrice = 1000; }
         }
-        public double MaxPrice { get; set; }
+        public double MaxPrice
+        {
+            get { return _maxPrice; }
+            set { SetProperty(ref _maxPrice, value); }
+        }
 
         public bool IsMultiplyEnabled
         {
@@ -56,9 +62,13 @@ namespace SalesModule.ViewModels
         public bool IsMultiplyLimited
         {
             get { return _isMultiplyLimited; }
-            set { SetProperty(ref _isMultiplyLimited, value); }
+            set { if (SetProperty(ref _isMultiplyLimited, value)) InstanceMultiply = 1; }
         }
-        public int InstanceMultiply { get; set; }
+        public int InstanceMultiply
+        {
+            get { return _multiply; }
+            set { SetProperty(ref _multiply, value); }
+        }
 
         public bool IsRecurrenceEnabled
         {
@@ -72,9 +82,13 @@ namespace SalesModule.ViewModels
         public bool IsRecurrenceLimited
         {
             get { return _isRecurrenceLimited; }
-            set { SetProperty(ref _isRecurrenceLimited, value); }
+            set { if (SetProperty(ref _isRecurrenceLimited, value)) RecurrencePerInstance = 1; }
         }
-        public int RecurrencePerInstance { get; set; }
+        public int RecurrencePerInstance
+        {
+            get { return _recerrences; }
+            set { SetProperty(ref _recerrences, value); }
+        }
 
         public bool IsDatesEnabled
         {
@@ -114,16 +128,16 @@ namespace SalesModule.ViewModels
         {
             SaleTitle = prop.Title;
             MinPrice = prop.MinPrice;
-            
+
             IsPriceLimited = prop.MaxPrice != null;
             if (IsPriceLimited)
                 MaxPrice = (double)prop.MaxPrice;
-            IsMultiplyLimited = prop.InstanceMultiply == 0;
+            IsMultiplyLimited = prop.InstanceMultiply != 0;
             if (IsMultiplyLimited)
                 InstanceMultiply = prop.InstanceMultiply;
-            IsRecurrenceLimited = prop.RecurrencePerInstance == 0;
+            IsRecurrenceLimited = prop.RecurrencePerInstance != 0;
             if (IsRecurrenceLimited)
-                RecurrencePerInstance= prop.RecurrencePerInstance;
+                RecurrencePerInstance = prop.RecurrencePerInstance;
 
             IsBroadSale = prop.IsBroadSale;
             DateFrom = prop.DateFrom;

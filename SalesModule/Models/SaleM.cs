@@ -102,7 +102,7 @@ namespace SalesModule.Models
                         {
                             //the discount is for each 1 unit, limited by MaxMultiply
                             discountBag = findPlu(bag, dp.ID, dp.isPluno, 0, false);
-                            if (discountBag == null) continue;
+                            if (discountBag == null || discountBag.Count == 0) continue;
 
                             double maxAllowed = 0;
                             if (dp.MaxMultiply == 0)

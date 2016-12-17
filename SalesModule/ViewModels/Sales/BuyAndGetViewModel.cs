@@ -69,11 +69,5 @@ namespace SalesModule.ViewModels
         {
             return new SalesPropertiesM("קנה וקבל") { InstanceMultiply = 0 };
         }
-        protected override SalesPropertiesViewModel CreatePropertiesSettings()
-        {
-            var vm = base.CreatePropertiesSettings();
-            vm.IsRecurrenceEnabled = false;
-            return vm;
-        }
     }
 }
