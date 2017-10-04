@@ -10,6 +10,11 @@ namespace SalesModule
         SingularBuyAndGet, Bundle
     }
 
+    public enum searchOrder
+    {
+        lowToHigh, highToLow
+    }
+
     internal static class Common
     {
         public static string CurrentDirectory { get { return Environment.CurrentDirectory; } }

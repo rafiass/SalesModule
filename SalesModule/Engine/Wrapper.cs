@@ -54,7 +54,7 @@ namespace SalesModule
             {
                 var v = (new System.Reflection.AssemblyName(
                      System.Reflection.Assembly.GetExecutingAssembly().FullName)).Version;
-                return v.Major + "." + v.Minor;
+                return v.Major + "." + v.Minor + "." + v.Build;
             }
         }
 
@@ -77,6 +77,7 @@ namespace SalesModule
                 {
                     User = user;
                     PCID = pcid;
+                    ActivityLogService.Logger.LogMessage("initiated succssfully, Module version: " + Version);
                     return InitResults.Success;
                 }
                 ActivityLogService.Logger.LogMessage("Login failed!");

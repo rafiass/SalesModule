@@ -8,16 +8,29 @@ namespace SalesModule.Services
         static ConnectionService()
         {
             StoresConn = "";
+
         }
 
         public static string CreateConnectionString(string ip, string username, string password, string catalog, string failover = "")
         {
             string modulename = "SalesModule";
-            string cs = "Data Source = " + ip + "; Initial Catalog = " + catalog + "; " +
+            string cs = "";
+
+            if (ip.ToLower() != "localhost")
+            {
+                cs = "Data Source = " + ip + "; Initial Catalog = " + catalog + "; " +
                 "User ID = " + username + "; Password = " + password + "; " +
                 "Pooling = false; Encrypt = True; Persist Security Info = false; Connect Timeout = 12" + "; TrustServerCertificate = true; ";
 
-            cs += (failover != "" ? "Failover Partner = " + failover + "; " : "");
+                cs += (failover != "" ? "Failover Partner = " + failover + "; " : "");
+            }
+            else
+            {
+                cs = "Data Source = " + ip + "; Initial Catalog = " + catalog + "; " +
+                "integrated security=True;" +
+                "Pooling = false; Encrypt = True; Persist Security Info = false; Connect Timeout = 12" + "; TrustServerCertificate = true; ";
+            }
+
             cs += (modulename != "" ? "Application Name = " + modulename : "");
             return cs;
         }

@@ -608,9 +608,13 @@ namespace SalesModule.Services
 
         public List<SalesGroupM> GetAvailableSales(string vipid = null)
         {
+            if (vipid == "")
+				vipid = null;
+
             ActivityLogService.Logger.LogCall(vipid);
             DataTable dt;
             var Sales = new List<SalesGroupM>();
+            string sql = "";
             try
             {
                 CheckIsRemote();
@@ -637,7 +641,7 @@ namespace SalesModule.Services
                 else
                     vipOwness = "(select count(*) from SalesUser as u where u.SaleGroupID=g.GroupID) = 0";
 
-                string sql =
+                sql =
                     "select g.GroupID from SalesPcid as p inner join SalesGroup as g on p.SaleGroupID = g.GroupID " +
                     "where p.PCID = @pcid and p.isEnabled = 1 and g.isEnabled = 1 and " +
                     "p.DateFrom <= @nowDate and (p.DateTo is NULL or @nowDate < p.DateTo) and " +
@@ -653,7 +657,7 @@ namespace SalesModule.Services
             }
             catch (Exception ex)
             {
-                ActivityLogService.Logger.LogError(ex);
+                ActivityLogService.Logger.LogError(ex, "query:" + sql);
                 return null;
             }
         }

@@ -71,7 +71,17 @@ namespace SalesModule.Models
             Discount = TotalDiscount ?? new DiscountM(0, DiscountTypes.Nothing);
         }
 
-        public List<SaleDiscount> GetEfective(List<ShoppingItem> bag, double totalReceipt)
+
+        /// <summary>
+        /// Main function for calculating sales
+        /// </summary>
+        /// <param name="bag"></param>
+        /// List of remaining shoping items from the customer bag
+        /// <param name="totalReceipt"></param>
+        /// Total price of the bag
+        /// <returns></returns>
+        /// Retunrs a list of discount items 
+         public List<SaleDiscount> GetEfective(List<ShoppingItem> bag, double totalReceipt)
         {
             double saleValue = 0, discountAmount, discountQTY;
             bool DiscountFound = true;
@@ -79,6 +89,8 @@ namespace SalesModule.Models
             List<SaleDiscount> discounts = new List<SaleDiscount>();
             List<ShoppingItem> discountBag, giftedBag;
 
+            //Find if required elements for the sale exist in the bag
+            //Do this for each instance of the sale
             var newBag = isRequiredExist(bag);
             if (newBag == null)
                 return discounts;
@@ -95,13 +107,14 @@ namespace SalesModule.Models
                     (i < Properties.RecurrencePerInstance || Properties.RecurrencePerInstance == 0); i++)
                 {
                     DiscountFound = false;
+                    //Go over all discount elements are find them in the bag
                     foreach (var dp in Discounted)
                     {
                         discountQTY = 0;
                         if (dp.Amount == 0)
                         {
                             //the discount is for each 1 unit, limited by MaxMultiply
-                            discountBag = findPlu(bag, dp.ID, dp.isPluno, 0, false);
+                            discountBag = findPlu(bag, dp.ID, dp.isPluno, 0, Properties.favourOrder);
                             if (discountBag == null || discountBag.Count == 0) continue;
 
                             double maxAllowed = 0;
@@ -135,7 +148,7 @@ namespace SalesModule.Models
                         else
                         {
                             //the discount is for each full package of dp.Amount units, limited by MaxMultiply packages
-                            discountBag = findPlu(bag, dp.ID, dp.isPluno, dp.Amount, false);
+                            discountBag = findPlu(bag, dp.ID, dp.isPluno, dp.Amount, Properties.favourOrder);
                             for (int k = 0; discountBag != null &&
                                 (dp.MaxMultiply == 0 || k < dp.MaxMultiply); k++)
                             {
@@ -146,7 +159,7 @@ namespace SalesModule.Models
 
                                 discountQTY++;
                                 if (k != dp.MaxMultiply - 1)
-                                    discountBag = findPlu(bag, dp.ID, dp.isPluno, dp.Amount, false);
+                                    discountBag = findPlu(bag, dp.ID, dp.isPluno, dp.Amount, Properties.favourOrder);
                             }
                         }
                         if (discountQTY != 0)
@@ -157,7 +170,7 @@ namespace SalesModule.Models
                             if (gift.Amount == 0)
                             {
                                 //the discount is for each 1 unit, limited by discountQTY
-                                giftedBag = findPlu(bag, gift.ID, gift.isPluno, 0, false);
+                                giftedBag = findPlu(bag, gift.ID, gift.isPluno, 0, Properties.favourOrder);
                                 if (giftedBag == null) continue;
 
                                 double maxAllowed = discountQTY;
@@ -188,7 +201,7 @@ namespace SalesModule.Models
                             {
                                 //the discount is for each full package of gift.Amount units,
                                 //limited by discountQTY
-                                giftedBag = findPlu(bag, gift.ID, gift.isPluno, gift.Amount, false);
+                                giftedBag = findPlu(bag, gift.ID, gift.isPluno, gift.Amount, Properties.favourOrder);
                                 for (int k = 0; k < discountQTY && giftedBag != null; k++)
                                 {
                                     double tempValue = 0;
@@ -197,17 +210,19 @@ namespace SalesModule.Models
                                     discounts.Add(new SaleDiscount(SaleID, Title, 1, discountAmount, plunosIn));
 
                                     if (k != discountQTY - 1)
-                                        giftedBag = findPlu(bag, gift.ID, gift.isPluno, gift.Amount, false);
+                                        giftedBag = findPlu(bag, gift.ID, gift.isPluno, gift.Amount, Properties.favourOrder);
                                 }
                             }
                         }
                     }
                 }
 
+                //Look for next instance of the sale
                 newBag = isRequiredExist(bag);
                 saleInstaceCounter++;
             }
             if (newBag != null)
+                //Sale not active - return the required items back to the bag
                 newBag.ForEach(si => Common.InsertItemToCart(bag, si));
 
             Common.collapseSales(discounts);
@@ -219,13 +234,21 @@ namespace SalesModule.Models
                 (kind != null && p.ID == kind.ToString() && !p.isPluno));
         }
 
+        /// <summary>
+        /// Find if required items for the sale exist in the bag
+        /// For each required elemet, look for it in the bag
+        /// If exist - remove it from the bag and add to the return list
+        /// </summary>
+        /// <param name="bag"></param>
+        /// <returns></returns>
+        /// List of shoping items that invoked the sale
         private List<ShoppingItem> isRequiredExist(List<ShoppingItem> bag)
         {
             var newBag = new List<ShoppingItem>();
             List<ShoppingItem> tempBag;
             foreach (ProdAmountM req in ReqProducts)
             {
-                tempBag = findPlu(bag, req.ID, req.isPluno, req.Amount, true);
+                tempBag = findPlu(bag, req.ID, req.isPluno, req.Amount, searchOrder.highToLow);
                 if (tempBag != null)
                     tempBag.ForEach(si => Common.InsertItemToCart(newBag, si));
                 else
@@ -236,7 +259,11 @@ namespace SalesModule.Models
             }
             return newBag;
         }
-        private List<ShoppingItem> findPlu(List<ShoppingItem> bag, string pluID, bool isPluno, double amount, bool isReq)
+        /// <summary>
+        /// Search for an item in the bag, 
+        /// if found retuns the items are remove it from the bag
+        /// </summary>
+        private List<ShoppingItem> findPlu(List<ShoppingItem> bag, string pluID, bool isPluno, double amount, searchOrder order)
         {
             var found = new List<ShoppingItem>();
             bool infinite = amount == 0;
@@ -258,7 +285,7 @@ namespace SalesModule.Models
                 return false;
             };
 
-            if (isReq)
+            if (order == searchOrder.highToLow)
             {
                 for (int i = bag.Count - 1; i >= 0; i--)//highest to lowest
                 {

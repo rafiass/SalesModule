@@ -13,6 +13,9 @@ namespace SalesModule.Models
         public DateTime DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
 
+        //Define how to go thorug the discount list
+        public searchOrder favourOrder { get; private set; }
+
         public SalesPropertiesM()
             : this("מבצע") { }
         public SalesPropertiesM(string title)
@@ -32,6 +35,9 @@ namespace SalesModule.Models
             IsBroadSale = IsBroad;
             DateFrom = from;
             DateTo = to;
+
+            //TODO - add to DB as property
+            favourOrder = searchOrder.highToLow;
         }
         public SalesPropertiesM(SalesPropertiesM prop)
         {
@@ -43,6 +49,7 @@ namespace SalesModule.Models
             IsBroadSale = prop.IsBroadSale;
             DateFrom = prop.DateFrom;
             DateTo = prop.DateTo;
+            favourOrder = prop.favourOrder;
         }
     }
 }

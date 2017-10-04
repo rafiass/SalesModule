@@ -130,7 +130,7 @@ namespace SalesModule
                 try
                 {
                     AvailableSales = DBService.GetService().GetAvailableSales(_vipno);
-                    return true;
+                    return AvailableSales != null;
                 }
                 catch
                 {

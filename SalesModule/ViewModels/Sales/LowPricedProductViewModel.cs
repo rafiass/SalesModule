@@ -87,7 +87,7 @@ namespace SalesModule.ViewModels
                 throw new SalesException("אנא בחר מוצר כמתנה.");
 
             var outs = new List<DiscountedProductM>();
-            outs.Add(new DiscountedProductM(SelectedProduct.ID, true,
+            outs.Add(new DiscountedProductM(SelectedProduct.ID, SelectedProduct.isPluno,
                 IsDiscountPerAmount ? AmountDiscounted : 0,
                 IsAmountLimited ? LimitedAmount : 0, Discount,
                 !IsGiftAvailable ? null : new GiftedProductM(Gifted,

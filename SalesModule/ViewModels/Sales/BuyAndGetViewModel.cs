@@ -58,10 +58,9 @@ namespace SalesModule.ViewModels
                 throw new SalesException("אנא בחר מוצר לקבלה.");
 
             var reqs = new List<ProdAmountM>();
-            reqs.Add(new ProdAmountM(BuyProduct.ID, true, BuyAmount));
+            reqs.Add(new ProdAmountM(BuyProduct.ID, BuyProduct.isPluno, BuyAmount));
             var outs = new List<DiscountedProductM>();
-            outs.Add(new DiscountedProductM(GetProduct.ID, true,
-                0, GetAmount, GetDiscount));
+            outs.Add(new DiscountedProductM(GetProduct.ID, GetProduct.isPluno, 1, GetAmount, GetDiscount));
             return new SaleM(SaleTypes.SingularBuyAndGet, _prop, reqs, outs, null, _isEditing ? _index : 1, _ID);
         }
 

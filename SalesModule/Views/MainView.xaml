@@ -7,7 +7,7 @@
              xmlns:vm="clr-namespace:SalesModule.ViewModels"
              xmlns:cntrls="clr-namespace:SalesModule.Controls"
              FlowDirection="RightToLeft"
-             mc:Ignorable="d" Height="229" Width="378">
+             mc:Ignorable="d" Height="160" Width="378">
     <UserControl.DataContext>
         <vm:MainViewModel />
     </UserControl.DataContext>
@@ -32,11 +32,10 @@
 
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid Height="155" VerticalAlignment="Top">
         <Grid.RowDefinitions>
-            <RowDefinition Height="88*" />
-            <RowDefinition Height="88*" />
-            <RowDefinition Height="50*" />
+            <RowDefinition Height="146*" />
+            <RowDefinition Height="83*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -45,13 +44,9 @@
         </Grid.ColumnDefinitions>
 
         <Button Grid.Column="0" Grid.Row="0" Content="קנה וקבל" CommandParameter="{x:Static local:SaleTypes.SingularBuyAndGet}" />
-        <Button Grid.Column="1" Grid.Row="0" Content="מבצע (בקרוב)" />
-        <Button Grid.Column="2" Grid.Row="0" Content="מוצר מוזל" CommandParameter="{x:Static local:SaleTypes.SingularLowerPrice}" />
+        <Button Grid.Column="1" Grid.Row="0" Content="מוצר מוזל" CommandParameter="{x:Static local:SaleTypes.SingularLowerPrice}" Margin="2,3,4,3" />
+        <Button Grid.Column="2" Content="חבילה" Margin="3" />
 
-        <Button Grid.Column="0" Grid.Row="1" Content="טסט" Command="{Binding TestCommand}" />
-        <Button Grid.Column="1" Grid.Row="1" Content="חבילה" />
-        <Button Grid.Column="2" Grid.Row="1" Content="קנה וקבל מתקדם (בקרוב)" />
-
-        <Button Grid.ColumnSpan="3" Grid.Row="2" Command="{Binding ManagementCommand}" Content="ניהול מבצעים" Margin="5" />
+        <Button Grid.ColumnSpan="3" Grid.Row="1" Command="{Binding ManagementCommand}" Content="ניהול מבצעים" Margin="5" />
     </Grid>
 </UserControl>

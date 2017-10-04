@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:v="clr-namespace:SalesModule.Views"
              xmlns:cntrls="clr-namespace:SalesModule.Controls"
-             FlowDirection="RightToLeft" mc:Ignorable="d" d:DesignHeight="700" d:DesignWidth="600">
+             FlowDirection="RightToLeft" mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="600">
     <Grid Margin="7">
         <Grid.RowDefinitions>
             <RowDefinition Height="40*" />
@@ -17,31 +17,31 @@
             <RowDefinition Height="60*" />
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Content="מבצע 'קנה וקבל'" FontSize="18"
+        <Label Grid.Row="0" Content="מבצע 'קנה וקבל'" FontSize="21.333"
                HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-        <TextBlock Grid.Row="1" Text="קנה פריט" Width="65"
-                   HorizontalAlignment="Left" VerticalAlignment="Center" />
-        <cntrls:TouchableNumeric Grid.Row="1" Margin="65,6,0,6" Value="{Binding BuyAmount}" Increment="0.1" Minimum="0.1" />
+        <TextBlock Grid.Row="1" Text="קנה פריט" Width="88"
+                   HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18.667" Margin="20,14,0,16" Height="24" />
+        <cntrls:TouchableNumeric Grid.Row="1" Margin="123,10,186,2" Value="{Binding BuyAmount}" Increment="1" Minimum="1" DecimalPlaces="0" FontSize="20" />
         <cntrls:AutoCompleteTextBox Grid.Row="2" SelectedItem="{Binding BuyProduct}" Margin="5,8" />
 
-        <TextBlock Grid.Row="3" Text="קבל פריט" Width="65"
-                   HorizontalAlignment="Left" VerticalAlignment="Center" />
-        <cntrls:TouchableNumeric Grid.Row="3" Margin="65,6,0,6" Value="{Binding GetAmount}" Increment="0.1" Minimum="0.1" />
+        <TextBlock Grid.Row="3" Text="קבל פריט" Width="88"
+                   HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18.667" Margin="20,11,0,13" Height="26" />
+        <cntrls:TouchableNumeric Grid.Row="3" Margin="123,10,186,2" Value="{Binding GetAmount}" Increment="1" Minimum="1" DecimalPlaces="0" FontSize="20"/>
         <cntrls:AutoCompleteTextBox Grid.Row="4" SelectedItem="{Binding GetProduct}" Margin="5,8" />
 
         <v:DiscountView Grid.Row="5" DataContext="{Binding GetDiscount}" />
-        
-        <Grid Grid.Row="6" Margin="0,5">
+
+        <Grid Grid.Row="6" Margin="0,21,0,71">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="ביטול" Command="{Binding CancelCommand}" IsCancel ="True" Margin="5,0" />
-            <Button Grid.Column="1" Content="מאפיינים..." Command="{Binding PropertiesCommand}" Margin="5,0" />
-            <Button Grid.Column="2" Content="בצע" Command="{Binding CommitCommand}" Margin="5,0" />
-           </Grid>
+            <Button Grid.Column="0" Content="ביטול" Command="{Binding CancelCommand}" IsCancel ="True" Margin="5,0,5,-58" FontSize="24" />
+            <Button Grid.Column="1" Content="מאפיינים..." Command="{Binding PropertiesCommand}" Margin="5,0,5,-58" FontSize="24"  />
+            <Button Grid.Column="2" Content="בצע" Command="{Binding CommitCommand}" Margin="5,0,5,-58" FontSize="24" />
+        </Grid>
     </Grid>
 </UserControl>
