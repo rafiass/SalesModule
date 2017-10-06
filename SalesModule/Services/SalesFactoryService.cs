@@ -22,7 +22,7 @@ namespace SalesModule.Services
             if (svm == null)
                 throw new ArgumentException("לא ניתן ליצור את המבצע הנדרש");
 
-            InteropService.OpenWindow(svm, svm.PopupProperties);
+            InteropService.OpenWindow(svm);
             return svm.Conducted;
         }
         public static SaleM EditSale(SaleM sale)
@@ -42,7 +42,7 @@ namespace SalesModule.Services
                 if (svm == null)
                     throw new ArgumentException("לא ניתן לערוך את המבצע הקיים");
 
-                InteropService.OpenWindow(svm, svm.PopupProperties);
+                InteropService.OpenWindow(svm);
                 return svm.Conducted;
             }
             catch (Exception ex)

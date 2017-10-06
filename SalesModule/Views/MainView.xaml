@@ -45,7 +45,7 @@
 
         <Button Grid.Column="0" Grid.Row="0" Content="קנה וקבל" CommandParameter="{x:Static local:SaleTypes.SingularBuyAndGet}" />
         <Button Grid.Column="1" Grid.Row="0" Content="מוצר מוזל" CommandParameter="{x:Static local:SaleTypes.SingularLowerPrice}" Margin="2,3,4,3" />
-        <Button Grid.Column="2" Content="חבילה" Margin="3" />
+        <Button Grid.Column="2" Grid.Row="0" Content="חבילה" Margin="3" />
 
         <Button Grid.ColumnSpan="3" Grid.Row="1" Command="{Binding ManagementCommand}" Content="ניהול מבצעים" Margin="5" />
     </Grid>

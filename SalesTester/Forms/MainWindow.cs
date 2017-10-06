@@ -16,9 +16,9 @@ namespace SalesTester
             if (!isInit)
             {
                 var w = new Wrapper();
-                InitResults res = w.Init("40.113.20.172,44455", "Sales", "Sales", "R0h3niu123", 1, "admin", "1234");
+                InitResults res = w.Init("newordersqlmain.database.windows.net", "SALES_TEST", "yoni", "Yy123456789", 1, "admin", "1234");
                 isInit = w.IsInited();
-                if (isInit && res == InitResults.Success)//isInit = w.IsInited())
+                if (isInit && res == InitResults.Success)
                     Text = "Testing version: " + w.Version;
             }
             return isInit;

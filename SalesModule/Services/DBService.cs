@@ -236,6 +236,7 @@ namespace SalesModule.Services
         #endregion
 
         #region Sales
+
         public int InsertGroup(SalesGroupM g)
         {
             ActivityLogService.Logger.LogCall(g.GroupID);
@@ -609,7 +610,7 @@ namespace SalesModule.Services
         public List<SalesGroupM> GetAvailableSales(string vipid = null)
         {
             if (vipid == "")
-				vipid = null;
+                vipid = null;
 
             ActivityLogService.Logger.LogCall(vipid);
             DataTable dt;
@@ -1046,10 +1047,10 @@ namespace SalesModule.Services
 
         #endregion
 
+        #region Utils
+
         public DataTable GetDiscountTypes() { return GetDictionaryTable("SalesOffType", "TypeName", "TypeID"); }
         public DataTable GetAllBranches() { return GetDictionaryTable("branch", "bhname", "bhno"); }
-
-        #region Utils
 
         private DataTable GetDictionaryTable(string table, string TitleCol, string IDCol)
         {
@@ -1102,6 +1103,15 @@ namespace SalesModule.Services
             if (_location != DBLocation.RemoteServer)
                 throw new InvalidOperationException("This operation is only valid on remote server.");
         }
+
+        #endregion
+
+        #region Backward Compatibility
+
+        //### create function AssureTableExist(tableName)
+        //  - includes map for TableName to List<Tuple<FieldName, DBType>>
+        //  - if tableName is not in the map - throw "DB version and SalesModule version are not compatible"
+        //### create function AssureFieldExist(tableName, fieldName)
 
         #endregion
 

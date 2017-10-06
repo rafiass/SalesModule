@@ -9,12 +9,13 @@ namespace SalesModule.Models
         public double? MaxPrice { get; set; }
         public int InstanceMultiply { get; set; }
         public int RecurrencePerInstance { get; set; }
+
         public bool IsBroadSale { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
 
         //Define how to go thorug the discount list
-        public searchOrder favourOrder { get; private set; }
+        public searchOrder FavourOrder { get; private set; }
 
         public SalesPropertiesM()
             : this("מבצע") { }
@@ -37,7 +38,7 @@ namespace SalesModule.Models
             DateTo = to;
 
             //TODO - add to DB as property
-            favourOrder = searchOrder.highToLow;
+            FavourOrder = searchOrder.highToLow;
         }
         public SalesPropertiesM(SalesPropertiesM prop)
         {
@@ -49,7 +50,7 @@ namespace SalesModule.Models
             IsBroadSale = prop.IsBroadSale;
             DateFrom = prop.DateFrom;
             DateTo = prop.DateTo;
-            favourOrder = prop.favourOrder;
+            FavourOrder = prop.FavourOrder;
         }
     }
 }

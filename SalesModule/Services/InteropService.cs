@@ -1,18 +1,18 @@
-﻿using System;
-using System.Reflection;
+﻿using SalesModule.ViewModels;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using SalesModule.ViewModels;
-using SalesModule.Views;
 
 namespace SalesModule.Services
 {
     internal static class InteropService
     {
-        public static void OpenWindow(object vm, PopupProperties prop = null, Action callbackFunction = null)
+        public static void OpenWindow(PopupViewModel vm, Action callbackFunction = null)
+        {
+            OpenWindow(vm, vm.PopupProperties, callbackFunction);
+        }
+        public static void OpenWindow(object vm, PopupProperties prop, Action callbackFunction = null)
         {
             if (vm == null) return;
             ActivityLogService.Logger.LogCall(vm);
@@ -35,11 +35,12 @@ namespace SalesModule.Services
             win.InputBindings.Add(new KeyBinding(new DelegateCommand(win.Close), new KeyGesture(Key.Escape)));
             win.Closed += (s, e) => callbackFunction();
 
-            if (vm is PopupViewModel)
+            var pvm = vm as PopupViewModel;
+            if (pvm != null)
             {
-                win.Closed += (s, e) => (vm as PopupViewModel).WindowClosed();
-                win.Closing += (s, e) => (vm as PopupViewModel).WindowClosing(e);
-                (vm as PopupViewModel).SetCloseAction(win.Close);
+                win.Closed += (s, e) => pvm.WindowClosed();
+                win.Closing += (s, e) => pvm.WindowClosing(e);
+                pvm.SetCloseAction(win.Close);
             }
 
             if (prop.IsModal)
@@ -52,7 +53,7 @@ namespace SalesModule.Services
         {
             ActivityLogService.Logger.LogCall(title, num);
             var vm = num == null ? new NumPadViewModel(title) : new NumPadViewModel(title, (double)num);
-            OpenWindow(vm, vm.PopupProperties);
+            OpenWindow(vm);
             return vm.Results;
         }
     }

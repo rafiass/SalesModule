@@ -16,7 +16,7 @@ namespace SalesModule.ViewModels
         {
             OpenCommand = new DelegateCommand<SaleTypes>(openNewSale);
             ManagementCommand = new DelegateCommand(openManagement);
-            TestCommand = new DelegateCommand(testFunc);
+            TestCommand = new DelegateCommand(() => InteropService.OpenWindow(new TestViewModel()));
         }
 
         private void openNewSale(SaleTypes type)
@@ -32,14 +32,7 @@ namespace SalesModule.ViewModels
 
         private void openManagement()
         {
-            var vm = new SalesManagementViewModel();
-            InteropService.OpenWindow(vm, vm.PopupProperties);
-        }
-
-        private void testFunc()
-        {
-            var vm = new TestViewModel();
-            InteropService.OpenWindow(vm, vm.PopupProperties);
+            InteropService.OpenWindow(new SalesManagementViewModel());
         }
     }
 }

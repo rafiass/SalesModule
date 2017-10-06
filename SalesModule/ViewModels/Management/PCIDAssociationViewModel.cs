@@ -14,7 +14,7 @@ namespace SalesModule.ViewModels
         private bool _isEnabled;
         private string _bhname;
         private bool _isHoursLimited, _isDatesLimited;
-        private int _timIndexFrom, _timeIndexTo;
+        private int _timeIndexFrom, _timeIndexTo;
 
         public bool IsEnabled
         {
@@ -54,10 +54,10 @@ namespace SalesModule.ViewModels
         public List<string> Hours { get; private set; }
         public int FromIndexTime
         {
-            get { return _timIndexFrom; }
+            get { return _timeIndexFrom; }
             set
             {
-                if (!SetProperty(ref _timIndexFrom, value)) return;
+                if (!SetProperty(ref _timeIndexFrom, value)) return;
                 FromTime = indexToTime(value);
                 OnPropertyChanged("FromTime");
             }

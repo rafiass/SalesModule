@@ -432,7 +432,7 @@ namespace SalesModule.Controls
             base.OnMouseDoubleClick(e);
 
             var vm = new ProductFinderViewModel();
-            InteropService.OpenWindow(vm, vm.PopupProperties);
+            InteropService.OpenWindow(vm);
             if (vm.Choosen != null)
                 SelectedItem = vm.Choosen;
         }

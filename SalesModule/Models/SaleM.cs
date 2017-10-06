@@ -3,49 +3,6 @@ using System.Collections.Generic;
 
 namespace SalesModule.Models
 {
-    internal class SalesGroupM
-    {
-        public int GroupID { get; private set; }
-        public UserData Emp { get; private set; }
-        public DateTime DateCreated { get; private set; }
-        public bool IsEnabled { get; private set; }
-
-        public List<SaleM> Sales { get; set; }
-
-        public SalesGroupM(SaleM sale)
-            : this(null, DateTime.Now, true, sale)
-        { }
-        public SalesGroupM(UserData emp, DateTime created, bool isEnabled, SaleM sale)
-            : this(-1, emp, created, isEnabled)
-        {
-            Sales = new List<SaleM>();
-            Sales.Add(sale);
-        }
-        public SalesGroupM(int groupID, UserData emp, DateTime created, bool isEnabled, List<SaleM> sales = null)
-        {
-            GroupID = groupID;
-            Sales = sales ?? new List<SaleM>();
-            Emp = emp;
-            DateCreated = created;
-            IsEnabled = isEnabled;
-        }
-
-        public List<SaleDiscount> GetEfective(List<ShoppingItem> bag, double totalReceipt)
-        {
-            List<SaleDiscount> sd;
-            for (int i = 0; i < Sales.Count; i++)
-                if ((sd = Sales[i].GetEfective(bag, totalReceipt)) != null)
-                    return sd;
-            return null;
-        }
-
-        public string IsProductRequire(string pluno, int? kind)
-        {
-            var sl = Sales.Find(s => s.IsProductRequire(pluno, kind));
-            return sl != null ? sl.Title : "";
-        }
-    }
-
     internal class SaleM
     {
         public int SaleID { get; private set; }
@@ -114,7 +71,7 @@ namespace SalesModule.Models
                         if (dp.Amount == 0)
                         {
                             //the discount is for each 1 unit, limited by MaxMultiply
-                            discountBag = findPlu(bag, dp.ID, dp.isPluno, 0, Properties.favourOrder);
+                            discountBag = findPlu(bag, dp.ID, dp.isPluno, 0, Properties.FavourOrder);
                             if (discountBag == null || discountBag.Count == 0) continue;
 
                             double maxAllowed = 0;
@@ -148,7 +105,7 @@ namespace SalesModule.Models
                         else
                         {
                             //the discount is for each full package of dp.Amount units, limited by MaxMultiply packages
-                            discountBag = findPlu(bag, dp.ID, dp.isPluno, dp.Amount, Properties.favourOrder);
+                            discountBag = findPlu(bag, dp.ID, dp.isPluno, dp.Amount, Properties.FavourOrder);
                             for (int k = 0; discountBag != null &&
                                 (dp.MaxMultiply == 0 || k < dp.MaxMultiply); k++)
                             {
@@ -159,7 +116,7 @@ namespace SalesModule.Models
 
                                 discountQTY++;
                                 if (k != dp.MaxMultiply - 1)
-                                    discountBag = findPlu(bag, dp.ID, dp.isPluno, dp.Amount, Properties.favourOrder);
+                                    discountBag = findPlu(bag, dp.ID, dp.isPluno, dp.Amount, Properties.FavourOrder);
                             }
                         }
                         if (discountQTY != 0)
@@ -170,7 +127,7 @@ namespace SalesModule.Models
                             if (gift.Amount == 0)
                             {
                                 //the discount is for each 1 unit, limited by discountQTY
-                                giftedBag = findPlu(bag, gift.ID, gift.isPluno, 0, Properties.favourOrder);
+                                giftedBag = findPlu(bag, gift.ID, gift.isPluno, 0, Properties.FavourOrder);
                                 if (giftedBag == null) continue;
 
                                 double maxAllowed = discountQTY;
@@ -201,7 +158,7 @@ namespace SalesModule.Models
                             {
                                 //the discount is for each full package of gift.Amount units,
                                 //limited by discountQTY
-                                giftedBag = findPlu(bag, gift.ID, gift.isPluno, gift.Amount, Properties.favourOrder);
+                                giftedBag = findPlu(bag, gift.ID, gift.isPluno, gift.Amount, Properties.FavourOrder);
                                 for (int k = 0; k < discountQTY && giftedBag != null; k++)
                                 {
                                     double tempValue = 0;
@@ -210,7 +167,7 @@ namespace SalesModule.Models
                                     discounts.Add(new SaleDiscount(SaleID, Title, 1, discountAmount, plunosIn));
 
                                     if (k != discountQTY - 1)
-                                        giftedBag = findPlu(bag, gift.ID, gift.isPluno, gift.Amount, Properties.favourOrder);
+                                        giftedBag = findPlu(bag, gift.ID, gift.isPluno, gift.Amount, Properties.FavourOrder);
                                 }
                             }
                         }

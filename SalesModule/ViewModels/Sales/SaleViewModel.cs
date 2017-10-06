@@ -54,7 +54,7 @@ namespace SalesModule.ViewModels
         private void propertiesFunc()
         {
             var propVM = CreatePropertiesSettings();
-            InteropService.OpenWindow(propVM, propVM.PopupProperties);
+            InteropService.OpenWindow(propVM);
             _prop = propVM.Conducted ?? _prop;
         }
 

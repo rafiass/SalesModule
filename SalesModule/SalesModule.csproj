@@ -87,6 +87,7 @@
     <Compile Include="Controls\TouchableNumeric.cs" />
     <Compile Include="Engine\ShoppingItem.cs" />
     <Compile Include="Models\DiscountM.cs" />
+    <Compile Include="Models\SalesGroupM.cs" />
     <Compile Include="Models\SalesPropertiesM.cs" />
     <Compile Include="Services\ActivityLogService.cs" />
     <Compile Include="Models\IProductM.cs" />
@@ -165,6 +166,7 @@
   <ItemGroup>
     <Content Include="InteropUserControl.rc" />
     <Content Include="sale.bmp" />
+    <Content Include="TODO List.txt" />
     <Resource Include="Resources\Images\link.png" />
     <Resource Include="Resources\Images\branches.png" />
     <Resource Include="Resources\Images\delete.jpg" />

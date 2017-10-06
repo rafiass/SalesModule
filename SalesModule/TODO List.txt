@@ -1,0 +1,86 @@
+﻿
+		TODO List for improvements
+
+4.10 tasks (mail):
+	1. New sales:
+		- X in NIS:
+			1. select product
+			2. set amount
+			3. set new Price for all
+		- "3+1" for the same product/group
+			1. select product to buy
+			2. set amount to buy
+			3. set amount to get
+		- Discounted product (simple)
+			1. select product
+			2. set discount
+			* set the current to "Adv."
+	3. switch order: properties window -> sales window
+		- see BroadSale
+		- new flow:
+			1. Group's mngmnt:
+				- Title
+				- PCIDAssociation: isBroad, AssociationButton, DateFrom, DateTo
+				- VIPAssociation
+			2. Sale's view
+			3. optional: new Properties view
+	V 4. Edit properties on "edit" - check why it's not available
+	5. Search sales
+		- Search by: Title, pluno, pluname, kind3
+		* make sure to search kind3 which includes this pluno!
+	7. Delete unavailable sales from the view
+		- see "Deleted" sales
+	
+	*. Bigger Fonts: NumPad, Discount values... etc
+	*. Edit dates - instead of delete&re-add
+
+		
+
+			Categories
+
+SalesPCID for broad sales:
+	- Mark broad sales (all branches) as pcid = -1
+		- when searching for relevant sales search pcid=@pcid OR pcid = -1
+	- Add Apply/Cancel buttons
+		- work on local dataset for branches
+		- dont apply anything 'till Apply is pressed
+		- When Cancel is pressed just close
+		- Dont let Zombie-Salse to be created (no PCID associated)
+
+Properties:
+	- Split Properties window to 2 ViewModels:
+		1. Original Properties window (exclude Title to the Sale's View)
+		2. PCID association:
+		- IsBroad checkbox and an Association button to edit
+		- On new sale: PCID will be located in the new SalesGroupM
+		- On edit sale: the window will show only PropertiesVM (smaller window as well)
+			- PCID will be enabled for edit in the Group's management window
+	- Move from SalesPropertiesM to SalesGroupM (including DateFrom & DateTo)
+	// This is Group property more than a single-sale property
+
+Comments:
+	- Explain confusing properties in SalesPropertiesM: InstanceMultiply, RecurrencePerInstance
+
+SalesGroup:
+	- Add a boolean property "isDeleted"
+		- Add a view option to view those groups
+	- Add GroupTitle:
+		- Set NULL by default
+		- Show single-sale group as the sale's title
+		- Add UI to edit in SalesManagement
+
+Sales:
+	- Add a boolean property "isDeleted"
+		- Add a view option to view those sales (EditGroup view in SalesManagement)
+
+Products groups for sales:
+	- Create Kind3-PLU association table
+
+Backward compatibility: (don't implement yet)
+	- Support the use of new DB fields on older DBs:
+		- If a field does not exists - create it
+		- If a table does not exists - create it
+
+Tests:
+	- Check correctness - make operational
+

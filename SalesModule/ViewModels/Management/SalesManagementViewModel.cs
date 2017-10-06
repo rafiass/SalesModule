@@ -112,7 +112,10 @@ namespace SalesModule.ViewModels
                 }
                 else
                 {
-                    //### TODO: edit group form
+                    //### TODO: EditGroup form
+                    //  re-arrange sales order
+                    //  add ability to edit each sale
+                    //  "delete" sale - change "isDeleted" to true
                     MessageBox.Show("כרגע, לא ניתן לערוך קבוצת מבצעים.");
                 }
             }
@@ -127,7 +130,7 @@ namespace SalesModule.ViewModels
             try
             {
                 var pcidVM = new PcidAssociationViewModel(sgvm.GroupID);
-                InteropService.OpenWindow(pcidVM, pcidVM.PopupProperties);
+                InteropService.OpenWindow(pcidVM);
             }
             catch (Exception ex)
             {
@@ -141,7 +144,7 @@ namespace SalesModule.ViewModels
             try
             {
                 var vipVM = new VipAssociationViewModel(sgvm.GroupID);
-                InteropService.OpenWindow(vipVM, vipVM.PopupProperties);
+                InteropService.OpenWindow(vipVM);
             }
             catch (Exception ex)
             {
