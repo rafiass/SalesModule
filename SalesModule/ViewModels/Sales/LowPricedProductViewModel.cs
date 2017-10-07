@@ -9,21 +9,10 @@ namespace SalesModule.ViewModels
     {
         private bool _isDiscountPerAmount, _isAmountLimited, _isGiftAvailable;
 
+        //### string SaleName = "מוצר מוזל"
+
         public IProductM SelectedProduct { get; set; }
         public DiscountM Discount { get; private set; }
-
-        public override PopupProperties PopupProperties
-        {
-            get
-            {
-                return new PopupProperties()
-                {
-                    Title = "מוצר מוזל",
-                    Width = 350,
-                    Height = 500
-                };
-            }
-        }
 
         public bool IsDiscountPerAmount
         {
@@ -44,10 +33,13 @@ namespace SalesModule.ViewModels
         }
         public IProductM Gifted { get; set; }
 
-        public LowPricedProductViewModel() : base() { }
-        public LowPricedProductViewModel(SaleM s) : base(s) { }
+        public LowPricedProductViewModel() : this(null) { }
+        public LowPricedProductViewModel(SaleM s) : base(s)
+        {
+            SetPopupTitle("מוצר במבצע");
+        }
 
-        protected override void LoadSale()
+        protected override void LoadEmpty()
         {
             SelectedProduct = null;
             Discount = new DiscountM(10, DiscountTypes.Fix_Discount);
@@ -99,7 +91,7 @@ namespace SalesModule.ViewModels
 
         protected override SalesPropertiesM CreateSaleProperties()
         {
-            return new SalesPropertiesM("מוצר במבצע");
+            return new SalesPropertiesM();
         }
     }
 }

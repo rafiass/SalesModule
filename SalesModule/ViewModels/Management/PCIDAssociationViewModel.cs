@@ -128,21 +128,6 @@ namespace SalesModule.ViewModels
         private int _groupID;
         private PCIDViewModel _newPcid;
 
-        public override PopupProperties PopupProperties
-        {
-            get
-            {
-                return new PopupProperties()
-                {
-                    Title = "שיוך לסניפים",
-                    Width = 850,
-                    MinWidth = 700,
-                    Height = 500,
-                    MinHeigth = 400
-                };
-            }
-        }
-
         public ObservableCollection<PCIDViewModel> Associations { get; private set; }
         public PCIDViewModel NewPcid
         {
@@ -159,6 +144,7 @@ namespace SalesModule.ViewModels
             AssociateCommand = new DelegateCommand(associateFunction);
             DisassociateCommand = new DelegateCommand<PCIDViewModel>(disassociateFunction);
 
+            SetPopupTitle("שיוך לסניפים");
             NewPcid = new PCIDViewModel(_groupID, true, false);
             populateAssociations();
         }

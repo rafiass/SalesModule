@@ -7,29 +7,20 @@ namespace SalesModule.ViewModels
 {
     internal class BuyAndGetViewModel : SaleViewModel
     {
-        public override PopupProperties PopupProperties
-        {
-            get
-            {
-                return new PopupProperties()
-                {
-                    Title = "קנה וקבל",
-                    Width = 500,
-                    Height = 700
-                };
-            }
-        }
-
+        //### string SalesName = "קנה וקבל"
         public IProductM BuyProduct { get; set; }
         public double BuyAmount { get; set; }
         public IProductM GetProduct { get; set; }
         public double GetAmount { get; set; }
         public DiscountM GetDiscount { get; private set; }
+        
+        public BuyAndGetViewModel() : this(null) { }
+        public BuyAndGetViewModel(SaleM s) : base(s)
+        {
+            SetPopupTitle("קנה וקבל");
+        }
 
-        public BuyAndGetViewModel() : base() { }
-        public BuyAndGetViewModel(SaleM s) : base(s) { }
-
-        protected override void LoadSale()
+        protected override void LoadEmpty()
         {
             BuyProduct = null;
             BuyAmount = 1;
@@ -66,7 +57,7 @@ namespace SalesModule.ViewModels
 
         protected override SalesPropertiesM CreateSaleProperties()
         {
-            return new SalesPropertiesM("קנה וקבל") { InstanceMultiply = 0 };
+            return new SalesPropertiesM() { InstanceMultiply = 0 };
         }
     }
 }

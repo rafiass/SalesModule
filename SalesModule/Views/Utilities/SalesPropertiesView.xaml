@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cntrls="clr-namespace:SalesModule.Controls"
-             FlowDirection="RightToLeft"
-             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="300">
+             FlowDirection="RightToLeft" mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -19,7 +18,7 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Margin="12,7">
+    <Grid Margin="12,7" Width="300" Height="400">
         <Grid.RowDefinitions>
             <RowDefinition Height="9*" />
             <RowDefinition Height="9*" />

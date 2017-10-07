@@ -15,7 +15,7 @@ namespace SalesModule.Services
         public ActivityLogService()
         {
             _path = Common.CurrentDirectory + "\\" + FILE_NAME;
-            using (File.Create(_path)) ;
+            using (File.Create(_path)) { }
         }
         public static ActivityLogService Logger { get { return _logger ?? (_logger = new ActivityLogService()); } }
 

@@ -237,7 +237,7 @@ namespace SalesModule
             if (!Enabled)
                 MessageBox.Show("אין אפשרות להפעיל מודל המבצעים.\nאירעה שגיאה בזמן טעינת המודל");
         }
-        public void Resize(int width, int heigth)
+        public new void Resize(int width, int heigth)
         {
             mainView1.Width = elementHost1.Width = Width = width;
             mainView1.Height = elementHost1.Height = Height = heigth;

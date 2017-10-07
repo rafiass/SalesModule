@@ -21,10 +21,7 @@ namespace SalesModule.Services
             var win = new Window()
             {
                 Title = prop.Title,
-                Width = prop.Width,
-                Height = prop.Height,
-                MinWidth = prop.MinWidth,
-                MinHeight = prop.MinHeigth,
+                SizeToContent = SizeToContent.WidthAndHeight,
                 ShowInTaskbar = prop.IsShowingOnTaskBar,
                 Content = vm,
                 FlowDirection = FlowDirection.RightToLeft,
@@ -35,14 +32,14 @@ namespace SalesModule.Services
             win.InputBindings.Add(new KeyBinding(new DelegateCommand(win.Close), new KeyGesture(Key.Escape)));
             win.Closed += (s, e) => callbackFunction();
 
-            var pvm = vm as PopupViewModel;
-            if (pvm != null)
+            if (vm is PopupViewModel pvm)
             {
                 win.Closed += (s, e) => pvm.WindowClosed();
                 win.Closing += (s, e) => pvm.WindowClosing(e);
                 pvm.SetCloseAction(win.Close);
             }
 
+            win.ContentRendered += (s, e) => win.SizeToContent = SizeToContent.Manual;
             if (prop.IsModal)
                 win.ShowDialog();
             else

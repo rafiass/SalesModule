@@ -569,13 +569,13 @@ namespace SalesModule.Services
                                 (DiscountTypes)int.Parse(Ro["offType"].ToString())), gifted, outID));
                     }
                     //Attributes
-                    var prop = new SalesPropertiesM(Rs["Title"].ToString(),
+                    var prop = new SalesPropertiesM(
                         double.Parse(Rs["MinTotalPrice"].ToString()), Rs["MaxTotalPrice"] as double?,
                         int.Parse(Rs["AllowMultiple"].ToString()), int.Parse(Rs["Recurrences"].ToString()));
                     var disc = new DiscountM(double.Parse(Rs["TotalOffPrice"].ToString()),
                         (DiscountTypes)int.Parse(Rs["TotalOffType"].ToString()));
 
-                    sales.Add(new SaleM((SaleTypes)int.Parse(Rs["SaleType"].ToString()), prop, reqs, outs,
+                    sales.Add(new SaleM(Rs["Title"].ToString(), (SaleTypes)int.Parse(Rs["SaleType"].ToString()), prop, reqs, outs,
                         disc, int.Parse(Rs["GroupIndex"].ToString()), saleId));
                 }
 

@@ -6,7 +6,7 @@ namespace SalesModule.Models
     internal class SaleM
     {
         public int SaleID { get; private set; }
-        public string Title { get { return Properties.Title; } }
+        public string Title { get; set; }
         public SaleTypes Type { get; private set; }
         public int Index { get; private set; }
 
@@ -17,7 +17,12 @@ namespace SalesModule.Models
 
         public SaleM(SaleTypes type, SalesPropertiesM prop, List<ProdAmountM> Reqs,
             List<DiscountedProductM> discounteds, DiscountM TotalDiscount = null, int index = 1, int saleID = -1)
+            : this("", type, prop, Reqs, discounteds, TotalDiscount, index, saleID)
+        { }
+        public SaleM(string title, SaleTypes type, SalesPropertiesM prop, List<ProdAmountM> Reqs,
+            List<DiscountedProductM> discounteds, DiscountM TotalDiscount = null, int index = 1, int saleID = -1)
         {
+            Title = title;
             SaleID = saleID;
             Type = type;
             Index = index;
@@ -38,7 +43,7 @@ namespace SalesModule.Models
         /// Total price of the bag
         /// <returns></returns>
         /// Retunrs a list of discount items 
-         public List<SaleDiscount> GetEfective(List<ShoppingItem> bag, double totalReceipt)
+        public List<SaleDiscount> GetEfective(List<ShoppingItem> bag, double totalReceipt)
         {
             double saleValue = 0, discountAmount, discountQTY;
             bool DiscountFound = true;

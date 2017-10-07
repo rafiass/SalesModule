@@ -30,21 +30,24 @@ namespace SalesModule.ViewModels
             _prop = s != null ? s.Properties :
                 CreateSaleProperties();
 
+
+            SetPopupTitle("מוצר במבצע");
+
             PropertiesCommand = new DelegateCommand(propertiesFunc);
             CommitCommand = new DelegateCommand(CommitFunc);
             CancelCommand = new DelegateCommand(CancelFunc);
 
             if (s != null) LoadSale(s);
-            else LoadSale();
+            else LoadEmpty();
         }
 
-        protected abstract void LoadSale();
+        protected abstract void LoadEmpty();
         protected abstract void LoadSale(SaleM s);
         protected abstract SaleM CreateSale();
 
         protected virtual SalesPropertiesM CreateSaleProperties()
         {
-            return new SalesPropertiesM("מוצר במבצע");
+            return new SalesPropertiesM();
         }
         protected virtual SalesPropertiesViewModel CreatePropertiesSettings()
         {

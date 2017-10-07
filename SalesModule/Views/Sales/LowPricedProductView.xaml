@@ -5,9 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:v="clr-namespace:SalesModule.Views"
              xmlns:cntrls="clr-namespace:SalesModule.Controls"
-             FlowDirection="RightToLeft"
-             mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="350">
-    <Grid Margin="10,5">
+             FlowDirection="RightToLeft" mc:Ignorable="d">
+    <Grid Margin="10,5" Width="350" Height="500">
         <Grid.RowDefinitions>
             <RowDefinition Height="40*" />
             <RowDefinition Height="30*" />

@@ -61,20 +61,7 @@ namespace SalesModule.ViewModels
         private List<PrivateVipViewModel> _availableCostumers;
         private List<ClubVipViewModel> _availableClubs;
         private List<IVipViewModel> _associatedVips;
-
-        public override PopupProperties PopupProperties
-        {
-            get
-            {
-                return new PopupProperties()
-                {
-                    Title = "שיוך ללקוחות",
-                    Width = 570,
-                    Height = 450
-                };
-            }
-        }
-
+        
         public string Criteria
         {
             get { return _criteria; }
@@ -105,6 +92,7 @@ namespace SalesModule.ViewModels
             AssociateVipCommand = new DelegateCommand<IVipViewModel>(associateFunction);
             DisassociateVipCommand = new DelegateCommand<IVipViewModel>(disassociateFunction);
 
+            SetPopupTitle("שיוך ללקוחות");
             populatePrivates();
             populateClubs();
             populateAssociated();

@@ -332,8 +332,8 @@ namespace SalesModule
             outs = new List<DiscountedProductM>();
             outs.Add(new DiscountedProductM("1_1", true, 1, 0,
                 new DiscountM(10, DiscountTypes.Fix_Discount)));
-            s = new SaleM(SaleTypes.SingularLowerPrice,
-                new SalesPropertiesM("Sale 1.1", 0, null, 1, 1), null, outs);
+            s = new SaleM("Sale 1.1", SaleTypes.SingularLowerPrice,
+                new SalesPropertiesM(0, null, 1, 1), null, outs);
             Sales.Add(new SalesGroupM(s));
 
             // Sale 1.2 - Lowered price with a gift ('1_3' for free, 3 x '1_2' for 10 NIS)
@@ -341,8 +341,8 @@ namespace SalesModule
             outs.Add(new DiscountedProductM("1_2", true, 3, 0,
                 new DiscountM(10, DiscountTypes.Fix_Price),
                 new GiftedProductM("1_3", true, 1, new DiscountM(0, DiscountTypes.Fix_Price))));
-            s = new SaleM(SaleTypes.SingularLowerPrice,
-                new SalesPropertiesM("Sale 1.2", 0, null, 1, 0), null, outs);
+            s = new SaleM("Sale 1.2", SaleTypes.SingularLowerPrice,
+                new SalesPropertiesM(0, null, 1, 0), null, outs);
             Sales.Add(new SalesGroupM(s));
 
             // Sale 2.1 - simple buy and get (buy 3 x '2_1' and get 2 x '2_2' for free)
@@ -350,8 +350,8 @@ namespace SalesModule
             reqs.Add(new ProdAmountM("2_1", true, 3));
             outs = new List<DiscountedProductM>();
             outs.Add(new DiscountedProductM("2_2", true, 0, 2, new DiscountM(0, DiscountTypes.Fix_Price)));
-            s = new SaleM(SaleTypes.SingularBuyAndGet,
-                new SalesPropertiesM("Sale 2.1", 0, null, 0, 1), reqs, outs);
+            s = new SaleM("Sale 2.1", SaleTypes.SingularBuyAndGet,
+                new SalesPropertiesM(0, null, 0, 1), reqs, outs);
             Sales.Add(new SalesGroupM(s));
 
             // Sale 2.2 - simple buy and get with minimum value (buy 2 x '2_3' and get 1.5 x '2_4' for free, one instance for each 200 NIS)
@@ -359,8 +359,8 @@ namespace SalesModule
             reqs.Add(new ProdAmountM("2_3", true, 2));
             outs = new List<DiscountedProductM>();
             outs.Add(new DiscountedProductM("2_4", true, 0, 1.5, new DiscountM(0, DiscountTypes.Fix_Price)));
-            s = new SaleM(SaleTypes.SingularBuyAndGet,
-                new SalesPropertiesM("Sale 2.2", 200, null, 0, 1), reqs, outs);
+            s = new SaleM("Sale 2.2", SaleTypes.SingularBuyAndGet,
+                new SalesPropertiesM(200, null, 0, 1), reqs, outs);
             Sales.Add(new SalesGroupM(s));
 
             return Sales;

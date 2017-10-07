@@ -4,7 +4,6 @@ namespace SalesModule.Models
 {
     internal class SalesPropertiesM
     {
-        public string Title { get; set; }
         public double MinPrice { get; set; }
         public double? MaxPrice { get; set; }
         public int InstanceMultiply { get; set; }
@@ -16,19 +15,16 @@ namespace SalesModule.Models
 
         //Define how to go thorug the discount list
         public searchOrder FavourOrder { get; private set; }
-
+        
         public SalesPropertiesM()
-            : this("מבצע") { }
-        public SalesPropertiesM(string title)
-            : this(title, 0, null, 1, 1)
+            : this(0, null, 1, 1)
         { }
-        public SalesPropertiesM(string title, double MinPrice, double? maxPrice, int maxInstances, int maxRecurrences)
-            : this(title, MinPrice, maxPrice, maxInstances, maxRecurrences, true, DateTime.Now, null)
+        public SalesPropertiesM(double MinPrice, double? maxPrice, int maxInstances, int maxRecurrences)
+            : this(MinPrice, maxPrice, maxInstances, maxRecurrences, true, DateTime.Now, null)
         { }
-        public SalesPropertiesM(string title, double minPrice, double? maxPrice,
+        public SalesPropertiesM(double minPrice, double? maxPrice,
             int maxInstances, int maxRecurrences, bool IsBroad, DateTime from, DateTime? to)
         {
-            Title = title;
             MinPrice = minPrice;
             MaxPrice = maxPrice;
             InstanceMultiply = maxInstances;
@@ -42,7 +38,6 @@ namespace SalesModule.Models
         }
         public SalesPropertiesM(SalesPropertiesM prop)
         {
-            Title = prop.Title;
             MinPrice = prop.MinPrice;
             MaxPrice = prop.MaxPrice;
             InstanceMultiply = prop.InstanceMultiply;

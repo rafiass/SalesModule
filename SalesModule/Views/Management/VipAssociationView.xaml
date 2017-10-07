@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:SalesModule"
-             FlowDirection="RightToLeft"
-             mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="700">
+             FlowDirection="RightToLeft" mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <Style TargetType="{x:Type ListViewItem}">
@@ -19,7 +18,7 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid Width="570" Height="450">
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
@@ -59,7 +58,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="שם הלקוח" Width="{Binding ActualWidth, ElementName=pNameCol}"/>
-                    
+
                     <GridViewColumn Header="הוסף" Width="{Binding ActualWidth, ElementName=pCmdCol}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>

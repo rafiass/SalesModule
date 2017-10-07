@@ -44,21 +44,7 @@ namespace SalesModule.ViewModels
     {
         private string _criteria;
         private List<SaleGroupViewModel> _groups;
-
-        public override PopupProperties PopupProperties
-        {
-            get
-            {
-                return new PopupProperties()
-                {
-                    Title = "חלון ניהול",
-                    Width = 900,
-                    MinWidth = 650,
-                    Height = 500
-                };
-            }
-        }
-
+        
         public string Criteria
         {
             get { return _criteria; }
@@ -78,6 +64,7 @@ namespace SalesModule.ViewModels
             GroupPCIDCommand = new DelegateCommand<SaleGroupViewModel>(pcidFunction);
             GroupVipCommand = new DelegateCommand<SaleGroupViewModel>(vipFunction);
 
+            SetPopupTitle("חלון ניהול");
             _criteria = "";
             refreshGroups();
         }

@@ -6,19 +6,7 @@ namespace SalesModule.ViewModels
     internal class TestViewModel : PopupViewModel
     {
         private string _criteria;
-        public override PopupProperties PopupProperties
-        {
-            get
-            {
-                return new PopupProperties()
-                {
-                    Title = "חלון חיפוש",
-                    Width = 900,
-                    Height = 500
-                };
-            }
-        }
-
+        
         public string Criteria
         {
             get { return _criteria; }
@@ -31,6 +19,8 @@ namespace SalesModule.ViewModels
         public TestViewModel()
         {
             RefreshCommand = new DelegateCommand(() => OnPropertyChanged("DataTable"));
+
+            SetPopupTitle("חלון חיפוש");
         }
     }
 }

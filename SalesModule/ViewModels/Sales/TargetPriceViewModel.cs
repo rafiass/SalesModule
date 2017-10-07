@@ -4,27 +4,14 @@ namespace SalesModule.ViewModels
 {
     internal class TargetPriceViewModel : SaleViewModel
     {
-        //### TargetPriceViewModel
+        //### Implement TargetPriceViewModel
 
-        public override PopupProperties PopupProperties
+        public TargetPriceViewModel() : base(null)
         {
-            get
-            {
-                return new PopupProperties()
-                {
-                    Title = "מחיר מטרה",
-                    Width = 300,
-                    Height = 300
-                };
-            }
+            SetPopupTitle("מחיר מטרה");
         }
 
-        public TargetPriceViewModel()
-        {
-            
-        }
-        
-        protected override void LoadSale()
+        protected override void LoadEmpty()
         {
         }
         protected override void LoadSale(SaleM s)
