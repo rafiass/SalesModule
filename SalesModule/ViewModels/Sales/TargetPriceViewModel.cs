@@ -6,9 +6,22 @@ namespace SalesModule.ViewModels
     {
         //### Implement TargetPriceViewModel
 
+        public override PopupProperties PopupProperties
+        {
+            get
+            {
+                return new PopupProperties()
+                {
+                    Title = "מחיר מטרה",
+                    Width = 300,
+                    Height = 300
+                };
+            }
+        }
+
         public TargetPriceViewModel() : base(null)
         {
-            SetPopupTitle("מחיר מטרה");
+
         }
 
         protected override void LoadEmpty()

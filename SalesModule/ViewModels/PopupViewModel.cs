@@ -9,11 +9,10 @@ namespace SalesModule.ViewModels
 
         //internal can set but only protected can execute
         protected Action CloseWindow { get; private set; }
-        public PopupProperties PopupProperties { get; protected set; }
+        public abstract PopupProperties PopupProperties { get; }
 
         public PopupViewModel()
         {
-            PopupProperties = new PopupProperties();
             CloseWindow = () => { };
             IsClosing = false;
         }
@@ -27,10 +26,6 @@ namespace SalesModule.ViewModels
         internal void SetCloseAction(Action closeWin)
         {
             CloseWindow = () => { IsClosing = true; closeWin(); };
-        }
-        protected void SetPopupTitle(string title)
-        {
-            PopupProperties.Title = title;
         }
     }
 }

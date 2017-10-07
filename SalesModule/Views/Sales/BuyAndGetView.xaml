@@ -3,36 +3,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:v="clr-namespace:SalesModule.Views"
              xmlns:cntrls="clr-namespace:SalesModule.Controls"
-             FlowDirection="RightToLeft" mc:Ignorable="d">
-    <Grid Margin="7" Width="500" Height="700">
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="600">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="19" />
+            <Setter Property="Margin" Value="20,0" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="7">
         <Grid.RowDefinitions>
             <RowDefinition Height="40*" />
             <RowDefinition Height="30*" />
-            <RowDefinition Height="35*" />
             <RowDefinition Height="30*" />
-            <RowDefinition Height="35*" />
-            <RowDefinition Height="80*" />
             <RowDefinition Height="60*" />
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Content="מבצע 'קנה וקבל'" FontSize="21.333"
+        <Label Grid.Row="0" Content="מבצע 'קנה וקבל'" FontSize="22"
                HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-        <TextBlock Grid.Row="1" Text="קנה פריט" Width="88"
-                   HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18.667" Margin="20,14,0,16" Height="24" />
-        <cntrls:TouchableNumeric Grid.Row="1" Margin="123,10,186,2" Value="{Binding BuyAmount}" Increment="1" Minimum="1" DecimalPlaces="0" FontSize="20" />
-        <cntrls:AutoCompleteTextBox Grid.Row="2" SelectedItem="{Binding BuyProduct}" Margin="5,8" />
+        <TextBlock Grid.Row="1" Text="שם המבצע" />
+        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Title}" Height="25" Margin="140,0,10,0" />
 
-        <TextBlock Grid.Row="3" Text="קבל פריט" Width="88"
-                   HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18.667" Margin="20,11,0,13" Height="26" />
-        <cntrls:TouchableNumeric Grid.Row="3" Margin="123,10,186,2" Value="{Binding GetAmount}" Increment="1" Minimum="1" DecimalPlaces="0" FontSize="20"/>
-        <cntrls:AutoCompleteTextBox Grid.Row="4" SelectedItem="{Binding GetProduct}" Margin="5,8" />
+        <TextBlock Grid.Row="2" Text="קנה פריט" />
+        <cntrls:TouchableNumeric Grid.Row="2" Margin="123,10,186,2" Value="{Binding BuyAmount}" Increment="1" Minimum="1" DecimalPlaces="0" FontSize="20" />
+        <cntrls:AutoCompleteTextBox Grid.Row="3" SelectedItem="{Binding BuyProduct}" Margin="5,8" />
 
-        <v:DiscountView Grid.Row="5" DataContext="{Binding GetDiscount}" />
 
-        <Grid Grid.Row="6" Margin="0,21,0,71">
+        <Grid Grid.Row="3" Margin="0,21,0,71">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />

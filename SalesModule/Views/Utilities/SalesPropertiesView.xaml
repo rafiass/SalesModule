@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cntrls="clr-namespace:SalesModule.Controls"
-             FlowDirection="RightToLeft" mc:Ignorable="d">
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -18,9 +19,8 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Margin="12,7" Width="300" Height="400">
+    <Grid Margin="12,7">
         <Grid.RowDefinitions>
-            <RowDefinition Height="9*" />
             <RowDefinition Height="9*" />
             <RowDefinition Height="7*" />
             <RowDefinition Height="7*" />
@@ -32,10 +32,7 @@
         <Label Grid.Row="0" Grid.ColumnSpan="2" Content="הגדרות מתקדמות" FontSize="14"
                HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-        <TextBlock Grid.Row="1" Text="שם המבצע" />
-        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding SaleTitle}" Margin="75,8,0,8" />
-
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="160" />
                 <ColumnDefinition Width="*" />
@@ -45,7 +42,7 @@
                                      Increment="0.1" Margin="7,5,0,5" />
         </Grid>
 
-        <Grid Grid.Row="3" IsEnabled="{Binding IsMaxEnabled}">
+        <Grid Grid.Row="2" IsEnabled="{Binding IsMaxEnabled}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="160" />
                 <ColumnDefinition Width="*" />
@@ -56,7 +53,7 @@
                                      Minimum="0.1" Increment="0.1" Margin="7,5,0,5" />
         </Grid>
 
-        <Grid Grid.Row="4" IsEnabled="{Binding IsMultiplyEnabled}">
+        <Grid Grid.Row="3" IsEnabled="{Binding IsMultiplyEnabled}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="160" />
                 <ColumnDefinition Width="*" />
@@ -67,7 +64,7 @@
                                      DecimalPlaces="0" Minimum="1" Margin="7,5,0,5" />
         </Grid>
 
-        <Grid Grid.Row="5" IsEnabled="{Binding IsRecurrenceEnabled}">
+        <Grid Grid.Row="4" IsEnabled="{Binding IsRecurrenceEnabled}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="160" />
                 <ColumnDefinition Width="*" />
@@ -78,7 +75,7 @@
                                      DecimalPlaces="0" Minimum="1" Margin="7,5,0,5" />
         </Grid>
 
-        <Grid Grid.Row="6" IsEnabled="{Binding IsDatesEnabled}">
+        <Grid Grid.Row="5" IsEnabled="{Binding IsDatesEnabled}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="3*" />

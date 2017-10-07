@@ -86,6 +86,7 @@
     <Compile Include="Controls\AutoComplete\SelectionAdapter.cs" />
     <Compile Include="Controls\TouchableNumeric.cs" />
     <Compile Include="Engine\ShoppingItem.cs" />
+    <Compile Include="Models\ComperableProductM.cs" />
     <Compile Include="Models\DiscountM.cs" />
     <Compile Include="Models\SalesGroupM.cs" />
     <Compile Include="Models\SalesPropertiesM.cs" />
@@ -108,8 +109,9 @@
     <Compile Include="ViewModels\Management\SalesManagementViewModel.cs" />
     <Compile Include="ViewModels\Management\VipAssociationViewModel.cs" />
     <Compile Include="ViewModels\PopupViewModel.cs" />
+    <Compile Include="ViewModels\Sales\BuyAndGetAdvViewModel.cs" />
     <Compile Include="ViewModels\Sales\BuyAndGetViewModel.cs" />
-    <Compile Include="ViewModels\Sales\LowPricedProductViewModel.cs" />
+    <Compile Include="ViewModels\Sales\LowPricedProductAdvViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\Sales\SaleViewModel.cs" />
     <Compile Include="ViewModels\Sales\TargetPriceViewModel.cs" />
@@ -137,11 +139,14 @@
     <Compile Include="Views\Management\VipAssociationView.xaml.cs">
       <DependentUpon>VipAssociationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Sales\BuyAndGetAdvView.xaml.cs">
+      <DependentUpon>BuyAndGetAdvView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Sales\BuyAndGetView.xaml.cs">
       <DependentUpon>BuyAndGetView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Sales\LowPricedProductView.xaml.cs">
-      <DependentUpon>LowPricedProductView.xaml</DependentUpon>
+    <Compile Include="Views\Sales\LowPricedProductAdvView.xaml.cs">
+      <DependentUpon>LowPricedProductAdvView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Sales\TargetPriceView.xaml.cs">
       <DependentUpon>TargetPriceView.xaml</DependentUpon>
@@ -224,6 +229,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Sales\BuyAndGetAdvView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Sales\BuyAndGetView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -264,7 +273,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Sales\LowPricedProductView.xaml">
+    <Page Include="Views\Sales\LowPricedProductAdvView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -89,7 +89,7 @@ namespace SalesModule
 
         public SalesEngine()
         {
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogFunctionCall();
             EngineRestarted += () => ActivityLogService.Logger.LogMessage("Engine restarted!");
             SaleApplied += sd => ActivityLogService.Logger.LogMessage("Sale applied: " + sd.Title + "(" + sd.SaleID + "), Id = " + sd.ID);
             SaleCancelled += id => ActivityLogService.Logger.LogMessage("Sale canceled: " + id);
@@ -102,15 +102,14 @@ namespace SalesModule
             {
                 if (Wrapper.User == null)
                     return _init = false;
-                ActivityLogService.Logger.LogCall();
+                ActivityLogService.Logger.LogFunctionCall();
                 try
                 {
                     _vipno = vipno;
                     _previousSales = new List<SaleDiscount>();
                     _shoppingBag = new List<ShoppingItem>();
                     SaleDiscount.ResetCounter();
-                    if (EngineRestarted != null)
-                        EngineRestarted();
+                    EngineRestarted?.Invoke();
                     return _init = true;
                 }
                 catch (Exception ex)
@@ -126,7 +125,7 @@ namespace SalesModule
             {
                 if (Wrapper.User == null)
                     return _init = false;
-                ActivityLogService.Logger.LogCall();
+                ActivityLogService.Logger.LogFunctionCall();
                 try
                 {
                     AvailableSales = DBService.GetService().GetAvailableSales(_vipno);
@@ -151,7 +150,7 @@ namespace SalesModule
         }
         internal string AddItem(string pluno, double qty, double price, int? kind, bool evalSales)
         {
-            ActivityLogService.Logger.LogCall(pluno, qty, price, kind, evalSales);
+            ActivityLogService.Logger.LogFunctionCall(pluno, qty, price, kind, evalSales);
             try
             {
                 if (!_init) return null;
@@ -186,7 +185,7 @@ namespace SalesModule
         {
             lock (_locker)
             {
-                ActivityLogService.Logger.LogCall(pluno, qty);
+                ActivityLogService.Logger.LogFunctionCall(pluno, qty);
                 try
                 {
                     if (!_init) return;
@@ -223,7 +222,7 @@ namespace SalesModule
 
         public void EvaluateSales()
         {
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogFunctionCall();
             try
             {
                 if (!_init) return;
@@ -277,8 +276,7 @@ namespace SalesModule
                 if (removed.Count == 0)
                 {
                     sd.SetID();
-                    if (SaleApplied != null)
-                        SaleApplied(sd);
+                    SaleApplied?.Invoke(sd);
                 }
                 else if (removed.Count != 1)
                 {
@@ -293,8 +291,7 @@ namespace SalesModule
             for (int i = 0; i < previousSales.Count; i++)
             {
                 SaleDiscount sd = previousSales[i];
-                if (SaleCancelled != null)
-                    SaleCancelled(sd.ID);
+                SaleCancelled?.Invoke(sd.ID);
             }
         }
 
@@ -303,15 +300,14 @@ namespace SalesModule
         {
             lock (_locker)
             {
-                ActivityLogService.Logger.LogCall();
+                ActivityLogService.Logger.LogFunctionCall();
                 try
                 {
                     _previousSales = new List<SaleDiscount>();
                     AvailableSales = makeSalesForTester();
                     _shoppingBag = new List<ShoppingItem>();
                     SaleDiscount.ResetCounter();
-                    if (EngineRestarted != null)
-                        EngineRestarted();
+                    EngineRestarted?.Invoke();
                     return _init = true;
                 }
                 catch (Exception ex)
@@ -332,7 +328,7 @@ namespace SalesModule
             outs = new List<DiscountedProductM>();
             outs.Add(new DiscountedProductM("1_1", true, 1, 0,
                 new DiscountM(10, DiscountTypes.Fix_Discount)));
-            s = new SaleM("Sale 1.1", SaleTypes.SingularLowerPrice,
+            s = new SaleM("Sale 1.1", SaleTypes.LowPricedProductAdv,
                 new SalesPropertiesM(0, null, 1, 1), null, outs);
             Sales.Add(new SalesGroupM(s));
 
@@ -341,25 +337,21 @@ namespace SalesModule
             outs.Add(new DiscountedProductM("1_2", true, 3, 0,
                 new DiscountM(10, DiscountTypes.Fix_Price),
                 new GiftedProductM("1_3", true, 1, new DiscountM(0, DiscountTypes.Fix_Price))));
-            s = new SaleM("Sale 1.2", SaleTypes.SingularLowerPrice,
+            s = new SaleM("Sale 1.2", SaleTypes.LowPricedProductAdv,
                 new SalesPropertiesM(0, null, 1, 0), null, outs);
             Sales.Add(new SalesGroupM(s));
 
             // Sale 2.1 - simple buy and get (buy 3 x '2_1' and get 2 x '2_2' for free)
-            reqs = new List<ProdAmountM>();
-            reqs.Add(new ProdAmountM("2_1", true, 3));
-            outs = new List<DiscountedProductM>();
-            outs.Add(new DiscountedProductM("2_2", true, 0, 2, new DiscountM(0, DiscountTypes.Fix_Price)));
-            s = new SaleM("Sale 2.1", SaleTypes.SingularBuyAndGet,
+            reqs = new List<ProdAmountM> { new ProdAmountM("2_1", true, 3) };
+            outs = new List<DiscountedProductM> { new DiscountedProductM("2_2", true, 0, 2, new DiscountM(0, DiscountTypes.Fix_Price)) };
+            s = new SaleM("Sale 2.1", SaleTypes.BuyAndGetAdv,
                 new SalesPropertiesM(0, null, 0, 1), reqs, outs);
             Sales.Add(new SalesGroupM(s));
 
             // Sale 2.2 - simple buy and get with minimum value (buy 2 x '2_3' and get 1.5 x '2_4' for free, one instance for each 200 NIS)
-            reqs = new List<ProdAmountM>();
-            reqs.Add(new ProdAmountM("2_3", true, 2));
-            outs = new List<DiscountedProductM>();
-            outs.Add(new DiscountedProductM("2_4", true, 0, 1.5, new DiscountM(0, DiscountTypes.Fix_Price)));
-            s = new SaleM("Sale 2.2", SaleTypes.SingularBuyAndGet,
+            reqs = new List<ProdAmountM> { new ProdAmountM("2_3", true, 2) };
+            outs = new List<DiscountedProductM> { new DiscountedProductM("2_4", true, 0, 1.5, new DiscountM(0, DiscountTypes.Fix_Price)) };
+            s = new SaleM("Sale 2.2", SaleTypes.BuyAndGetAdv,
                 new SalesPropertiesM(200, null, 0, 1), reqs, outs);
             Sales.Add(new SalesGroupM(s));
 

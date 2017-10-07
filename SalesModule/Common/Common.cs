@@ -6,8 +6,8 @@ namespace SalesModule
 {
     internal enum SaleTypes
     {
-        None = 0, TargetPrice, SingularLowerPrice,
-        SingularBuyAndGet, Bundle
+        None = 0, TargetPrice, LowPricedProductAdv,
+        SingularBuyAndGet, BuyAndGetAdv, Bundle
     }
 
     public enum searchOrder

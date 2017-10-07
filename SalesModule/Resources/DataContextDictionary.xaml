@@ -19,12 +19,15 @@
 
 
     <!-- Sales: -->
-    <DataTemplate DataType="{x:Type vm:LowPricedProductViewModel}">
-        <v:LowPricedProductView DataContext="{Binding}" />
+    <DataTemplate DataType="{x:Type vm:LowPricedProductAdvViewModel}">
+        <v:LowPricedProductAdvView DataContext="{Binding}" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vm:BuyAndGetViewModel}">
         <v:BuyAndGetView DataContext="{Binding}" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:BuyAndGetAdvViewModel}">
+        <v:BuyAndGetAdvView DataContext="{Binding}" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vm:TargetPriceViewModel}">

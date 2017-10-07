@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="SalesModule.Views.LowPricedProductAdvView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:v="clr-namespace:SalesModule.Views"
+             xmlns:cntrls="clr-namespace:SalesModule.Controls"
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="350">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="TextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="19" />
+            </Style>
+            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="17" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="10,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40*" />
+            <RowDefinition Height="30*" />
+            <RowDefinition Height="30*" />
+            <RowDefinition Height="100*" />
+            <RowDefinition Height="50*" />
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="60*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="מוצר מוזל" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <TextBlock Grid.Row="1" Text="שם המבצע" Margin="15,0" />
+        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Title}" Height="25" Margin="140,0,10,0" />
+
+        <TextBlock Grid.Row="2" Text="בחר מוצר" Margin="15,0" />
+        <cntrls:AutoCompleteTextBox Grid.Row="2" SelectedItem="{Binding SelectedProduct}" Margin="120,7,5,8" />
+
+        <v:DiscountView Grid.Row="3" DataContext="{Binding Discount}" />
+
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox Grid.Column="0" Grid.Row="0" IsChecked="{Binding IsDiscountPerAmount}" Content="מבצע על כמות:" />
+            <cntrls:TouchableNumeric Grid.Column="1" Grid.Row="0" Value="{Binding AmountDiscounted}" Increment="1" Minimum="1"
+                                     IsEnabled="{Binding IsDiscountPerAmount}" Margin="15,0" VerticalAlignment="Center" />
+            
+            <CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding IsAmountLimited}" Content="הגבלת כמות:" />
+            <cntrls:TouchableNumeric Grid.Column="1" Grid.Row="1" Value="{Binding LimitedAmount}" Increment="1" Minimum="1"
+                                     IsEnabled="{Binding IsAmountLimited}" Margin="15,0" VerticalAlignment="Center" />
+        </Grid>
+
+        <CheckBox Grid.Row="5" IsChecked="{Binding IsGiftAvailable}" Content="הוסף מוצר במתנה:" />
+        <cntrls:AutoCompleteTextBox Grid.Row="6" SelectedItem="{Binding Gifted}" Margin="35,5,7,5"
+                                    IsEnabled="{Binding IsGiftAvailable, Mode=OneWay}" />
+
+        <Grid Grid.Row="7" Margin="0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="ביטול" Command="{Binding CancelCommand}" IsCancel ="True" Margin="5,0" />
+            <Button Grid.Column="1" Content="מאפיינים..." Command="{Binding PropertiesCommand}" Margin="5,0" />
+            <Button Grid.Column="2" Content="בצע" Command="{Binding CommitCommand}" IsDefault="True" Margin="5,0" />
+        </Grid>
+    </Grid>
+</UserControl>

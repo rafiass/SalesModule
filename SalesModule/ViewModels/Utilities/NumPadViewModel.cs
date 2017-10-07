@@ -10,7 +10,19 @@ namespace SalesModule.ViewModels
         private string _valstr;
 
         internal double? Results { get; private set; }
-        
+        public override PopupProperties PopupProperties
+        {
+            get
+            {
+                return new PopupProperties()
+                {
+                    Title = "בחר ערך",
+                    Width = 348,
+                    Height = 529
+                };
+            }
+        }
+
         public string Title { get; private set; }
         public double Value
         {
@@ -30,7 +42,7 @@ namespace SalesModule.ViewModels
             OkCommand = new DelegateCommand(okFunction);
             CancelCommand = new DelegateCommand(cancelFunction);
 
-            SetPopupTitle(title);
+            Title = title;
             Value = val;
             _valstr = "0";
             Results = null;

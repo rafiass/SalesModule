@@ -15,13 +15,16 @@ namespace SalesModule.Services
         public static void OpenWindow(object vm, PopupProperties prop, Action callbackFunction = null)
         {
             if (vm == null) return;
-            ActivityLogService.Logger.LogCall(vm);
+            ActivityLogService.Logger.LogFunctionCall(vm);
             prop = prop ?? new PopupProperties();
             callbackFunction = callbackFunction ?? (() => { });
             var win = new Window()
             {
                 Title = prop.Title,
-                SizeToContent = SizeToContent.WidthAndHeight,
+                Width = prop.Width,
+                Height = prop.Height,
+                MinWidth = prop.MinWidth,
+                MinHeight = prop.MinHeigth,
                 ShowInTaskbar = prop.IsShowingOnTaskBar,
                 Content = vm,
                 FlowDirection = FlowDirection.RightToLeft,
@@ -39,7 +42,6 @@ namespace SalesModule.Services
                 pvm.SetCloseAction(win.Close);
             }
 
-            win.ContentRendered += (s, e) => win.SizeToContent = SizeToContent.Manual;
             if (prop.IsModal)
                 win.ShowDialog();
             else
@@ -48,7 +50,7 @@ namespace SalesModule.Services
 
         public static double? GetNumber(string title, double? num = null)
         {
-            ActivityLogService.Logger.LogCall(title, num);
+            ActivityLogService.Logger.LogFunctionCall(title, num);
             var vm = num == null ? new NumPadViewModel(title) : new NumPadViewModel(title, (double)num);
             OpenWindow(vm);
             return vm.Results;

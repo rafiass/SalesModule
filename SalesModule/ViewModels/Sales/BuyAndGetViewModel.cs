@@ -1,58 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using SalesModule.Models;
+﻿using SalesModule.Models;
 using SalesModule.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SalesModule.ViewModels
 {
     internal class BuyAndGetViewModel : SaleViewModel
     {
-        //### string SalesName = "קנה וקבל"
-        public IProductM BuyProduct { get; set; }
+        public string Title { get; set; }
+
+        public IProductM SelectedProduct { get; set; }
         public double BuyAmount { get; set; }
-        public IProductM GetProduct { get; set; }
         public double GetAmount { get; set; }
-        public DiscountM GetDiscount { get; private set; }
-        
+
+        public override PopupProperties PopupProperties
+        {
+            get
+            {
+                return new PopupProperties()
+                {
+                    Title = "קנה וקבל",
+                    Width = 600,
+                    Height = 600
+                };
+            }
+        }
+
         public BuyAndGetViewModel() : this(null) { }
         public BuyAndGetViewModel(SaleM s) : base(s)
         {
-            SetPopupTitle("קנה וקבל");
         }
 
         protected override void LoadEmpty()
         {
-            BuyProduct = null;
+            Title = "קנה וקבל";
+            SelectedProduct = null;
             BuyAmount = 1;
-            GetProduct = null;
             GetAmount = 1;
-            GetDiscount = new DiscountM(0, DiscountTypes.Fix_Price);
         }
         protected override void LoadSale(SaleM s)
         {
-            if (s.ReqProducts == null || s.ReqProducts.Count != 1)
-                throw new SalesException("Required's product data mismatch.");
-            if (s.Discounted == null || s.Discounted.Count != 1)
-                throw new SalesException("Discounted's product data mismatch.");
+            if (s.ReqProducts == null || s.ReqProducts.Count != 1 ||
+                s.Discounted == null || s.Discounted.Count != 1 ||
+                s.ReqProducts[0] != s.Discounted[0])
+                throw new SalesException("Selected product data mismatch.");
 
-            BuyProduct = DBService.GetService().GetProduct(s.ReqProducts[0].ID, s.ReqProducts[0].isPluno);
+            Title = s.Title;
+            SelectedProduct = DBService.GetService().GetProduct(s.ReqProducts[0].ID, s.ReqProducts[0].IsPluno);
             BuyAmount = s.ReqProducts[0].Amount;
-            GetProduct = DBService.GetService().GetProduct(s.Discounted[0].ID, s.Discounted[0].isPluno);
             GetAmount = s.Discounted[0].MaxMultiply;
-            GetDiscount = s.Discounted[0].Discount;
         }
         protected override SaleM CreateSale()
         {
-            if (BuyProduct == null)
+            if (Title.Trim() == "")
+                throw new SalesException("שם מבצע לא תקין");
+            if (SelectedProduct == null)
                 throw new SalesException("אנא בחר מוצר לקנייה.");
-            if (GetProduct == null)
-                throw new SalesException("אנא בחר מוצר לקבלה.");
 
             var reqs = new List<ProdAmountM>();
-            reqs.Add(new ProdAmountM(BuyProduct.ID, BuyProduct.isPluno, BuyAmount));
+            reqs.Add(new ProdAmountM(SelectedProduct.ID, SelectedProduct.isPluno, BuyAmount));
             var outs = new List<DiscountedProductM>();
-            outs.Add(new DiscountedProductM(GetProduct.ID, GetProduct.isPluno, 1, GetAmount, GetDiscount));
-            return new SaleM(SaleTypes.SingularBuyAndGet, _prop, reqs, outs, null, _isEditing ? _index : 1, _ID);
+            outs.Add(new DiscountedProductM(SelectedProduct.ID, SelectedProduct.isPluno, 1, GetAmount, new DiscountM(0, DiscountTypes.Fix_Price)));
+            return new SaleM(Title, SaleTypes.SingularBuyAndGet, _prop, reqs, outs, null, _isEditing ? _index : 1, _ID);
         }
 
         protected override SalesPropertiesM CreateSaleProperties()

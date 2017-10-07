@@ -1,5 +1,5 @@
-﻿
-using SalesModule.ViewModels;
+﻿using SalesModule.ViewModels;
+
 namespace SalesModule.Models
 {
     internal enum DiscountTypes { Nothing = 1, Percentage, Fix_Price, Fix_Discount };

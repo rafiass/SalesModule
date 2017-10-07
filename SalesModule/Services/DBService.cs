@@ -42,7 +42,7 @@ namespace SalesModule.Services
         }
         public static DBService GetLocalService()
         {
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogFunctionCall();
             try
             {
                 DBService temp = new DBService(ConnectionService.GetLocalConnectionString());
@@ -60,7 +60,7 @@ namespace SalesModule.Services
         public bool SetStoresConnString(string store)
         {
             if (_location != DBLocation.LocalServer) return false;
-            ActivityLogService.Logger.LogCall(store);
+            ActivityLogService.Logger.LogFunctionCall(store);
             try
             {
                 string sql = "select IP, UserName, Password, Catalog from Stores where StoreName = @StoreName";
@@ -88,7 +88,7 @@ namespace SalesModule.Services
         }
         public UserData GetUserData(string empName, string empPass)
         {
-            ActivityLogService.Logger.LogCall(empName, empPass);
+            ActivityLogService.Logger.LogFunctionCall(empName, empPass);
             if (_location != DBLocation.RemoteServer) return null;
             try
             {
@@ -118,7 +118,7 @@ namespace SalesModule.Services
 
         public List<IProductM> GetProducts()
         {
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogFunctionCall();
             DataTable dt = new DataTable();
             var list = new List<IProductM>();
             try
@@ -157,7 +157,7 @@ namespace SalesModule.Services
         }
         public IProductM GetProduct(string id, bool isPluno)
         {
-            ActivityLogService.Logger.LogCall(id, isPluno);
+            ActivityLogService.Logger.LogFunctionCall(id, isPluno);
             var dt = new DataTable();
             try
             {
@@ -202,7 +202,7 @@ namespace SalesModule.Services
 
         private DataTable SearchProducts(string term, string colName, bool isLikable = true)
         {
-            ActivityLogService.Logger.LogCall(term);
+            ActivityLogService.Logger.LogFunctionCall(term);
             DataTable dt = new DataTable();
             try
             {
@@ -239,7 +239,7 @@ namespace SalesModule.Services
 
         public int InsertGroup(SalesGroupM g)
         {
-            ActivityLogService.Logger.LogCall(g.GroupID);
+            ActivityLogService.Logger.LogFunctionCall(g.GroupID);
             if (g == null || g.Sales.Count == 0)
                 return -1;
             try
@@ -363,7 +363,7 @@ namespace SalesModule.Services
                 foreach (var p in reqs)
                 {
                     pID.Value = p.ID;
-                    pIsID.Value = p.isPluno;
+                    pIsID.Value = p.IsPluno;
                     pQTY.Value = p.Amount;
                     _cmd.ExecuteNonQuery();
                 }
@@ -412,7 +412,7 @@ namespace SalesModule.Services
 
                     _cmd.CommandText = mainSql;
                     pID.Value = p.ID;
-                    pIsID.Value = p.isPluno;
+                    pIsID.Value = p.IsPluno;
                     pQTY.Value = p.Amount;
                     pMax.Value = p.MaxMultiply;
                     pDiscQ.Value = p.Discount.Amount;
@@ -425,7 +425,7 @@ namespace SalesModule.Services
                         if (gift.Discount == null)
                             throw new ArgumentException("Gifted product must have a discount. (pluno: " + p.ID + ")");
                         pID.Value = gift.ID;
-                        pIsID.Value = gift.isPluno;
+                        pIsID.Value = gift.IsPluno;
                         pQTY.Value = gift.Amount;
                         pDiscQ.Value = gift.Discount.Amount;
                         pDiscT.Value = (int)gift.Discount.Type;
@@ -443,7 +443,7 @@ namespace SalesModule.Services
         public bool EditSale(SaleM sale)
         {
             if (sale == null) return false;
-            ActivityLogService.Logger.LogCall(sale.SaleID);
+            ActivityLogService.Logger.LogFunctionCall(sale.SaleID);
             _trans = null;
             try
             {
@@ -502,7 +502,7 @@ namespace SalesModule.Services
 
         public SalesGroupM LoadGroup(int groupID)
         {
-            ActivityLogService.Logger.LogCall(groupID);
+            ActivityLogService.Logger.LogFunctionCall(groupID);
             DataTable dt;
             var sales = new List<SaleM>();
             try
@@ -612,7 +612,7 @@ namespace SalesModule.Services
             if (vipid == "")
                 vipid = null;
 
-            ActivityLogService.Logger.LogCall(vipid);
+            ActivityLogService.Logger.LogFunctionCall(vipid);
             DataTable dt;
             var Sales = new List<SalesGroupM>();
             string sql = "";
@@ -665,7 +665,7 @@ namespace SalesModule.Services
         public DataTable GetAllSalesTitles()
         {
             //GroupID, Title, ename, isEnabled, DateCreated
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogFunctionCall();
             DataTable dt = new DataTable();
             try
             {
@@ -695,7 +695,7 @@ namespace SalesModule.Services
 
         public bool DisableSaleGroupM(int groupID, bool isEnabled)
         {
-            ActivityLogService.Logger.LogCall(groupID, isEnabled);
+            ActivityLogService.Logger.LogFunctionCall(groupID, isEnabled);
             try
             {
                 CheckIsRemote();
@@ -727,7 +727,7 @@ namespace SalesModule.Services
         {
             //vipno, vname
             DataTable dt = new DataTable();
-            ActivityLogService.Logger.LogCall(groupID);
+            ActivityLogService.Logger.LogFunctionCall(groupID);
             try
             {
                 CheckIsRemote();
@@ -755,7 +755,7 @@ namespace SalesModule.Services
         {
             //clubno, clubName, membersCount
             DataTable dt = new DataTable();
-            ActivityLogService.Logger.LogCall(groupID);
+            ActivityLogService.Logger.LogFunctionCall(groupID);
             try
             {
                 CheckIsRemote();
@@ -784,7 +784,7 @@ namespace SalesModule.Services
         {
             //isVipno, VipID, name, membersCount
             DataTable dt = new DataTable();
-            ActivityLogService.Logger.LogCall(groupID);
+            ActivityLogService.Logger.LogFunctionCall(groupID);
             try
             {
                 CheckIsRemote();
@@ -816,7 +816,7 @@ namespace SalesModule.Services
 
         public bool AssociateVIP2Sale(int groupID, int vipid, bool isVipno)
         {
-            ActivityLogService.Logger.LogCall(groupID, vipid, isVipno);
+            ActivityLogService.Logger.LogFunctionCall(groupID, vipid, isVipno);
             try
             {
                 CheckIsRemote();
@@ -842,7 +842,7 @@ namespace SalesModule.Services
         }
         public bool DisassociateVIPfromSale(int groupID, int vipid, bool isVipno)
         {
-            ActivityLogService.Logger.LogCall(groupID, vipid, isVipno);
+            ActivityLogService.Logger.LogFunctionCall(groupID, vipid, isVipno);
             try
             {
                 CheckIsRemote();
@@ -869,7 +869,7 @@ namespace SalesModule.Services
 
         public bool IsSaleRestricted(int groupID)
         {
-            ActivityLogService.Logger.LogCall(groupID);
+            ActivityLogService.Logger.LogFunctionCall(groupID);
             try
             {
                 CheckIsRemote();
@@ -908,7 +908,7 @@ namespace SalesModule.Services
         private bool associatePcid2SaleM(int groupID, int pcid,
             DateTime from, DateTime? to, TimeSpan? start, TimeSpan? end)
         {
-            ActivityLogService.Logger.LogCall(groupID, pcid);
+            ActivityLogService.Logger.LogFunctionCall(groupID, pcid);
             try
             {
                 CheckIsRemote();
@@ -939,7 +939,7 @@ namespace SalesModule.Services
 
         public bool DisassociatePcidfromSaleM(int groupID, int pcid)
         {
-            ActivityLogService.Logger.LogCall(groupID, pcid);
+            ActivityLogService.Logger.LogFunctionCall(groupID, pcid);
             try
             {
                 CheckIsRemote();
@@ -965,7 +965,7 @@ namespace SalesModule.Services
 
         public bool DisablePCID(int groupID, int pcid, bool isEnabled)
         {
-            ActivityLogService.Logger.LogCall(groupID, pcid, isEnabled);
+            ActivityLogService.Logger.LogFunctionCall(groupID, pcid, isEnabled);
             try
             {
                 CheckIsRemote();
@@ -994,7 +994,7 @@ namespace SalesModule.Services
         {
             //bhno, bhname
             DataTable dt = new DataTable();
-            ActivityLogService.Logger.LogCall(groupID);
+            ActivityLogService.Logger.LogFunctionCall(groupID);
             try
             {
                 CheckIsRemote();
@@ -1021,7 +1021,7 @@ namespace SalesModule.Services
         public DataTable GetSalesBranches(int groupID)
         {
             DataTable dt = new DataTable();
-            ActivityLogService.Logger.LogCall(groupID);
+            ActivityLogService.Logger.LogFunctionCall(groupID);
             try
             {
                 CheckIsRemote();
@@ -1117,7 +1117,7 @@ namespace SalesModule.Services
 
         public DataTable Test(string table)
         {
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogFunctionCall();
             DataTable dt = new DataTable();
             var list = new List<IProductM>();
             try

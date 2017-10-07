@@ -7,11 +7,17 @@
              xmlns:cntrls="clr-namespace:SalesModule.Controls"
              xmlns:M="clr-namespace:SalesModule.Models"
              FlowDirection="RightToLeft"
-             mc:Ignorable="d" d:DesignHeight="121" d:DesignWidth="250">
+             mc:Ignorable="d" d:DesignHeight="140" d:DesignWidth="300">
     <UserControl.Resources>
-        <local:EnumToVisibilityConverter x:Key="enumConverter" />
+        <ResourceDictionary>
+            <local:EnumToVisibilityConverter x:Key="enumConverter" />
+            <Style TargetType="RadioButton">
+                <Setter Property="FontSize" Value="19" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <GroupBox Header="קביעת הנחה">
+    <GroupBox Header="קביעת הנחה" FontSize="15">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -34,7 +40,7 @@
 
             <TextBlock Grid.Column="1" Grid.Row="0" Text="₪" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <TextBlock Grid.Column="1" Grid.Row="1" Text="₪" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBlock Grid.Column="1" Grid.Row="2" Text="%" FontSize="16"  HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Grid.Row="2" Text="%" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
             <cntrls:TouchableNumeric Grid.Column="2" Grid.Row="0" Margin="5,2" Value="{Binding Amount}" Increment="0.1"
                                      IsEnabled="{Binding Type, Converter={StaticResource enumConverter}, ConverterParameter={x:Static M:DiscountTypes.Fix_Price}}" />

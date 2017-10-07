@@ -61,7 +61,20 @@ namespace SalesModule.ViewModels
         private List<PrivateVipViewModel> _availableCostumers;
         private List<ClubVipViewModel> _availableClubs;
         private List<IVipViewModel> _associatedVips;
-        
+
+        public override PopupProperties PopupProperties
+        {
+            get
+            {
+                return new PopupProperties()
+                {
+                    Title = "שיוך ללקוחות",
+                    Width = 570,
+                    Height = 450
+                };
+            }
+        }
+
         public string Criteria
         {
             get { return _criteria; }
@@ -92,7 +105,6 @@ namespace SalesModule.ViewModels
             AssociateVipCommand = new DelegateCommand<IVipViewModel>(associateFunction);
             DisassociateVipCommand = new DelegateCommand<IVipViewModel>(disassociateFunction);
 
-            SetPopupTitle("שיוך ללקוחות");
             populatePrivates();
             populateClubs();
             populateAssociated();
@@ -134,7 +146,7 @@ namespace SalesModule.ViewModels
 
         private void associateFunction(IVipViewModel vm)
         {
-            ActivityLogService.Logger.LogCall(vm.ID, vm is PrivateVipViewModel);
+            ActivityLogService.Logger.LogFunctionCall(vm.ID, vm is PrivateVipViewModel);
             try
             {
                 DBService.GetService().AssociateVIP2Sale(_groupID, vm.ID, vm is PrivateVipViewModel);
@@ -161,7 +173,7 @@ namespace SalesModule.ViewModels
 
         private void disassociateFunction(IVipViewModel vm)
         {
-            ActivityLogService.Logger.LogCall(vm.ID, vm is PrivateVipViewModel);
+            ActivityLogService.Logger.LogFunctionCall(vm.ID, vm is PrivateVipViewModel);
             try
             {
                 DBService.GetService().DisassociateVIPfromSale(_groupID, vm.ID, vm is PrivateVipViewModel);

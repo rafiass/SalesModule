@@ -66,7 +66,7 @@ namespace SalesModule
 
         public InitResults Init(string ip, string Catalog, string username, string password, int pcid, string empName, string empPass)
         {
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogFunctionCall();
             string connBackup = "";
             try
             {
@@ -93,7 +93,7 @@ namespace SalesModule
         }
         public InitResults Init(string store, string userName, string password, int pcid)
         {
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogFunctionCall();
             try
             {
                 UserData user;
@@ -118,7 +118,7 @@ namespace SalesModule
 
         public bool ChangeUser(string empName, string empPass)
         {
-            ActivityLogService.Logger.LogCall(empName, empPass);
+            ActivityLogService.Logger.LogFunctionCall(empName, empPass);
             try
             {
                 var db = DBService.GetLocalService();

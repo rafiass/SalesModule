@@ -44,7 +44,21 @@ namespace SalesModule.ViewModels
     {
         private string _criteria;
         private List<SaleGroupViewModel> _groups;
-        
+
+        public override PopupProperties PopupProperties
+        {
+            get
+            {
+                return new PopupProperties()
+                {
+                    Title = "חלון ניהול",
+                    Width = 900,
+                    MinWidth = 650,
+                    Height = 500
+                };
+            }
+        }
+
         public string Criteria
         {
             get { return _criteria; }
@@ -64,7 +78,6 @@ namespace SalesModule.ViewModels
             GroupPCIDCommand = new DelegateCommand<SaleGroupViewModel>(pcidFunction);
             GroupVipCommand = new DelegateCommand<SaleGroupViewModel>(vipFunction);
 
-            SetPopupTitle("חלון ניהול");
             _criteria = "";
             refreshGroups();
         }
@@ -82,7 +95,7 @@ namespace SalesModule.ViewModels
 
         public void editFunction(SaleGroupViewModel sgvm)
         {
-            ActivityLogService.Logger.LogCall(sgvm.GroupID);
+            ActivityLogService.Logger.LogFunctionCall(sgvm.GroupID);
             try
             {
                 var group = DBService.GetService().LoadGroup(sgvm.GroupID);
@@ -113,7 +126,7 @@ namespace SalesModule.ViewModels
         }
         public void pcidFunction(SaleGroupViewModel sgvm)
         {
-            ActivityLogService.Logger.LogCall(sgvm.GroupID);
+            ActivityLogService.Logger.LogFunctionCall(sgvm.GroupID);
             try
             {
                 var pcidVM = new PcidAssociationViewModel(sgvm.GroupID);
@@ -127,7 +140,7 @@ namespace SalesModule.ViewModels
         }
         public void vipFunction(SaleGroupViewModel sgvm)
         {
-            ActivityLogService.Logger.LogCall(sgvm.GroupID);
+            ActivityLogService.Logger.LogFunctionCall(sgvm.GroupID);
             try
             {
                 var vipVM = new VipAssociationViewModel(sgvm.GroupID);

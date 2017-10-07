@@ -12,9 +12,21 @@ namespace SalesModule.ViewModels
         private double _maxPrice;
         private int _multiply, _recerrences;
         private bool _isBroadSale, _isSaleDatesLimited;
-        
+
+        public override PopupProperties PopupProperties
+        {
+            get
+            {
+                return new PopupProperties()
+                {
+                    Title = "הגדרות מבצע",
+                    Width = 300,
+                    Height = 400
+                };
+            }
+        }
+
         public SalesPropertiesM Conducted { get; private set; }
-        //### SalesPropertiesViewModel public string SaleTitle { get; set; }
         public double MinPrice { get; set; }
 
         public bool IsMaxEnabled
@@ -107,14 +119,12 @@ namespace SalesModule.ViewModels
             CommitCommand = new DelegateCommand(CommitFunc);
             CancelCommand = new DelegateCommand(CancelFunc);
 
-            SetPopupTitle("הגדרות מבצע");
             IsMaxEnabled = IsMultiplyEnabled = IsRecurrenceEnabled = IsDatesEnabled = true;
             populate(prop);
         }
 
         private void populate(SalesPropertiesM prop)
         {
-            //### SaleTitle = prop.Title;
             MinPrice = prop.MinPrice;
 
             IsPriceLimited = prop.MaxPrice != null;
@@ -135,15 +145,12 @@ namespace SalesModule.ViewModels
 
         private void CommitFunc()
         {
-            //### if (SaleTitle.Trim() == "")
-            //    throw new SalesException("שם מבצע לא תקין");
             if (IsPriceLimited && MaxPrice <= MinPrice)
                 throw new SalesException("ערכי מינימום ומקסימום של שווי הסל לא מתאימים.");
             if (IsBroadSale && IsSaleDatesLimited &&
                 (DateTo < DateFrom || DateTo < DateTime.Now))
                 throw new SalesException("טווח התאריכים אינו תקין");
 
-            //### SaleTitle
             Conducted = new SalesPropertiesM(MinPrice,
                 IsPriceLimited ? MaxPrice : (double?)null,
                 IsMultiplyLimited ? InstanceMultiply : 0,

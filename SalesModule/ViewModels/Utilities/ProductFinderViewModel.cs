@@ -9,7 +9,20 @@ namespace SalesModule.ViewModels
     {
         private string _criteria;
         private List<IProductM> _results;
-        
+
+        public override PopupProperties PopupProperties
+        {
+            get
+            {
+                return new PopupProperties()
+                {
+                    Title = "חלון חיפוש",
+                    Width = 900,
+                    Height = 500
+                };
+            }
+        }
+
         public string Criteria
         {
             get { return _criteria; }
@@ -26,7 +39,6 @@ namespace SalesModule.ViewModels
         {
             ChooseItemCommand = new DelegateCommand<IProductM>(chooseFunction);
 
-            SetPopupTitle("חלון חיפוש");
             Choosen = null;
             _criteria = "";
             _results = DBService.GetService().GetProducts();

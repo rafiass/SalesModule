@@ -69,8 +69,8 @@ namespace SalesModule
             if (obj is ComperableProductM)
             {
                 var cp = obj as ComperableProductM;
-                return (cp.isPluno && Pluno == cp.ID) ||
-                    (!cp.isPluno && Kind != null && Kind.ToString() == cp.ID);
+                return (cp.IsPluno && Pluno == cp.ID) ||
+                    (!cp.IsPluno && Kind != null && Kind.ToString() == cp.ID);
             }
             return false;
         }

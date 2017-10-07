@@ -9,13 +9,14 @@ namespace SalesModule.Services
     {
         public static SaleM CreateSale(SaleTypes type)
         {
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogFunctionCall();
             SaleViewModel svm;
             switch (type)
             {
-                case SaleTypes.TargetPrice: svm = null; break;
-                case SaleTypes.SingularLowerPrice: svm = new LowPricedProductViewModel(); break;
+                case SaleTypes.TargetPrice: svm = null; break; //###
+                case SaleTypes.LowPricedProductAdv: svm = new LowPricedProductAdvViewModel(); break;
                 case SaleTypes.SingularBuyAndGet: svm = new BuyAndGetViewModel(); break;
+                case SaleTypes.BuyAndGetAdv: svm = new BuyAndGetAdvViewModel(); break;
                 case SaleTypes.Bundle: svm = null; break;
                 default: svm = null; break;
             }
@@ -27,15 +28,16 @@ namespace SalesModule.Services
         }
         public static SaleM EditSale(SaleM sale)
         {
-            ActivityLogService.Logger.LogCall();
+            ActivityLogService.Logger.LogFunctionCall();
             try
             {
                 SaleViewModel svm;
                 switch (sale.Type)
                 {
-                    case SaleTypes.TargetPrice: svm = null; break;
-                    case SaleTypes.SingularLowerPrice: svm = new LowPricedProductViewModel(sale); break;
+                    case SaleTypes.TargetPrice: svm = null; break; //###
+                    case SaleTypes.LowPricedProductAdv: svm = new LowPricedProductAdvViewModel(sale); break;
                     case SaleTypes.SingularBuyAndGet: svm = new BuyAndGetViewModel(sale); break;
+                    case SaleTypes.BuyAndGetAdv: svm = new BuyAndGetAdvViewModel(sale); break;
                     case SaleTypes.Bundle: svm = null; break;
                     default: svm = null; break;
                 }

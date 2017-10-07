@@ -19,19 +19,20 @@ namespace SalesModule.Services
         }
         public static ActivityLogService Logger { get { return _logger ?? (_logger = new ActivityLogService()); } }
 
-        public void LogCall(params object[] arguments)
+        public void LogFunctionCall(params object[] arguments)
         {
             var msg = callerName() + "(";
             if (arguments != null && arguments.Length > 0)
-                msg += arguments.Aggregate("", (acc, arg) => acc + arg + ", ",
-                    acc => acc.Substring(0, acc.Length - 2));
+                msg += arguments.Aggregate("", (acc, arg) => acc + arg + ", ", acc => acc.Substring(0, acc.Length - 2));
             msg += ")";
             writeMessage(msg);
         }
         public void LogError(Exception ex, string msg = null)
         {
             writeMessage("An error occurred in function '" + callerName() + "'.");
-            if (!string.IsNullOrEmpty(msg)) writeMessage(msg);
+            if (!string.IsNullOrEmpty(msg))
+                writeMessage(msg);
+
             writeMessage("Exception message:");
             writeMessage(ex.Message);
             writeMessage("Full stacktrace:");

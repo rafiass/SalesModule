@@ -19,19 +19,12 @@ namespace SalesModule.ViewModels
         public DelegateCommand CommitCommand { get; private set; }
         public DelegateCommand CancelCommand { get; private set; }
 
-        protected SaleViewModel()
-            : this(null)
-        {
-        }
         protected SaleViewModel(SaleM s)
         {
             _index = s != null ? s.Index : -1;
             _ID = s != null ? s.SaleID : -1;
             _prop = s != null ? s.Properties :
                 CreateSaleProperties();
-
-
-            SetPopupTitle("מוצר במבצע");
 
             PropertiesCommand = new DelegateCommand(propertiesFunc);
             CommitCommand = new DelegateCommand(CommitFunc);
@@ -40,7 +33,7 @@ namespace SalesModule.ViewModels
             if (s != null) LoadSale(s);
             else LoadEmpty();
         }
-
+        
         protected abstract void LoadEmpty();
         protected abstract void LoadSale(SaleM s);
         protected abstract SaleM CreateSale();
@@ -67,6 +60,7 @@ namespace SalesModule.ViewModels
             {
                 Conducted = CreateSale();
                 CloseWindow();
+                ActivityLogService.Logger.LogMessage("Sale created succsessfully.");
             }
             catch (SalesException ex)
             {

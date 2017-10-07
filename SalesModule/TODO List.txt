@@ -11,6 +11,7 @@
 			1. select product to buy
 			2. set amount to buy
 			3. set amount to get
+			* remain to design GUI
 		- Discounted product (simple)
 			1. select product
 			2. set discount
@@ -24,7 +25,6 @@
 				- VIPAssociation
 			2. Sale's view
 			3. optional: new Properties view
-	V 4. Edit properties on "edit" - check why it's not available
 	5. Search sales
 		- Search by: Title, pluno, pluname, kind3
 		* make sure to search kind3 which includes this pluno!
@@ -42,14 +42,14 @@ SalesPCID for broad sales:
 	- Mark broad sales (all branches) as pcid = -1
 		- when searching for relevant sales search pcid=@pcid OR pcid = -1
 	- Add Apply/Cancel buttons
-		- work on local dataset for branches
+		- work on local DataSet for branches
 		- dont apply anything 'till Apply is pressed
 		- When Cancel is pressed just close
 		- Dont let Zombie-Salse to be created (no PCID associated)
 
 Properties:
 	- Split Properties window to 2 ViewModels:
-		1. Original Properties window (exclude Title to the Sale's View)
+		1. Original Properties window
 		2. PCID association:
 		- IsBroad checkbox and an Association button to edit
 		- On new sale: PCID will be located in the new SalesGroupM
