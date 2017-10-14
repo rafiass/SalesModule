@@ -10,12 +10,13 @@ namespace SalesModule
     public interface IShoppingItem
     {
         string Pluno { get; }
+        int? Kind { get; }
         double Amount { get; }
         double Price { get; }
     }
 
     [Guid(ClassId), ClassInterface(ClassInterfaceType.None)]
-    public class ShoppingItem : IShoppingItem
+    internal class ShoppingItem : IShoppingItem
     {
         #region COM
 #if COM_INTEROP_ENABLED
@@ -47,9 +48,10 @@ namespace SalesModule
 
         public ShoppingItem(string pluno, double amount, double price)
             : this(pluno, amount, price, null) { }
-        public ShoppingItem(ShoppingItem si)
+        public ShoppingItem(IShoppingItem si)
             : this(si.Pluno, si.Amount, si.Price, si.Kind)
-        { }
+        {
+        }
         public ShoppingItem(string pluno, double amount, double price, int? kind)
         {
             Pluno = pluno;
@@ -94,7 +96,7 @@ namespace SalesModule
             }
         }
 
-        public bool Add(ShoppingItem si)
+        internal bool Add(IShoppingItem si)
         {
             if (si != this)
                 return false;
@@ -102,7 +104,7 @@ namespace SalesModule
             Amount += si.Amount;
             return true;
         }
-        public double Reduce(double amount)
+        internal double Reduce(double amount)
         {
             return Amount -= amount;
         }

@@ -8,20 +8,24 @@ using SalesModule.Services;
 namespace SalesModule
 {
     public delegate void RestartHandler();
-    public delegate void AppliedHandler(SaleDiscount sd);
+    public delegate void AppliedHandler(ISaleDiscount sd);
     public delegate void CancelHandler(int id);
 
     [Guid(SalesEngine.EventsId), InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface ISalesEngineEvents
     {
         void EngineRestarted();
-        void SaleApplied(SaleDiscount sd);
+        void SaleApplied(ISaleDiscount sd);
         void SaleCancelled(int id);
     }
 
     [Guid(SalesEngine.InterfaceId)]
     public interface ISalesEngine
     {
+        event RestartHandler EngineRestarted;
+        event AppliedHandler SaleApplied;
+        event CancelHandler SaleCancelled;
+
         bool Initialized { get; }
 
         bool Initialize(string vipno = null);
@@ -34,12 +38,16 @@ namespace SalesModule
         void EvaluateSales();
 
         bool IsPlunoActive(string pluno);
-        SaleDiscount[] CalcAllSales();
+        ISaleDiscount[] CalcAllSales();
+
+#if DEBUG
+        bool InitializeForDebugging();
+#endif
     }
 
     [Guid(ClassId), ClassInterface(ClassInterfaceType.None)]
     [ComSourceInterfaces(typeof(ISalesEngineEvents))]
-    public class SalesEngine : ISalesEngine
+    internal class SalesEngine : ISalesEngine
     {
         #region COM
 #if COM_INTEROP_ENABLED
@@ -155,7 +163,7 @@ namespace SalesModule
             {
                 if (!_init) return null;
 
-                ShoppingItem newItem = new ShoppingItem(pluno, qty, price, kind);
+                var newItem = new ShoppingItem(pluno, qty, price, kind);
                 bool added = false;
                 foreach (ShoppingItem si in _shoppingBag)
                     if (added = si.Add(newItem))
@@ -243,7 +251,7 @@ namespace SalesModule
             lock (_locker)
                 return _previousSales.Exists(sd => sd.IsContainProduct(pluno));
         }
-        public SaleDiscount[] CalcAllSales()
+        public ISaleDiscount[] CalcAllSales()
         {
             if (!_init) return null;
             lock (_locker)
@@ -252,8 +260,8 @@ namespace SalesModule
 
         private List<SaleDiscount> evaluateSales()
         {
-            List<SaleDiscount> newSales = new List<SaleDiscount>();
-            List<ShoppingItem> newBag = _shoppingBag.ConvertAll(p => new ShoppingItem(p)); //clone
+            var newSales = new List<SaleDiscount>();
+            var newBag = _shoppingBag.ConvertAll(p => new ShoppingItem(p)); //clone
             List<SaleDiscount> efective;
             double totalReceipt = 0;
             _shoppingBag.ForEach(si => totalReceipt += si.Price * si.Amount);

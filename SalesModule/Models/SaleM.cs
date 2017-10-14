@@ -14,7 +14,7 @@ namespace SalesModule.Models
         public List<ProdAmountM> ReqProducts { get; private set; }
         public List<DiscountedProductM> Discounted { get; private set; }
         public DiscountM Discount { get; private set; }
-        
+
         public SaleM(string title, SaleTypes type, SalesPropertiesM prop, List<ProdAmountM> Reqs,
             List<DiscountedProductM> discounteds, DiscountM TotalDiscount = null, int index = 1, int saleID = -1)
         {
@@ -44,7 +44,7 @@ namespace SalesModule.Models
             double saleValue = 0, discountAmount, discountQTY;
             bool DiscountFound = true;
             int saleInstaceCounter = 1;
-            List<SaleDiscount> discounts = new List<SaleDiscount>();
+            var discounts = new List<SaleDiscount>();
             List<ShoppingItem> discountBag, giftedBag;
 
             //Find if required elements for the sale exist in the bag
@@ -53,7 +53,7 @@ namespace SalesModule.Models
             if (newBag == null)
                 return discounts;
 
-            var plunosIn = new List<ShoppingItem>(newBag);
+            var plunosIn = new List<IShoppingItem>(newBag);
             while ((Properties.InstanceMultiply == 0 || saleInstaceCounter <= Properties.InstanceMultiply) &&
                 (saleInstaceCounter * Properties.MinPrice <= totalReceipt) && newBag != null && DiscountFound)
             {
@@ -230,7 +230,7 @@ namespace SalesModule.Models
             //out: is that item reduced completely or not
             Func<int, bool> search = i =>
             {
-                ShoppingItem si = bag[i];
+                var si = bag[i];
                 double toMove = 0;
                 if ((isPluno && si.Pluno == pluID) ||
                     (!isPluno && (si.Kind != null && si.Kind.ToString() == pluID)))

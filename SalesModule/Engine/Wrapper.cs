@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SalesModule.Services;
+using SalesModule.ViewModels;
+using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using SalesModule.Services;
 
 namespace SalesModule
 {
@@ -11,12 +12,12 @@ namespace SalesModule
     [Guid(Wrapper.InterfaceId)]
     public interface IWrapper
     {
+        string Version { get; }
+        bool IsEnabled { get; }
+
         InitResults Init(string store, string userName, string password, int pcid);
         InitResults Init(string ip, string Catalog, string username, string password, int pcid, string empName, string empPass);
         bool ChangeUser(string empName, string empPass);
-        bool IsInited();
-
-        string Version { get; }
     }
 
     [Guid(ClassId), ClassInterface(ClassInterfaceType.None)]
@@ -45,8 +46,21 @@ namespace SalesModule
 #endif
         #endregion
 
-        internal static UserData User;
-        internal static int PCID;
+        private static Wrapper s_wrapper;
+        public static Wrapper Instance
+        {
+            get
+            {
+                if (s_wrapper == null)
+                    return s_wrapper = new Wrapper();
+                return s_wrapper;
+            }
+        }
+
+
+        internal static UserData User { get; private set; }
+        internal static int PCID { get; private set; }
+
 
         public string Version
         {
@@ -57,11 +71,17 @@ namespace SalesModule
                 return v.Major + "." + v.Minor + "." + v.Build;
             }
         }
+        public bool IsEnabled { get { return User != null; } }
 
-        public Wrapper()
+        //make private for Singleton purpose
+        private Wrapper()
+        {
+        }
+        static Wrapper()
         {
             User = null;
             PCID = -1;
+            s_wrapper = null;
         }
 
         public InitResults Init(string ip, string Catalog, string username, string password, int pcid, string empName, string empPass)
@@ -140,9 +160,19 @@ namespace SalesModule
             }
         }
 
-        public bool IsInited()
+        public static ISalesEngine CreateEngine()
         {
-            return User != null;
+            return new SalesEngine();
+        }
+        public static bool OpenSalesWindow()
+        {
+            if (User == null)
+            {
+                MessageBox.Show("אין אפשרות להפעיל מודל המבצעים.\nאירעה שגיאה בזמן טעינת המודל");
+                return false;
+            }
+            InteropService.OpenWindow<MainViewModel>();
+            return true;
         }
     }
 }

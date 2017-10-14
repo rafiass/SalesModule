@@ -48,6 +48,10 @@
     </DataTemplate>
 
     <!-- Misc -->
+    <DataTemplate DataType="{x:Type vm:MainViewModel}">
+        <v:MainView DataContext="{Binding}" />
+    </DataTemplate>
+    
     <DataTemplate DataType="{x:Type vm:TestViewModel}">
         <v:TestView DataContext="{Binding}" />
     </DataTemplate>

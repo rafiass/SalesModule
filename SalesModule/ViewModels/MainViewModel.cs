@@ -5,8 +5,25 @@ using SalesModule.Services;
 
 namespace SalesModule.ViewModels
 {
-    internal class MainViewModel
+    internal class MainViewModel : PopupViewModel
     {
+        public override PopupProperties PopupProperties
+        {
+            get
+            {
+                return new PopupProperties()
+                {
+                    Title = "פאנל מבצעים",
+                    Width = 350,
+                    Height = 240,
+                    MinWidth = 200,
+                    MinHeight = 160,
+                    IsModal = false,
+                    IsShowingOnTaskBar = true
+                };
+            }
+        }
+
         public DelegateCommand<SaleTypes> OpenCommand { get; private set; }
         public DelegateCommand ManagementCommand { get; private set; }
 
@@ -16,7 +33,7 @@ namespace SalesModule.ViewModels
         {
             OpenCommand = new DelegateCommand<SaleTypes>(openNewSale);
             ManagementCommand = new DelegateCommand(openManagement);
-            TestCommand = new DelegateCommand(() => InteropService.OpenWindow(new TestViewModel()));
+            TestCommand = new DelegateCommand(() => InteropService.OpenWindow<TestViewModel>());
         }
 
         private void openNewSale(SaleTypes type)
@@ -32,7 +49,7 @@ namespace SalesModule.ViewModels
 
         private void openManagement()
         {
-            InteropService.OpenWindow(new SalesManagementViewModel());
+            InteropService.OpenWindow<SalesManagementViewModel>();
         }
     }
 }

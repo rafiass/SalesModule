@@ -9,8 +9,8 @@ namespace SalesTester
     internal partial class CashierAutomaticTester : Form
     {
         //NOTE: all tests refer to the tests created in SalesEngine.setSalesForTester()
-        private SalesEngine _eng;
-        private List<SaleDiscount> _engDiscounts;
+        private ISalesEngine _eng;
+        private List<ISaleDiscount> _engDiscounts;
         private List<TestDiscount> _cartDiscounts;
         private List<TestsGroup> _tests;
         private string _console;
@@ -20,10 +20,10 @@ namespace SalesTester
             ResetConsole();
             registerTests();
 
-            _engDiscounts = new List<SaleDiscount>();
+            _engDiscounts = new List<ISaleDiscount>();
             _cartDiscounts = new List<TestDiscount>();
 
-            _eng = new SalesEngine();
+            _eng = Wrapper.CreateEngine();
             _eng.EngineRestarted += () => _engDiscounts.Clear();
             _eng.SaleApplied += sd => _engDiscounts.Add(sd);
             _eng.SaleCancelled += id => _engDiscounts.RemoveAll(sd => sd.ID == id);

@@ -8,6 +8,11 @@ namespace SalesModule.Services
 {
     internal static class InteropService
     {
+        public static void OpenWindow<T>(Action callbackFunction = null)
+            where T : PopupViewModel, new()
+        {
+            OpenWindow(new T(), callbackFunction);
+        }
         public static void OpenWindow(PopupViewModel vm, Action callbackFunction = null)
         {
             OpenWindow(vm, vm.PopupProperties, callbackFunction);
@@ -18,13 +23,15 @@ namespace SalesModule.Services
             ActivityLogService.Logger.LogFunctionCall(vm);
             prop = prop ?? new PopupProperties();
             callbackFunction = callbackFunction ?? (() => { });
+            var winExtraWidth = SystemParameters.ResizeFrameVerticalBorderWidth;
+            var winExtraHeight = SystemParameters.ResizeFrameHorizontalBorderHeight + SystemParameters.CaptionHeight;
             var win = new Window()
             {
                 Title = prop.Title,
-                Width = prop.Width,
-                Height = prop.Height,
-                MinWidth = prop.MinWidth,
-                MinHeight = prop.MinHeigth,
+                Width = prop.Width + winExtraWidth,
+                Height = prop.Height + winExtraHeight,
+                MinWidth = prop.MinWidth + winExtraWidth,
+                MinHeight = prop.MinHeight + winExtraHeight,
                 ShowInTaskbar = prop.IsShowingOnTaskBar,
                 Content = vm,
                 FlowDirection = FlowDirection.RightToLeft,

@@ -23,8 +23,10 @@ namespace SalesModule.ViewModels
                 return new PopupProperties()
                 {
                     Title = "קנה וקבל",
-                    Width = 600,
-                    Height = 600
+                    Width = 450,
+                    Height = 450,
+                    MinWidth = 400,
+                    MinHeight=300
                 };
             }
         }

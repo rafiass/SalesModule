@@ -106,7 +106,10 @@ namespace SalesModule.ViewModels
                     if (sale == null) return;
 
                     if (DBService.GetService().EditSale(sale))
+                    {
                         MessageBox.Show("המבצע עודכן בהצלחה!");
+                        refreshGroups();
+                    }
                     else
                         MessageBox.Show("אירעה שגיאה בזמן עריכת המבצע.\nלא בוצעו שינויים במבצע הקיים.");
                 }

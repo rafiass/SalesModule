@@ -13,36 +13,36 @@ namespace SalesTester
 {
     public partial class CashierManualTester : Form
     {
-        private int _ActionID;
-        private SalesEngine Engine;
-        private List<SaleDiscount> _sales;
+        private int _actionID;
+        private ISalesEngine _engine;
+        private List<ISaleDiscount> _sales;
         public CashierManualTester()
         {
             InitializeComponent();
-            _ActionID = 0;
-            _sales = new List<SaleDiscount>();
+            _actionID = 0;
+            _sales = new List<ISaleDiscount>();
             InitEngine();
-            Engine.LoadSales();
+            _engine.LoadSales();
         }
         private int getID()
         {
-            return ++_ActionID;
+            return ++_actionID;
         }
         private void InitEngine()
         {
-            Engine = new SalesEngine();
-            Engine.Initialize();
+            _engine = Wrapper.CreateEngine();
+            _engine.Initialize();
             //Engine.InitializeForDebugging();
-            Engine.EngineRestarted += CallReset;
-            Engine.SaleApplied += CallApplied;
-            Engine.SaleCancelled += CallRemoved;
+            _engine.EngineRestarted += CallReset;
+            _engine.SaleApplied += CallApplied;
+            _engine.SaleCancelled += CallRemoved;
         }
 
         private void addProduct(string pluno, double qty, double price)
         {
             string str = getID() + ". Product " + pluno + ": " + qty + " * " + price;
             listCashier.Items.Add(new KeyValuePair<int, string>(-1, str));
-            lblInSale.Text = Engine.AddItem(pluno, qty, price, checkBox1.Checked);
+            lblInSale.Text = _engine.AddItem(pluno, qty, price, checkBox1.Checked);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -63,19 +63,19 @@ namespace SalesTester
         }
         private void btnDebug_Click(object sender, EventArgs e)
         {
-            Engine.Initialize();
+            _engine.Initialize();
             //Engine.InitializeForDebugging();
         }
 
         private void CallReset()
         {
-            _sales = new List<SaleDiscount>();
+            _sales = new List<ISaleDiscount>();
             listCashier.Items.Clear();
             listActions.Items.Clear();
             MessageBox.Show(getID() + ". Module Reseted");
-            _ActionID = 0;
+            _actionID = 0;
         }
-        private void CallApplied(SaleDiscount sd)
+        private void CallApplied(ISaleDiscount sd)
         {
             _sales.Add(sd);
             string sdStr = getID() + ". " + sd.ID + ": " + sd.Title + ", Discount = " + sd.Discount + " * " + sd.Quantity;

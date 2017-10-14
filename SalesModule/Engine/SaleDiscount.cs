@@ -13,13 +13,13 @@ namespace SalesModule
         string Title { get; }
         double Quantity { get; }
         double Discount { get; }
-        ShoppingItem[] Products { get; }
+        IShoppingItem[] Products { get; }
 
         bool IsContainProduct(string pluno);
     }
 
     [Guid(ClassId), ClassInterface(ClassInterfaceType.None)]
-    public class SaleDiscount : ISaleDiscount
+    internal class SaleDiscount : ISaleDiscount
     {
         #region COM
 #if COM_INTEROP_ENABLED
@@ -51,10 +51,10 @@ namespace SalesModule
         public string Title { get; private set; }
         public double Quantity { get; private set; }
         public double Discount { get; private set; }
-        public ShoppingItem[] Products { get; private set; }
+        public IShoppingItem[] Products { get; private set; }
 
-        public SaleDiscount() : this(-1, "", 0, 0, new List<ShoppingItem>()) { }
-        internal SaleDiscount(int saleID, string title, double QTY, double dis, List<ShoppingItem> plus)
+        public SaleDiscount() : this(-1, "", 0, 0, new List<IShoppingItem>()) { }
+        internal SaleDiscount(int saleID, string title, double QTY, double dis, List<IShoppingItem> plus)
         {
             SaleID = saleID;
             ID = -1;
@@ -67,6 +67,7 @@ namespace SalesModule
         {
             ResetCounter();
         }
+
         internal static void ResetCounter()
         {
             _salesID = 0;

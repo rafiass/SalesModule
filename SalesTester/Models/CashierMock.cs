@@ -9,13 +9,13 @@ namespace SalesTester
 {
     class CashierMock : ICashier
     {
-        private SalesEngine _engine;
+        private ISalesEngine _engine;
 
         public List<CashierItem> Items { get; private set; }
         public CashierMock()
         {
             Items = new List<CashierItem>();
-            _engine = new SalesEngine();
+            _engine = Wrapper.CreateEngine();
             _engine.EngineRestarted += engineResetarted;
             _engine.SaleApplied += saleApplied;
             _engine.SaleCancelled += saleCancelled;
@@ -54,7 +54,7 @@ namespace SalesTester
         {
             Items.Clear();
         }
-        private void saleApplied(SaleDiscount s)
+        private void saleApplied(ISaleDiscount s)
         {
             Items.Add(new CashierItem(s.Title, s.ID.ToString(), s.Quantity, s.Discount, CashierItemType.Discount));
         }

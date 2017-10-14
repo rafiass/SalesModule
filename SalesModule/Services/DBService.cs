@@ -273,7 +273,7 @@ namespace SalesModule.Services
             catch (Exception ex)
             {
                 ActivityLogService.Logger.LogError(ex);
-                if (_trans != null) _trans.Rollback();
+                _trans?.Rollback();
                 return -1;
             }
             finally
@@ -495,7 +495,7 @@ namespace SalesModule.Services
             catch (Exception ex)
             {
                 ActivityLogService.Logger.LogError(ex);
-                if (_trans != null) _trans.Rollback();
+                _trans?.Rollback();
                 return false;
             }
         }

@@ -22,7 +22,9 @@ namespace SalesModule.ViewModels
                 {
                     Title = "קנה וקבל",
                     Width = 500,
-                    Height = 750
+                    Height = 750,
+                    MinWidth = 400,
+                    MinHeight = 550
                 };
             }
         }

@@ -6,15 +6,21 @@
              xmlns:v="clr-namespace:SalesModule.Views"
              xmlns:cntrls="clr-namespace:SalesModule.Controls"
              FlowDirection="RightToLeft"
-             mc:Ignorable="d" d:DesignHeight="740" d:DesignWidth="500">
+             mc:Ignorable="d" d:DesignHeight="750" d:DesignWidth="550">
     <UserControl.Resources>
-        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="19" />
-            <Setter Property="Margin" Value="20,0" />
-        </Style>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="TextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="19" />
+                <Setter Property="Margin" Value="20,0" />
+            </Style>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Margin" Value="5,0" />
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid Margin="7">
         <Grid.RowDefinitions>
@@ -35,25 +41,25 @@
         <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Title}" Height="25" Margin="140,0,10,0" />
 
         <TextBlock Grid.Row="2" Text="קנה פריט" />
-        <cntrls:TouchableNumeric Grid.Row="2" Margin="123,10,186,2" Value="{Binding BuyAmount}" Increment="1" Minimum="1" DecimalPlaces="0" FontSize="20" />
+        <cntrls:TouchableNumeric Grid.Row="2" Margin="123,10,20,10" Value="{Binding BuyAmount}" Increment="1" Minimum="1" DecimalPlaces="0" FontSize="20" />
         <cntrls:AutoCompleteTextBox Grid.Row="3" SelectedItem="{Binding BuyProduct}" Margin="5,8" />
 
         <TextBlock Grid.Row="4" Text="קבל פריט" />
-        <cntrls:TouchableNumeric Grid.Row="4" Margin="123,10,186,2" Value="{Binding GetAmount}" Increment="1" Minimum="1" DecimalPlaces="0" FontSize="20"/>
+        <cntrls:TouchableNumeric Grid.Row="4" Margin="123,10,20,10" Value="{Binding GetAmount}" Increment="1" Minimum="1" DecimalPlaces="0" FontSize="20"/>
         <cntrls:AutoCompleteTextBox Grid.Row="5" SelectedItem="{Binding GetProduct}" Margin="5,8" />
 
         <v:DiscountView Grid.Row="6" DataContext="{Binding GetDiscount}" />
-
-        <Grid Grid.Row="7" Margin="0,21,0,71">
+        
+        <Grid Grid.Row="7" Margin="5,15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="ביטול" Command="{Binding CancelCommand}" IsCancel ="True" Margin="5,0,5,-58" FontSize="24" />
-            <Button Grid.Column="1" Content="מאפיינים..." Command="{Binding PropertiesCommand}" Margin="5,0,5,-58" FontSize="24"  />
-            <Button Grid.Column="2" Content="בצע" Command="{Binding CommitCommand}" Margin="5,0,5,-58" FontSize="24" />
+            <Button Grid.Column="0" Content="ביטול" Command="{Binding CancelCommand}" IsCancel ="True" />
+            <Button Grid.Column="1" Content="מאפיינים..." Command="{Binding PropertiesCommand}" />
+            <Button Grid.Column="2" Content="בצע" Command="{Binding CommitCommand}" />
         </Grid>
     </Grid>
 </UserControl>

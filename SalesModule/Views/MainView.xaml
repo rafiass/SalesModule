@@ -4,38 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SalesModule"
-             xmlns:vm="clr-namespace:SalesModule.ViewModels"
-             xmlns:cntrls="clr-namespace:SalesModule.Controls"
              FlowDirection="RightToLeft"
-             mc:Ignorable="d" Height="160" Width="378">
-    <UserControl.DataContext>
-        <vm:MainViewModel />
-    </UserControl.DataContext>
+             mc:Ignorable="d" d:DesignHeight="240" d:DesignWidth="350">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Resources/ResourceDictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-                <Setter Property="Command" Value="{Binding OpenCommand}" />
-                <Setter Property="Margin" Value="3" />
-                <Setter Property="FontSize" Value="15" />
-                <Setter Property="ContentTemplate">
-                    <Setter.Value>
-                        <DataTemplate>
-                            <TextBlock Text="{TemplateBinding Content}" TextWrapping="Wrap" TextAlignment="Center" />
-                        </DataTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-        </ResourceDictionary>
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Command" Value="{Binding OpenCommand}" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{TemplateBinding Content}" TextWrapping="Wrap" TextAlignment="Center" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
-    <Grid Height="155" VerticalAlignment="Top">
+    <Grid Margin="5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="146*" />
-            <RowDefinition Height="83*" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -43,10 +32,12 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Button Grid.Column="0" Grid.Row="0" Content="קנה וקבל" CommandParameter="{x:Static local:SaleTypes.BuyAndGetAdv}" />
-        <Button Grid.Column="1" Grid.Row="0" Content="מוצר מוזל" CommandParameter="{x:Static local:SaleTypes.LowPricedProductAdv}" Margin="2,3,4,3" />
-        <Button Grid.Column="2" Grid.Row="0" Content="חבילה" Margin="3" />
+        <Button Grid.Column="0" Grid.Row="0" Content="קנה וקבל" CommandParameter="{x:Static local:SaleTypes.SingularBuyAndGet}" />
+        <Button Grid.Column="2" Grid.Row="0" Content="חבילה" />
 
-        <Button Grid.ColumnSpan="3" Grid.Row="1" Command="{Binding ManagementCommand}" Content="ניהול מבצעים" Margin="5" />
+        <Button Grid.Column="0" Grid.Row="1" Content="קנה וקבל (מתקדם)" CommandParameter="{x:Static local:SaleTypes.BuyAndGetAdv}" />
+        <Button Grid.Column="1" Grid.Row="1" Content="מוצר מוזל (מתקדם)" CommandParameter="{x:Static local:SaleTypes.LowPricedProductAdv}" />
+
+        <Button Grid.ColumnSpan="3" Grid.Row="2" Command="{Binding ManagementCommand}" Content="ניהול מבצעים" />
     </Grid>
 </UserControl>

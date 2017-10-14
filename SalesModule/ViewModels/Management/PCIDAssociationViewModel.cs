@@ -138,7 +138,7 @@ namespace SalesModule.ViewModels
                     Width = 850,
                     MinWidth = 700,
                     Height = 500,
-                    MinHeigth = 400
+                    MinHeight = 400
                 };
             }
         }
