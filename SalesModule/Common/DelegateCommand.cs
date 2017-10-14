@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace SalesModule
 {
-    class DelegateCommand : ICommand
+    internal class DelegateCommand : ICommand
     {
         private readonly Func<bool> _canExecute;
         private readonly Action _execute;
@@ -36,7 +36,7 @@ namespace SalesModule
         }
     }
 
-    class DelegateCommand<T> : ICommand
+    internal class DelegateCommand<T> : ICommand
     {
         private readonly Predicate<T> _canExecute;
         private readonly Action<T> _execute;

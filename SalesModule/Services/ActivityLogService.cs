@@ -35,6 +35,7 @@ namespace SalesModule.Services
 
             writeMessage("Exception message:");
             writeMessage(ex.Message);
+            logInnerException(ex.InnerException);
             writeMessage("Full stacktrace:");
             writeMessage(ex.StackTrace);
         }
@@ -53,6 +54,13 @@ namespace SalesModule.Services
             StreamWriter sw;
             using (sw = File.AppendText(_path))
                 sw.WriteLine(s);
+        }
+        private void logInnerException(Exception ex, string prefix = "")
+        {
+            if (ex == null) return;
+            writeMessage(prefix + "Inner exception message:");
+            writeMessage(prefix + ex.Message);
+            logInnerException(ex.InnerException, "\t" + prefix);
         }
     }
 }

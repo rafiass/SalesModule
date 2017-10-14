@@ -6,7 +6,7 @@
              xmlns:v="clr-namespace:SalesModule.Views"
              xmlns:cntrls="clr-namespace:SalesModule.Controls"
              FlowDirection="RightToLeft"
-             mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="350">
+             mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="400">
     <UserControl.Resources>
         <ResourceDictionary>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -16,6 +16,7 @@
                 <Setter Property="FontSize" Value="19" />
             </Style>
             <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
+                <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="FontSize" Value="17" />
             </Style>
@@ -27,46 +28,40 @@
             <RowDefinition Height="30*" />
             <RowDefinition Height="30*" />
             <RowDefinition Height="100*" />
-            <RowDefinition Height="50*" />
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="25*" />
             <RowDefinition Height="25*" />
             <RowDefinition Height="25*" />
             <RowDefinition Height="60*" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="140" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="0" Content="מוצר מוזל" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Label Grid.Row="0" Grid.ColumnSpan="2" Content="מוצר מוזל" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
         <TextBlock Grid.Row="1" Text="שם המבצע" Margin="15,0" />
-        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Title}" Height="25" Margin="140,0,10,0" />
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Title}" Height="25" Margin="10,0" />
 
         <TextBlock Grid.Row="2" Text="בחר מוצר" Margin="15,0" />
-        <cntrls:AutoCompleteTextBox Grid.Row="2" SelectedItem="{Binding SelectedProduct}" Margin="120,7,5,8" />
+        <cntrls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" SelectedItem="{Binding SelectedProduct}" Height="25" Margin="10,0" />
 
-        <v:DiscountView Grid.Row="3" DataContext="{Binding Discount}" />
+        <v:DiscountView Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Discount}" />
 
-        <Grid Grid.Row="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <CheckBox Grid.Row="4" Grid.Column="0" IsChecked="{Binding IsDiscountPerAmount}" Content="מבצע על כמות:" />
+        <cntrls:TouchableNumeric Grid.Row="4" Grid.Column="1" Value="{Binding AmountDiscounted}" Increment="1" Minimum="1"
+                                 IsEnabled="{Binding IsDiscountPerAmount}" Margin="15,0" VerticalAlignment="Center" />
 
-            <CheckBox Grid.Column="0" Grid.Row="0" IsChecked="{Binding IsDiscountPerAmount}" Content="מבצע על כמות:" />
-            <cntrls:TouchableNumeric Grid.Column="1" Grid.Row="0" Value="{Binding AmountDiscounted}" Increment="1" Minimum="1"
-                                     IsEnabled="{Binding IsDiscountPerAmount}" Margin="15,0" VerticalAlignment="Center" />
-            
-            <CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding IsAmountLimited}" Content="הגבלת כמות:" />
-            <cntrls:TouchableNumeric Grid.Column="1" Grid.Row="1" Value="{Binding LimitedAmount}" Increment="1" Minimum="1"
-                                     IsEnabled="{Binding IsAmountLimited}" Margin="15,0" VerticalAlignment="Center" />
-        </Grid>
+        <CheckBox Grid.Row="5" Grid.Column="0" IsChecked="{Binding IsAmountLimited}" Content="הגבלת כמות:" />
+        <cntrls:TouchableNumeric Grid.Row="5" Grid.Column="1" Value="{Binding LimitedAmount}" Increment="1" Minimum="1"
+                                 IsEnabled="{Binding IsAmountLimited}" Margin="15,0" VerticalAlignment="Center" />
 
-        <CheckBox Grid.Row="5" IsChecked="{Binding IsGiftAvailable}" Content="הוסף מוצר במתנה:" />
-        <cntrls:AutoCompleteTextBox Grid.Row="6" SelectedItem="{Binding Gifted}" Margin="35,5,7,5"
+        <CheckBox Grid.Row="6" Grid.ColumnSpan="2" IsChecked="{Binding IsGiftAvailable}" Content="הוסף מוצר במתנה:" />
+        <cntrls:AutoCompleteTextBox Grid.Row="7" Grid.ColumnSpan="2" SelectedItem="{Binding Gifted}" Margin="35,5,7,5"
                                     IsEnabled="{Binding IsGiftAvailable, Mode=OneWay}" />
 
-        <Grid Grid.Row="7" Margin="0,5">
+        <Grid Grid.Row="8" Grid.ColumnSpan="2" Margin="0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />

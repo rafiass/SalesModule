@@ -52,14 +52,14 @@ namespace SalesModule.Models
         public double Amount { get; private set; }
         public double MaxMultiply { get; private set; }
         public DiscountM Discount { get; private set; }
-        public List<GiftedProductM> Discounted { get; private set; }
+        public List<GiftedProductM> Gifted { get; private set; }
 
         public DiscountedProductM(string id, bool isProduct, double amount,
             double rec, DiscountM discount, GiftedProductM gift)
             : this(id, isProduct, amount, rec, discount)
         {
             if (gift != null)
-                Discounted.Add(gift);
+                Gifted.Add(gift);
         }
         public DiscountedProductM(string id, bool isProduct, double amount,
             double rec, DiscountM discount, List<GiftedProductM> gifted = null, int outID = -1)
@@ -68,7 +68,7 @@ namespace SalesModule.Models
             Amount = amount;
             MaxMultiply = rec;
             Discount = discount;
-            Discounted = gifted ?? new List<GiftedProductM>();
+            Gifted = gifted ?? new List<GiftedProductM>();
             OutID = outID;
         }
     }

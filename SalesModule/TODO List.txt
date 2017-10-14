@@ -2,20 +2,6 @@
 		TODO List for improvements
 
 4.10 tasks (mail):
-	1. New sales:
-		- X in NIS:
-			1. select product
-			2. set amount
-			3. set new Price for all
-		- "3+1" for the same product/group
-			1. select product to buy
-			2. set amount to buy
-			3. set amount to get
-			* remain to design GUI
-		- Discounted product (simple)
-			1. select product
-			2. set discount
-			* set the current to "Adv."
 	3. switch order: properties window -> sales window
 		- see BroadSale
 		- new flow:

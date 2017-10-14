@@ -17,7 +17,7 @@ namespace SalesTester
     }
 
     enum CashierItemType { Product, Discount }
-    class CashierItem
+    internal class CashierItem
     {
         public string Title { get; private set; }
         public string ID { get; private set; }

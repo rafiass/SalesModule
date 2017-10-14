@@ -420,7 +420,7 @@ namespace SalesModule.Services
                     _cmd.ExecuteNonQuery();
 
                     _cmd.CommandText = giftSql;
-                    foreach (var gift in p.Discounted)
+                    foreach (var gift in p.Gifted)
                     {
                         if (gift.Discount == null)
                             throw new ArgumentException("Gifted product must have a discount. (pluno: " + p.ID + ")");

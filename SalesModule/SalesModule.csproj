@@ -111,6 +111,8 @@
     <Compile Include="ViewModels\PopupViewModel.cs" />
     <Compile Include="ViewModels\Sales\BuyAndGetAdvViewModel.cs" />
     <Compile Include="ViewModels\Sales\BuyAndGetViewModel.cs" />
+    <Compile Include="ViewModels\Sales\FixedPricedProductViewModel.cs" />
+    <Compile Include="ViewModels\Sales\DiscountedProductViewModel.cs" />
     <Compile Include="ViewModels\Sales\LowPricedProductAdvViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\Sales\SaleViewModel.cs" />
@@ -144,6 +146,12 @@
     </Compile>
     <Compile Include="Views\Sales\BuyAndGetView.xaml.cs">
       <DependentUpon>BuyAndGetView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Sales\FixedPricedProductView.xaml.cs">
+      <DependentUpon>FixedPricedProductView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Sales\DiscountedProductView.xaml.cs">
+      <DependentUpon>DiscountedProductView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Sales\LowPricedProductAdvView.xaml.cs">
       <DependentUpon>LowPricedProductAdvView.xaml</DependentUpon>
@@ -236,6 +244,14 @@
     <Page Include="Views\Sales\BuyAndGetView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Sales\FixedPricedProductView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Sales\DiscountedProductView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Sales\TargetPriceView.xaml">
       <SubType>Designer</SubType>

@@ -5,7 +5,7 @@ using SalesModule.Services;
 
 namespace SalesModule.ViewModels
 {
-    class LowPricedProductAdvViewModel : SaleViewModel
+    internal class LowPricedProductAdvViewModel : SaleViewModel
     {
         private bool _isDiscountPerAmount, _isAmountLimited, _isGiftAvailable;
 
@@ -32,7 +32,7 @@ namespace SalesModule.ViewModels
             set { SetProperty(ref _isGiftAvailable, value); }
         }
         public IProductM Gifted { get; set; }
-        
+
         public override PopupProperties PopupProperties
         {
             get
@@ -70,7 +70,7 @@ namespace SalesModule.ViewModels
             if (s.Discounted == null || s.Discounted.Count != 1 || s.Discounted[0].Discount == null)
                 throw new InvalidOperationException("Discounted product data mismatch.");
             var discounted = s.Discounted[0];
-            if (discounted.Discounted == null || discounted.Discounted.Count > 1)
+            if (discounted.Gifted == null || discounted.Gifted.Count > 1)
                 throw new InvalidOperationException("Gifted product data mismatch.");
 
             Title = s.Title;
@@ -80,10 +80,10 @@ namespace SalesModule.ViewModels
             AmountDiscounted = discounted.Amount != 0 ? discounted.Amount : 1;
             IsAmountLimited = discounted.MaxMultiply != 0;
             LimitedAmount = discounted.MaxMultiply != 0 ? discounted.MaxMultiply : 1;
-            IsGiftAvailable = discounted.Discounted.Count > 0;
-            if (discounted.Discounted.Count > 0)
+            IsGiftAvailable = discounted.Gifted.Count > 0;
+            if (discounted.Gifted.Count > 0)
                 Gifted = DBService.GetService().GetProduct(
-                    discounted.Discounted[0].ID, discounted.Discounted[0].IsPluno);
+                    discounted.Gifted[0].ID, discounted.Gifted[0].IsPluno);
             Discount = discounted.Discount;
         }
         protected override SaleM CreateSale()
@@ -104,11 +104,6 @@ namespace SalesModule.ViewModels
             _prop.RecurrencePerInstance = 1;
             return new SaleM(Title, SaleTypes.LowPricedProductAdv, _prop,
                 null, outs, null, _isEditing ? _index : 1, _ID);
-        }
-
-        protected override SalesPropertiesM CreateSaleProperties()
-        {
-            return new SalesPropertiesM();
         }
     }
 }

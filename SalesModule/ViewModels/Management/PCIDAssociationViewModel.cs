@@ -92,7 +92,7 @@ namespace SalesModule.ViewModels
             ToIndexTime = 48;
         }
 
-        internal void populateBranches()
+        private void populateBranches()
         {
             if (_isCreated) return;
 
@@ -136,8 +136,8 @@ namespace SalesModule.ViewModels
                 {
                     Title = "שיוך לסניפים",
                     Width = 850,
-                    MinWidth = 700,
                     Height = 500,
+                    MinWidth = 700,
                     MinHeight = 400
                 };
             }

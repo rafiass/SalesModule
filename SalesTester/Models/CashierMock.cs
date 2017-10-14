@@ -7,7 +7,7 @@ using SalesModule;
 
 namespace SalesTester
 {
-    class CashierMock : ICashier
+    internal class CashierMock : ICashier
     {
         private ISalesEngine _engine;
 

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace SalesModule.ViewModels
 {
-    class ViewModelBase : INotifyPropertyChanged
+    internal class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -123,7 +123,7 @@ namespace SalesModule.Models
                         if (discountQTY != 0)
                             DiscountFound = true;
 
-                        foreach (var gift in dp.Discounted)
+                        foreach (var gift in dp.Gifted)
                         {
                             if (gift.Amount == 0)
                             {

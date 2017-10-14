@@ -53,8 +53,9 @@ namespace SalesModule.ViewModels
                 {
                     Title = "חלון ניהול",
                     Width = 900,
+                    Height = 500,
                     MinWidth = 650,
-                    Height = 500
+                    MinHeight = 300
                 };
             }
         }
@@ -101,11 +102,11 @@ namespace SalesModule.ViewModels
                 var group = DBService.GetService().LoadGroup(sgvm.GroupID);
                 if (group.Sales.Count == 1)
                 {
-                    var sale = group.Sales[0];
-                    sale = SalesFactoryService.EditSale(sale);
-                    if (sale == null) return;
+                    var sale = SalesFactoryService.EditSale(group.Sales[0]);
+                    if (sale == null)
+                        MessageBox.Show("אירעה שגיאה, אנא נסה שוב במועד מאוחר יותר.");
 
-                    if (DBService.GetService().EditSale(sale))
+                    else if (DBService.GetService().EditSale(sale))
                     {
                         MessageBox.Show("המבצע עודכן בהצלחה!");
                         refreshGroups();
@@ -124,6 +125,7 @@ namespace SalesModule.ViewModels
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 ActivityLogService.Logger.LogError(ex);
             }
         }

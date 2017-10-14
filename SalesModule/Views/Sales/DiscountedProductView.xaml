@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="SalesModule.Views.DiscountedProductView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:v="clr-namespace:SalesModule.Views"
+             xmlns:cntrls="clr-namespace:SalesModule.Controls"
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="450">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="TextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="19" />
+                <Setter Property="Margin" Value="20,0" />
+            </Style>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Margin" Value="5,0" />
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="7">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40*" />
+            <RowDefinition Height="30*" />
+            <RowDefinition Height="35*" />
+            <RowDefinition Height="100*" />
+            <RowDefinition Height="60*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="מבצע 'מוצר בהנחה'" FontSize="22"
+               HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <TextBlock Grid.Row="1" Text="שם המבצע" />
+        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Title}" Height="25" Margin="140,0,10,0" />
+
+        <cntrls:AutoCompleteTextBox Grid.Row="2" SelectedItem="{Binding SelectedProduct}" Margin="5,8" />
+
+        <v:DiscountView Grid.Row="3" DataContext="{Binding Discount}" />
+
+        <Grid Grid.Row="4" Margin="5,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="ביטול" Command="{Binding CancelCommand}" IsCancel ="True" />
+            <Button Grid.Column="1" Content="מאפיינים..." Command="{Binding PropertiesCommand}" />
+            <Button Grid.Column="2" Content="בצע" Command="{Binding CommitCommand}" />
+        </Grid>
+    </Grid>
+</UserControl>

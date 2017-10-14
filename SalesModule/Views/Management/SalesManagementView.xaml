@@ -71,7 +71,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="סניפים" Width="{Binding ActualWidth, ElementName=pcidCol}">
+                    <GridViewColumn Header="תוקף" Width="{Binding ActualWidth, ElementName=pcidCol}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Button CommandParameter="{Binding}"
