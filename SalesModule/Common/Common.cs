@@ -6,11 +6,14 @@ namespace SalesModule
 {
     internal enum SaleTypes
     {
+        //DO NOT CHANGE ORDER!
+        //this values are written to DB
         None = 0,
-        DiscountedProduct,
         FixedPricedProduct,
         LowPricedProductAdv,
-        SingularBuyAndGet, BuyAndGetAdv
+        BuyAndGetAdv,
+        SingularBuyAndGet,
+        DiscountedProduct,
     }
 
     internal enum SearchOrder
