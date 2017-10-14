@@ -7,7 +7,7 @@ namespace SalesModule
     /// <summary>
     /// Generates delegates according to the specified signature on runtime
     /// </summary>
-    public static class EventHandlerGenerator
+    internal static class EventHandlerGenerator
     {
         /// <summary>
         /// Generates a delegate with a matching signature of the supplied eventHandlerType

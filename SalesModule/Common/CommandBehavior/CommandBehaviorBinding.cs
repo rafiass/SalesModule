@@ -8,7 +8,7 @@ namespace SalesModule
     /// <summary>
     /// Defines the command behavior binding
     /// </summary>
-    public class CommandBehaviorBinding : IDisposable
+    internal class CommandBehaviorBinding : IDisposable
     {
         #region Properties
         /// <summary>

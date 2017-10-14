@@ -7,7 +7,7 @@ namespace SalesModule.Views
     /// </summary>
     public partial class TargetPriceView : UserControl
     {
-        public TargetPriceView()
+        internal TargetPriceView()
         {
             InitializeComponent();
         }

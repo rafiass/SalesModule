@@ -7,7 +7,7 @@ namespace SalesModule.Views
     /// </summary>
     public partial class VipAssociationView : UserControl
     {
-        public VipAssociationView()
+        internal VipAssociationView()
         {
             InitializeComponent();
         }

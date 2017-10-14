@@ -14,7 +14,7 @@ namespace SalesModule.Models
         public DateTime? DateTo { get; set; }
 
         //Define how to go thorug the discount list
-        public searchOrder FavourOrder { get; private set; }
+        public SearchOrder FavourOrder { get; private set; }
         
         public SalesPropertiesM()
             : this(0, null, 1, 1)
@@ -34,7 +34,7 @@ namespace SalesModule.Models
             DateTo = to;
 
             //TODO - add to DB as property
-            FavourOrder = searchOrder.highToLow;
+            FavourOrder = SearchOrder.highToLow;
         }
         public SalesPropertiesM(SalesPropertiesM prop)
         {

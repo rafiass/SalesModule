@@ -10,7 +10,7 @@ namespace SalesModule
         SingularBuyAndGet, BuyAndGetAdv, Bundle
     }
 
-    public enum searchOrder
+    internal enum SearchOrder
     {
         lowToHigh, highToLow
     }

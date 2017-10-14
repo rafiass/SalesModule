@@ -7,7 +7,7 @@ namespace SalesModule
     /// <summary>
     /// Defines the attached properties to create a CommandBehaviorBinding
     /// </summary>
-    public class CommandBehavior
+    internal class CommandBehavior
     {
         #region Behavior
 

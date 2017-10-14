@@ -206,7 +206,7 @@ namespace SalesModule.Models
             List<ShoppingItem> tempBag;
             foreach (ProdAmountM req in ReqProducts)
             {
-                tempBag = findPlu(bag, req.ID, req.IsPluno, req.Amount, searchOrder.highToLow);
+                tempBag = findPlu(bag, req.ID, req.IsPluno, req.Amount, SearchOrder.highToLow);
                 if (tempBag != null)
                     tempBag.ForEach(si => Common.InsertItemToCart(newBag, si));
                 else
@@ -221,7 +221,7 @@ namespace SalesModule.Models
         /// Search for an item in the bag, 
         /// if found retuns the items are remove it from the bag
         /// </summary>
-        private List<ShoppingItem> findPlu(List<ShoppingItem> bag, string pluID, bool isPluno, double amount, searchOrder order)
+        private List<ShoppingItem> findPlu(List<ShoppingItem> bag, string pluID, bool isPluno, double amount, SearchOrder order)
         {
             var found = new List<ShoppingItem>();
             bool infinite = amount == 0;
@@ -243,7 +243,7 @@ namespace SalesModule.Models
                 return false;
             };
 
-            if (order == searchOrder.highToLow)
+            if (order == SearchOrder.highToLow)
             {
                 for (int i = bag.Count - 1; i >= 0; i--)//highest to lowest
                 {

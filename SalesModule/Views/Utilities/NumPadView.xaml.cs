@@ -7,7 +7,7 @@ namespace SalesModule.Views
     /// </summary>
     public partial class NumPadView : UserControl
     {
-        public NumPadView()
+        internal NumPadView()
         {
             InitializeComponent();
         }

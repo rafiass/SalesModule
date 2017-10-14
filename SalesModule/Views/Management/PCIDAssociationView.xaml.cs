@@ -7,7 +7,7 @@ namespace SalesModule.Views
     /// </summary>
     public partial class PcidAssociationView : UserControl
     {
-        public PcidAssociationView()
+        internal PcidAssociationView()
         {
             InitializeComponent();
         }

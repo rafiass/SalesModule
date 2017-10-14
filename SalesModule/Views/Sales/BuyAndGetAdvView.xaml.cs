@@ -7,7 +7,7 @@ namespace SalesModule.Views
     /// </summary>
     public partial class BuyAndGetAdvView : UserControl
     {
-        public BuyAndGetAdvView()
+        internal BuyAndGetAdvView()
         {
             InitializeComponent();
         }

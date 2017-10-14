@@ -7,7 +7,7 @@ namespace SalesModule.Views
     /// </summary>
     public partial class DiscountView : UserControl
     {
-        public DiscountView()
+        internal DiscountView()
         {
             InitializeComponent();
         }

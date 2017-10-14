@@ -7,7 +7,7 @@ namespace SalesModule.Views
     /// </summary>
     public partial class ProductFinderView : UserControl
     {
-        public ProductFinderView()
+        internal ProductFinderView()
         {
             InitializeComponent();
         }

@@ -7,7 +7,7 @@ namespace SalesModule.Views
     /// </summary>
     public partial class SalesManagementView : UserControl
     {
-        public SalesManagementView()
+        internal SalesManagementView()
         {
             InitializeComponent();
         }
