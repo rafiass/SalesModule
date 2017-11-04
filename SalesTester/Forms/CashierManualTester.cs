@@ -14,7 +14,7 @@ namespace SalesTester
     public partial class CashierManualTester : Form
     {
         private int _actionID;
-        private ISalesEngine _engine;
+        private SalesEngine _engine;
         private List<ISaleDiscount> _sales;
         public CashierManualTester()
         {
@@ -30,7 +30,7 @@ namespace SalesTester
         }
         private void InitEngine()
         {
-            _engine = Wrapper.CreateEngine();
+            _engine = new Wrapper().CreateEngine();
             _engine.Initialize();
             //Engine.InitializeForDebugging();
             _engine.EngineRestarted += CallReset;

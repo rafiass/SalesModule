@@ -9,7 +9,7 @@ namespace SalesTester
     internal partial class CashierAutomaticTester : Form
     {
         //NOTE: all tests refer to the tests created in SalesEngine.setSalesForTester()
-        private ISalesEngine _eng;
+        private SalesEngine _eng;
         private List<ISaleDiscount> _engDiscounts;
         private List<TestDiscount> _cartDiscounts;
         private List<TestsGroup> _tests;
@@ -23,7 +23,7 @@ namespace SalesTester
             _engDiscounts = new List<ISaleDiscount>();
             _cartDiscounts = new List<TestDiscount>();
 
-            _eng = Wrapper.CreateEngine();
+            _eng = new Wrapper().CreateEngine();
             _eng.EngineRestarted += () => _engDiscounts.Clear();
             _eng.SaleApplied += sd => _engDiscounts.Add(sd);
             _eng.SaleCancelled += id => _engDiscounts.RemoveAll(sd => sd.ID == id);
@@ -112,11 +112,13 @@ namespace SalesTester
         private void InitTest()
         {
             _cartDiscounts.Clear();
+#if DEBUG
             _eng.InitializeForDebugging();
+#endif
         }
-        #endregion
+#endregion
 
-        #region Tests
+#region Tests
         /*
          * - tests for lowered price discount
          * - tests for buy and get (simple)
@@ -253,9 +255,9 @@ namespace SalesTester
 
             return true;
         }
-        #endregion
+#endregion
 
-        #region GUI
+#region GUI
         private void btn_run_Click(object sender, EventArgs e)
         {
             var test = lstbx_tests.SelectedItem as TestsGroup;
@@ -289,7 +291,7 @@ namespace SalesTester
                 test.Execute();
             }
         }
-        #endregion
+#endregion
     }
 
     internal class TestDiscount

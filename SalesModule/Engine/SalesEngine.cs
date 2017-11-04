@@ -22,10 +22,6 @@ namespace SalesModule
     [Guid(SalesEngine.InterfaceId)]
     public interface ISalesEngine
     {
-        event RestartHandler EngineRestarted;
-        event AppliedHandler SaleApplied;
-        event CancelHandler SaleCancelled;
-
         bool Initialized { get; }
 
         bool Initialize(string vipno = null);
@@ -47,7 +43,7 @@ namespace SalesModule
 
     [Guid(ClassId), ClassInterface(ClassInterfaceType.None)]
     [ComSourceInterfaces(typeof(ISalesEngineEvents))]
-    internal class SalesEngine : ISalesEngine
+    public class SalesEngine : ISalesEngine
     {
         #region COM
 #if COM_INTEROP_ENABLED
@@ -95,7 +91,7 @@ namespace SalesModule
         public event AppliedHandler SaleApplied;
         public event CancelHandler SaleCancelled;
 
-        public SalesEngine()
+        internal SalesEngine()
         {
             ActivityLogService.Logger.LogFunctionCall();
             EngineRestarted += () => ActivityLogService.Logger.LogMessage("Engine restarted!");
@@ -303,6 +299,7 @@ namespace SalesModule
             }
         }
 
+#if DEBUG
         //### Testing purpose
         public bool InitializeForDebugging()
         {
@@ -365,5 +362,6 @@ namespace SalesModule
 
             return Sales;
         }
+#endif
     }
 }

@@ -18,6 +18,9 @@ namespace SalesModule
         InitResults Init(string store, string userName, string password, int pcid);
         InitResults Init(string ip, string Catalog, string username, string password, int pcid, string empName, string empPass);
         bool ChangeUser(string empName, string empPass);
+
+        SalesEngine CreateEngine();
+        bool OpenSalesWindow();
     }
 
     [Guid(ClassId), ClassInterface(ClassInterfaceType.None)]
@@ -45,19 +48,7 @@ namespace SalesModule
 
 #endif
         #endregion
-
-        private static Wrapper s_wrapper;
-        public static Wrapper Instance
-        {
-            get
-            {
-                if (s_wrapper == null)
-                    return s_wrapper = new Wrapper();
-                return s_wrapper;
-            }
-        }
-
-
+        
         internal static UserData User { get; private set; }
         internal static int PCID { get; private set; }
 
@@ -74,14 +65,13 @@ namespace SalesModule
         public bool IsEnabled { get { return User != null; } }
 
         //make private for Singleton purpose
-        private Wrapper()
+        public Wrapper()
         {
         }
         static Wrapper()
         {
             User = null;
             PCID = -1;
-            s_wrapper = null;
         }
 
         public InitResults Init(string ip, string Catalog, string username, string password, int pcid, string empName, string empPass)
@@ -160,11 +150,11 @@ namespace SalesModule
             }
         }
 
-        public static ISalesEngine CreateEngine()
+        public SalesEngine CreateEngine()
         {
             return new SalesEngine();
         }
-        public static bool OpenSalesWindow()
+        public bool OpenSalesWindow()
         {
             if (User == null)
             {

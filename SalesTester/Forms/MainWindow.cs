@@ -16,7 +16,7 @@ namespace SalesTester
         {
             if (!isInit)
             {
-                var w = Wrapper.Instance;
+                var w = new Wrapper();
                 InitResults res = w.Init("newordersqlmain.database.windows.net", "SALES_TEST", "yoni", "Yy123456789", 1, "admin", "1234");
                 if (w.IsEnabled && res == InitResults.Success)
                     Text = "Testing version: " + w.Version;
@@ -28,8 +28,7 @@ namespace SalesTester
         private void btn_create_Click(object sender, EventArgs e)
         {
             if (init())
-                Wrapper.OpenSalesWindow();
-                //(new CreateSale()).ShowDialog();
+                new Wrapper().OpenSalesWindow();
             else
                 MessageBox.Show("אין אפשרות להציג את המודל.");
         }
