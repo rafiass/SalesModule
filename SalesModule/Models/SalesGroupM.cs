@@ -36,8 +36,8 @@ namespace SalesModule.Models
         public List<SaleDiscount> GetEfective(List<ShoppingItem> bag, double totalReceipt)
         {
             List<SaleDiscount> sd;
-            for (int i = 0; i < Sales.Count; i++)
-                if ((sd = Sales[i].GetEfective(bag, totalReceipt)) != null)
+            foreach(var sale in Sales)
+                if ((sd = sale.GetEfective(bag, totalReceipt)) != null)
                     return sd;
             return null;
         }

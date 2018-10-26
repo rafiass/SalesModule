@@ -23,7 +23,7 @@ namespace SalesTester
             _engDiscounts = new List<ISaleDiscount>();
             _cartDiscounts = new List<TestDiscount>();
 
-            _eng = new Wrapper().CreateEngine();
+            _eng = new SalesEngine();
             _eng.EngineRestarted += () => _engDiscounts.Clear();
             _eng.SaleApplied += sd => _engDiscounts.Add(sd);
             _eng.SaleCancelled += id => _engDiscounts.RemoveAll(sd => sd.ID == id);

@@ -62,15 +62,13 @@ namespace SalesModule
 
         public override bool Equals(object obj)
         {
-            if (obj is ShoppingItem)
+            if (obj is ShoppingItem si)
             {
-                var si = obj as ShoppingItem;
                 return Pluno == si.Pluno &&
                     Price == si.Price;
             }
-            if (obj is ComperableProductM)
+            if (obj is ComperableProductM cp)
             {
-                var cp = obj as ComperableProductM;
                 return (cp.IsPluno && Pluno == cp.ID) ||
                     (!cp.IsPluno && Kind != null && Kind.ToString() == cp.ID);
             }
@@ -98,7 +96,7 @@ namespace SalesModule
 
         internal bool Add(IShoppingItem si)
         {
-            if (si != this)
+            if (si == this)
                 return false;
             if (Kind == null) Kind = si.Kind;
             Amount += si.Amount;

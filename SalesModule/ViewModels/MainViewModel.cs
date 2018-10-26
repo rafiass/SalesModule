@@ -18,8 +18,8 @@ namespace SalesModule.ViewModels
                     Height = 240,
                     MinWidth = 200,
                     MinHeight = 160,
-                    IsModal = false,
-                    IsShowingOnTaskBar = true
+                    IsModal = true,
+                    IsShowingOnTaskBar = false
                 };
             }
         }

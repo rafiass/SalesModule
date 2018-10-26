@@ -8,14 +8,14 @@ using SalesModule.Services;
 namespace SalesModule
 {
     public delegate void RestartHandler();
-    public delegate void AppliedHandler(ISaleDiscount sd);
+    public delegate void AppliedHandler(SaleDiscount sd); // ### use the interface ISaleDiscount
     public delegate void CancelHandler(int id);
 
     [Guid(SalesEngine.EventsId), InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface ISalesEngineEvents
     {
         void EngineRestarted();
-        void SaleApplied(ISaleDiscount sd);
+        void SaleApplied(SaleDiscount sd);
         void SaleCancelled(int id);
     }
 
@@ -68,8 +68,7 @@ namespace SalesModule
 #endif
         #endregion
 
-        private object _locker = new object();
-        private bool _init;
+        private readonly object _locker = new object();
         private string _vipno;
         private List<SalesGroupM> _availableSales;
         private List<ShoppingItem> _shoppingBag;
@@ -85,7 +84,7 @@ namespace SalesModule
             set { _availableSales = value; }
         }
 
-        public bool Initialized { get { return _init; } }
+        public bool Initialized { get; private set; }
 
         public event RestartHandler EngineRestarted;
         public event AppliedHandler SaleApplied;
@@ -95,9 +94,9 @@ namespace SalesModule
         {
             ActivityLogService.Logger.LogFunctionCall();
             EngineRestarted += () => ActivityLogService.Logger.LogMessage("Engine restarted!");
-            SaleApplied += sd => ActivityLogService.Logger.LogMessage("Sale applied: " + sd.Title + "(" + sd.SaleID + "), Id = " + sd.ID);
+            SaleApplied += sd => ActivityLogService.Logger.LogMessage($"Sale applied: {sd.Title} ({sd.SaleID}), Id = {sd.ID}");
             SaleCancelled += id => ActivityLogService.Logger.LogMessage("Sale canceled: " + id);
-            _init = false;
+            Initialized = false;
         }
 
         public bool Initialize(string vipno = null)
@@ -105,7 +104,7 @@ namespace SalesModule
             lock (_locker)
             {
                 if (Wrapper.User == null)
-                    return _init = false;
+                    return Initialized = false;
                 ActivityLogService.Logger.LogFunctionCall();
                 try
                 {
@@ -114,12 +113,12 @@ namespace SalesModule
                     _shoppingBag = new List<ShoppingItem>();
                     SaleDiscount.ResetCounter();
                     EngineRestarted?.Invoke();
-                    return _init = true;
+                    return Initialized = true;
                 }
                 catch (Exception ex)
                 {
                     ActivityLogService.Logger.LogError(ex);
-                    return _init = false;
+                    return Initialized = false;
                 }
             }
         }
@@ -127,16 +126,20 @@ namespace SalesModule
         {
             lock (_locker)
             {
-                if (Wrapper.User == null)
-                    return _init = false;
                 ActivityLogService.Logger.LogFunctionCall();
+                if (Wrapper.User == null)
+                {
+                    ActivityLogService.Logger.LogMessage("A user must log in to load sales.");
+                    return Initialized = false;
+                }
                 try
                 {
                     AvailableSales = DBService.GetService().GetAvailableSales(_vipno);
                     return AvailableSales != null;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    ActivityLogService.Logger.LogError(ex, "Failed to load sales from DB.");
                     return false;
                 }
             }
@@ -157,7 +160,7 @@ namespace SalesModule
             ActivityLogService.Logger.LogFunctionCall(pluno, qty, price, kind, evalSales);
             try
             {
-                if (!_init) return null;
+                if (!Initialized) return null;
 
                 var newItem = new ShoppingItem(pluno, qty, price, kind);
                 bool added = false;
@@ -175,7 +178,7 @@ namespace SalesModule
 
                 string title;
                 for (int i = 0; i < AvailableSales.Count; i++)
-                    if ((title = AvailableSales[i].IsProductRequire(pluno, kind)) != "")
+                    if (!string.IsNullOrEmpty(title = AvailableSales[i].IsProductRequire(pluno, kind)))
                         return title; //### handle multiple sales' titles received
                 return "";
             }
@@ -192,7 +195,7 @@ namespace SalesModule
                 ActivityLogService.Logger.LogFunctionCall(pluno, qty);
                 try
                 {
-                    if (!_init) return;
+                    if (!Initialized) return;
                     var removeList = _shoppingBag.FindAll(si => si.Pluno == pluno);
                     if (removeList.Count == 0)
                     {
@@ -229,7 +232,8 @@ namespace SalesModule
             ActivityLogService.Logger.LogFunctionCall();
             try
             {
-                if (!_init) return;
+                if (!Initialized)
+                    return;
 
                 var sales = evaluateSales();
                 Common.collapseSales(sales);
@@ -243,31 +247,39 @@ namespace SalesModule
 
         public bool IsPlunoActive(string pluno)
         {
-            if (!_init) return false;
+            if (!Initialized) return false;
             lock (_locker)
                 return _previousSales.Exists(sd => sd.IsContainProduct(pluno));
         }
         public ISaleDiscount[] CalcAllSales()
         {
-            if (!_init) return null;
+            if (!Initialized) return null;
             lock (_locker)
                 return _previousSales.ToArray();
         }
 
         private List<SaleDiscount> evaluateSales()
         {
-            var newSales = new List<SaleDiscount>();
-            var newBag = _shoppingBag.ConvertAll(p => new ShoppingItem(p)); //clone
-            List<SaleDiscount> efective;
-            double totalReceipt = 0;
-            _shoppingBag.ForEach(si => totalReceipt += si.Price * si.Amount);
-            foreach (var s in AvailableSales)
+            try
             {
-                efective = s.GetEfective(newBag, totalReceipt);
-                if (efective != null && efective.Count > 0)
-                    efective.ForEach(sd => newSales.Add(sd));
+                var newSales = new List<SaleDiscount>();
+                var newBag = _shoppingBag.ConvertAll(p => new ShoppingItem(p)); //clone
+                List<SaleDiscount> efective;
+                double totalReceipt = 0;
+                _shoppingBag.ForEach(si => totalReceipt += si.Price * si.Amount);
+                foreach (var s in AvailableSales)
+                {
+                    efective = s.GetEfective(newBag, totalReceipt);
+                    if (efective != null && efective.Count > 0)
+                        efective.ForEach(sd => newSales.Add(sd));
+                }
+                return newSales;
             }
-            return newSales;
+            catch (Exception ex)
+            {
+                ActivityLogService.Logger.LogError(ex, "Failed to evaluate sales.");
+                return new List<SaleDiscount>();
+            }
         }
         private void evaluateChanges(List<SaleDiscount> newSales)
         {
@@ -313,12 +325,12 @@ namespace SalesModule
                     _shoppingBag = new List<ShoppingItem>();
                     SaleDiscount.ResetCounter();
                     EngineRestarted?.Invoke();
-                    return _init = true;
+                    return Initialized = true;
                 }
                 catch (Exception ex)
                 {
                     ActivityLogService.Logger.LogError(ex);
-                    return _init = false;
+                    return Initialized = false;
                 }
             }
         }

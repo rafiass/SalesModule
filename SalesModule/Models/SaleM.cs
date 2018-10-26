@@ -221,7 +221,7 @@ namespace SalesModule.Models
         /// Search for an item in the bag, 
         /// if found retuns the items are remove it from the bag
         /// </summary>
-        private List<ShoppingItem> findPlu(List<ShoppingItem> bag, string pluID, bool isPluno, double amount, SearchOrder order)
+        private static List<ShoppingItem> findPlu(List<ShoppingItem> bag, string pluID, bool isPluno, double amount, SearchOrder order)
         {
             var found = new List<ShoppingItem>();
             bool infinite = amount == 0;
@@ -232,6 +232,7 @@ namespace SalesModule.Models
             {
                 var si = bag[i];
                 double toMove = 0;
+                
                 if ((isPluno && si.Pluno == pluID) ||
                     (!isPluno && (si.Kind != null && si.Kind.ToString() == pluID)))
                 {

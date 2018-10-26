@@ -19,7 +19,7 @@ namespace SalesModule
         InitResults Init(string ip, string Catalog, string username, string password, int pcid, string empName, string empPass);
         bool ChangeUser(string empName, string empPass);
 
-        SalesEngine CreateEngine();
+        ISalesEngine CreateEngine();
         bool OpenSalesWindow();
     }
 
@@ -34,21 +34,21 @@ namespace SalesModule
         // These routines perform the additional COM registration needed by ActiveX controls
         [EditorBrowsable(EditorBrowsableState.Never)]
         [ComRegisterFunction]
-        private static void Register(System.Type t)
+        private static void Register(Type t)
         {
             ComRegistration.RegisterControl(t);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         [ComUnregisterFunction]
-        private static void Unregister(System.Type t)
+        private static void Unregister(Type t)
         {
             ComRegistration.UnregisterControl(t);
         }
 
 #endif
         #endregion
-        
+
         internal static UserData User { get; private set; }
         internal static int PCID { get; private set; }
 
@@ -59,7 +59,14 @@ namespace SalesModule
             {
                 var v = (new System.Reflection.AssemblyName(
                      System.Reflection.Assembly.GetExecutingAssembly().FullName)).Version;
-                return v.Major + "." + v.Minor + "." + v.Build;
+                var verStr = v.Major + "." + v.Minor;
+                if (v.Build != 0)
+                {
+                    verStr += "." + v.Build;
+                    if (v.Revision != 0)
+                        verStr += "." + v.Revision;
+                }
+                return verStr;
             }
         }
         public bool IsEnabled { get { return User != null; } }
@@ -150,7 +157,7 @@ namespace SalesModule
             }
         }
 
-        public SalesEngine CreateEngine()
+        public ISalesEngine CreateEngine()
         {
             return new SalesEngine();
         }

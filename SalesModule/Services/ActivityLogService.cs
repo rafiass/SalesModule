@@ -9,13 +9,11 @@ namespace SalesModule.Services
     {
         private static ActivityLogService _logger;
         private const string FILE_NAME = "Sales.log.txt";
-
-        private string _path;
+        private static readonly string s_path = Common.CurrentDirectory + "\\" + FILE_NAME;
 
         public ActivityLogService()
         {
-            _path = Common.CurrentDirectory + "\\" + FILE_NAME;
-            using (File.Create(_path)) { }
+            using (File.Create(s_path)) { }
         }
         public static ActivityLogService Logger { get { return _logger ?? (_logger = new ActivityLogService()); } }
 
@@ -52,8 +50,8 @@ namespace SalesModule.Services
         private void writeMessage(string s)
         {
             StreamWriter sw;
-            using (sw = File.AppendText(_path))
-                sw.WriteLine(s);
+            using (sw = File.AppendText(s_path))
+                sw.WriteLine($"[{DateTime.Now}]: {s}");
         }
         private void logInnerException(Exception ex, string prefix = "")
         {

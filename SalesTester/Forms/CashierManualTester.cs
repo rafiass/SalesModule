@@ -30,7 +30,7 @@ namespace SalesTester
         }
         private void InitEngine()
         {
-            _engine = new Wrapper().CreateEngine();
+            _engine = new SalesEngine();
             _engine.Initialize();
             //Engine.InitializeForDebugging();
             _engine.EngineRestarted += CallReset;

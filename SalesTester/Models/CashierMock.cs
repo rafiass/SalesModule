@@ -15,7 +15,7 @@ namespace SalesTester
         public CashierMock()
         {
             Items = new List<CashierItem>();
-            _engine = new Wrapper().CreateEngine();
+            _engine = new SalesEngine();
             _engine.EngineRestarted += engineResetarted;
             _engine.SaleApplied += saleApplied;
             _engine.SaleCancelled += saleCancelled;

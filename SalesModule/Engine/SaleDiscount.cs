@@ -19,7 +19,8 @@ namespace SalesModule
     }
 
     [Guid(ClassId), ClassInterface(ClassInterfaceType.None)]
-    internal class SaleDiscount : ISaleDiscount
+    //### change to internal
+    public class SaleDiscount : ISaleDiscount
     {
         #region COM
 #if COM_INTEROP_ENABLED
